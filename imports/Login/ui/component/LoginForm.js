@@ -6,7 +6,7 @@ import styled from "styled-components";
 import ButtonIcon from "@/imports/Login/ui/assets/ButtonIcon";
 import GoogleLogin from "@/imports/Login/ui/assets/GoogleLogin";
 
-const LoginForm = () => {
+const LoginForm = ({ $fromSignup = false }) => {
   return (
     <MainSection
       $direction="column"
@@ -15,9 +15,13 @@ const LoginForm = () => {
       $justifycontent="center"
     >
       <TitleSection $direction="column">
-        <MainTitle>
-          Welcome <span>Back!</span>
-        </MainTitle>
+        <MainTitle
+          dangerouslySetInnerHTML={{
+            __html: $fromSignup
+              ? `Let's Get <span>You Started</span>`
+              : ` Welcome <span>Back!</span>`,
+          }}
+        />
         <SubTitle>
           Log iLorem ipsum dolor sit amet, consectetur adipiscing
         </SubTitle>
@@ -25,13 +29,13 @@ const LoginForm = () => {
       <FormSection $fullwidth $direction="column">
         <UpperSection $fullwidth $direction="column">
           <Label>Your Information</Label>
-          <InputField placeholder="Your Fullname" />
+          {$fromSignup && <InputField placeholder="Your Fullname" />}
           <InputField placeholder="Email" />
           <InputField placeholder="Your Password" />
         </UpperSection>
         <BtnWrapper $fullwidth $direction="column">
           <ContinueCTA $fullwidth $alignitems="center" $justifycontent="center">
-            Log in <ButtonIcon />
+            {$fromSignup ? "Sign in" : "Log in"} <ButtonIcon />
           </ContinueCTA>
           <OrSection $alignitems="center" $justifycontent="center" $fullwidth>
             <Line />
@@ -44,7 +48,7 @@ const LoginForm = () => {
             $justifycontent="center"
           >
             <GoogleLogin />
-            <CTATxt>Log in with Google</CTATxt>
+            <CTATxt>{$fromSignup ? "Sign in" : "Log in"} with Google</CTATxt>
           </GoogleLoginCTA>
           <TermsCheckbox $alignitems="center">
             <CheckboxInput type="checkbox" id="terms" />
