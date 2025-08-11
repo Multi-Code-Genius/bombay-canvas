@@ -5,10 +5,10 @@ import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import SearchIcon from "../assets/SearchIcon";
-import CloseIcon from "../assets/CloseIcon";
-import VuesaxIcon from "../assets/VuesaxIcon";
-import ExpandIcon from "../assets/ExpandIcon";
+import SearchIcon from "/imports/core/ui/assets/SearchIcon";
+import CloseIcon from "/imports/core/ui/assets/CloseIcon";
+import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
+import ExpandIcon from "/imports/core/ui/assets/ExpandIcon";
 
 const Header = () => {
   const router = useRouter();
