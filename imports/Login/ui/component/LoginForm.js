@@ -11,11 +11,8 @@ const LoginForm = ({ $fromSignup = false }) => {
   const router = useRouter();
 
   const handleRedirect = () => {
-    if ($fromSignup) {
-      router.push("/login");
-    } else {
-      router.push("/signup");
-    }
+    if ($fromSignup) router.push("/login");
+    else router.push("/signup");
   };
 
   return (
