@@ -244,11 +244,6 @@ const FormSection = styled(Flex)`
   padding: 25px 17px;
   border-radius: 24px;
   backdrop-filter: blur(16.3px);
-  box-shadow: -9.4px 22.5px 54.5px 0 rgba(0, 0, 0, 0.05),
-    -36.6px 92.1px 98.6px 0 rgba(0, 0, 0, 0.05),
-    -82.7px 206.7px 133.4px 0 rgba(0, 0, 0, 0.03),
-    -146.6px 367.3px 157.8px 0 rgba(0, 0, 0, 0.01),
-    -228.3px 575px 172.9px 0 rgba(0, 0, 0, 0);
   border: solid 6px rgba(54, 54, 54, 0.37);
   background-color: rgba(32, 32, 32, 0.7);
 
@@ -282,8 +277,9 @@ const MainTitle = styled.div`
 `;
 
 const MainSection = styled(Flex)`
-  min-height: 100vh;
+  min-height: calc(100vh - 126px);
   max-width: 895px;
+  width: 95%;
   margin: 0 auto;
   gap: 42px;
 `;

@@ -11,13 +11,6 @@ import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
 import ExpandIcon from "/imports/core/ui/assets/ExpandIcon";
 import MenuIcon from "/imports/core/ui/assets/MenuIcon";
 
-export const BREAKPOINTS = {
-  xs: 350,
-  sm: 768,
-  md: 920,
-  lg: 1200,
-};
-
 const Header = () => {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,14 +43,15 @@ const Header = () => {
           </SearchWrapper>
           <CloseIcon />
         </Search>
-
         <CategoryTitle>
           <VuesaxIcon />
           <Text>Categories</Text>
           <ExpandIcon />
         </CategoryTitle>
 
-        <LoginButton onClick={() => handleLinkClick("/login")}>Login</LoginButton>
+        <LoginButton onClick={() => handleLinkClick("/login")}>
+          Login
+        </LoginButton>
       </RightSection>
       <MenuIconWrapper onClick={toggleMenu}>
         <MenuIcon open={isMenuOpen} />
@@ -79,7 +73,9 @@ const Header = () => {
           <Text>Categories</Text>
           <ExpandIcon />
         </CategoryTitle>
-        <LoginButton onClick={() => handleLinkClick("/login")}>Login</LoginButton>
+        <LoginButton onClick={() => handleLinkClick("/login")}>
+          Login
+        </LoginButton>
       </DropdownMenu>
     </HeaderContainer>
   );
@@ -96,7 +92,7 @@ const HeaderContainer = styled(Flex)`
   width: 100%;
   padding: 40px;
 
-  @media (max-width: ${BREAKPOINTS.md}px) {
+  @media (max-width: 920px) {
     padding: 20px;
   }
 `;
@@ -124,7 +120,7 @@ const Navs = styled(Flex)`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: ${BREAKPOINTS.md}px) {
+  @media (max-width: 920px) {
     display: none;
   }
 `;
@@ -133,7 +129,7 @@ const RightSection = styled(Flex)`
   width: 544px;
   gap: 14px;
 
-  @media (max-width: ${BREAKPOINTS.md}px) {
+  @media (max-width: 920px) {
     display: none;
   }
 `;
@@ -215,46 +211,47 @@ const MenuIconWrapper = styled.div`
   display: none;
   cursor: pointer;
 
-  @media (max-width: ${BREAKPOINTS.md}px) {
+  @media (max-width: 920px) {
     display: block;
   }
 `;
 
 const DropdownMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: absolute;
-  top: 80px;
-  right: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  border-radius: 8px;
-  z-index: 1001;
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  transform: ${({ open }) => (open ? 'translateY(0)' : 'translateY(-20px)')};
-  opacity: ${({ open }) => (open ? 1 : 0)};
-  pointer-events: ${({ open }) => (open ? 'auto' : 'none')};
+  display: none;
 
-  @media (min-width: ${BREAKPOINTS.md + 1}px) {
-    display: none;
-  }
-
-  > ${Navs} {
+  @media (max-width: 920px) {
     display: flex;
+
     flex-direction: column;
-    gap: 10px;
-  }
+    gap: 16px;
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1001;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform: ${({ open }) => (open ? "translateY(0)" : "translateY(-20px)")};
+    opacity: ${({ open }) => (open ? 1 : 0)};
+    pointer-events: ${({ open }) => (open ? "auto" : "none")};
 
-  > ${Search} {
-    width: 100%;
-  }
+    > ${Navs} {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-  > ${CategoryTitle} {
-    width: 100%;
-  }
+    > ${Search} {
+      width: 100%;
+    }
 
-  > ${LoginButton} {
-    width: 100%;
+    > ${CategoryTitle} {
+      width: 100%;
+    }
+
+    > ${LoginButton} {
+      width: 100%;
+    }
   }
 `;

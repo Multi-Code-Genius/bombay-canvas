@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning={true}>
         <StyledComponentsRegistry>
           <ProviderLayout>
-            <Shadow />
+            {/* <Shadow /> */}
             <Header />
             {children}
           </ProviderLayout>
