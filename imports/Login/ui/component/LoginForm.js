@@ -1,12 +1,23 @@
 "use client";
 
-import Flex from "@/lib/atoms/Flex";
-import React from "react";
+import { useRouter } from "next/navigation";
+import { Fragment } from "react";
 import styled from "styled-components";
-import ButtonIcon from "@/imports/Login/ui/assets/ButtonIcon";
-import GoogleLogin from "@/imports/Login/ui/assets/GoogleLogin";
+import ButtonIcon from "/imports/Login/ui/assets/ButtonIcon";
+import GoogleLogin from "/imports/Login/ui/assets/GoogleLogin";
+import Flex from "/lib/atoms/Flex";
 
 const LoginForm = ({ $fromSignup = false }) => {
+  const router = useRouter();
+
+  const handleRedirect = () => {
+    if ($fromSignup) {
+      router.push("/login");
+    } else {
+      router.push("/signup");
+    }
+  };
+
   return (
     <MainSection
       $direction="column"
@@ -59,11 +70,38 @@ const LoginForm = ({ $fromSignup = false }) => {
           </TermsCheckbox>
         </BtnWrapper>
       </FormSection>
+      <ExtraTxt>
+        {$fromSignup ? (
+          <Fragment>
+            Already have an account?{" "}
+            <span onClick={handleRedirect}>Log in</span>
+          </Fragment>
+        ) : (
+          <Fragment>
+            Don't have an account? <span onClick={handleRedirect}>Sign in</span>
+          </Fragment>
+        )}
+      </ExtraTxt>
     </MainSection>
   );
 };
 
 export default LoginForm;
+
+const ExtraTxt = styled.div`
+  opacity: 0.7;
+  font-family: "HelveticaMedium";
+  font-size: 20px;
+  line-height: 1.5;
+  text-align: center;
+  color: #fff;
+
+  span {
+    font-family: "HelveticaBold";
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
 
 const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
   width: 16.9px;

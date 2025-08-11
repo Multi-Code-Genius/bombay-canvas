@@ -1,5 +1,5 @@
-import ProviderLayout from "@/lib/ProviderLayout";
-import StyledComponentsRegistry from "@/lib/StyledComponentsRegistry";
+import ProviderLayout from "/lib/ProviderLayout";
+import StyledComponentsRegistry from "/lib/StyledComponentsRegistry";
 
 export default function RootLayout({ children }) {
   return (

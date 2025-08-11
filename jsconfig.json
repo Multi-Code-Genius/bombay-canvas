@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"]
+      "imports/*": ["./imports/*"],
+      "public/*": ["./public/*"],
+      "lib/*": ["./lib/*"],
+      "/zustand/*": ["./zustand/*"],
+      "styles/*": ["./styles/*"],
+      "*": ["./*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "test", ".vscode"]
 }
