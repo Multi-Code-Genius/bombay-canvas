@@ -3,13 +3,12 @@ const GlobalStyles = createGlobalStyle`
 
 html,
 body {
-
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
-    background: rgb(236 240 243/1);
-    margin: 0;
-    &::-webkit-scrollbar-thumb {
+  background: #181818;
+  margin: 0;
+  /* &::-webkit-scrollbar-thumb {
       background-color: #5651e5;
     }
 
@@ -17,8 +16,8 @@ body {
       background-color: white;
       color: #aca496;
       width: 3px;
-    }
-  }
+    } */
+}
 
 a {
   color: inherit;
@@ -28,6 +27,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
 `;
 
 export default GlobalStyles;
