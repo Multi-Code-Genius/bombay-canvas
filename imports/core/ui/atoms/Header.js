@@ -26,15 +26,20 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLinkClick = (path) => {
+    router.push(path);
+    setIsMenuOpen(false);
+  };
+
   return (
     <HeaderContainer $fullwidth>
       <Left $alignitems="center">
-        <Logo onClick={() => router.push("/")}>
+        <Logo onClick={() => handleLinkClick("/")}>
           <Image src="/static/logo.png" alt="Logo" width={100} height={40} />
         </Logo>
         <Navs>
-          <NavLink onClick={() => router.push("/")}>Home</NavLink>
-          <NavLink onClick={() => router.push("/about")}>About</NavLink>
+          <NavLink onClick={() => handleLinkClick("/")}>Home</NavLink>
+          <NavLink onClick={() => handleLinkClick("/about")}>About</NavLink>
         </Navs>
       </Left>
       <RightSection $alignitems="center">
@@ -52,32 +57,30 @@ const Header = () => {
           <ExpandIcon />
         </CategoryTitle>
 
-        <LoginButton onClick={() => router.push("/login")}>Login</LoginButton>
+        <LoginButton onClick={() => handleLinkClick("/login")}>Login</LoginButton>
       </RightSection>
       <MenuIconWrapper onClick={toggleMenu}>
-        <MenuIcon />
+        <MenuIcon open={isMenuOpen} />
       </MenuIconWrapper>
-      {isMenuOpen && (
-        <DropdownMenu>
-          <Navs $direction="column">
-            <NavLink onClick={() => router.push("/")}>Home</NavLink>
-            <NavLink onClick={() => router.push("/about")}>About</NavLink>
-          </Navs>
-          <Search>
-            <SearchWrapper $alignitems="center" $gap="8px">
-              <SearchIcon />
-              <SearchBar type="text" placeholder="Search" />
-            </SearchWrapper>
-            <CloseIcon />
-          </Search>
-          <CategoryTitle>
-            <VuesaxIcon />
-            <Text>Categories</Text>
-            <ExpandIcon />
-          </CategoryTitle>
-          <LoginButton onClick={() => router.push("/login")}>Login</LoginButton>
-        </DropdownMenu>
-      )}
+      <DropdownMenu open={isMenuOpen}>
+        <Navs $direction="column">
+          <NavLink onClick={() => handleLinkClick("/")}>Home</NavLink>
+          <NavLink onClick={() => handleLinkClick("/about")}>About</NavLink>
+        </Navs>
+        <Search>
+          <SearchWrapper $alignitems="center" $gap="8px">
+            <SearchIcon />
+            <SearchBar type="text" placeholder="Search" />
+          </SearchWrapper>
+          <CloseIcon />
+        </Search>
+        <CategoryTitle>
+          <VuesaxIcon />
+          <Text>Categories</Text>
+          <ExpandIcon />
+        </CategoryTitle>
+        <LoginButton onClick={() => handleLinkClick("/login")}>Login</LoginButton>
+      </DropdownMenu>
     </HeaderContainer>
   );
 };
@@ -218,36 +221,40 @@ const MenuIconWrapper = styled.div`
 `;
 
 const DropdownMenu = styled.div`
-  display: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 1001;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transform: ${({ open }) => (open ? 'translateY(0)' : 'translateY(-20px)')};
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  pointer-events: ${({ open }) => (open ? 'auto' : 'none')};
 
-  @media (max-width: ${BREAKPOINTS.md}px) {
+  @media (min-width: ${BREAKPOINTS.md + 1}px) {
+    display: none;
+  }
+
+  > ${Navs} {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    position: absolute;
-    top: 80px;
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    border-radius: 8px;
-    z-index: 1001;
+    gap: 10px;
+  }
 
-    > ${Navs} {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+  > ${Search} {
+    width: 100%;
+  }
 
-    > ${Search} {
-      width: 100%;
-    }
+  > ${CategoryTitle} {
+    width: 100%;
+  }
 
-    > ${CategoryTitle} {
-      width: 100%;
-    }
-
-    > ${LoginButton} {
-      width: 100%;
-    }
+  > ${LoginButton} {
+    width: 100%;
   }
 `;
