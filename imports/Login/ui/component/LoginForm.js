@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonIcon from "/imports/Login/ui/assets/ButtonIcon";
 import GoogleLogin from "/imports/Login/ui/assets/GoogleLogin";
@@ -10,9 +11,19 @@ import Flex from "/lib/atoms/Flex";
 const LoginForm = ({ $fromSignup = false }) => {
   const router = useRouter();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const handleRedirect = () => {
     if ($fromSignup) router.push("/login");
     else router.push("/signup");
+  };
+
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
@@ -34,15 +45,38 @@ const LoginForm = ({ $fromSignup = false }) => {
           Log iLorem ipsum dolor sit amet, consectetur adipiscing
         </SubTitle>
       </TitleSection>
-      <FormSection $fullwidth $direction="column">
+      <FormSection onSubmit={handleSubmit(onSubmit)}>
         <UpperSection $fullwidth $direction="column">
           <Label>Your Information</Label>
-          {$fromSignup && <InputField placeholder="Your Fullname" />}
-          <InputField placeholder="Email" />
-          <InputField placeholder="Your Password" />
+          {$fromSignup && (
+            <>
+              <InputField
+                placeholder="Your Fullname"
+                {...register("fullname", { required: $fromSignup })}
+              />
+              {errors.fullname && <ErrorText>Fullname is required</ErrorText>}
+            </>
+          )}
+          <InputField
+            placeholder="Email"
+            {...register("email", { required: true })}
+          />
+          {errors.email && <ErrorText>Email is required</ErrorText>}
+          <InputField
+            placeholder="Your Password"
+            type="password"
+            {...register("password", { required: true })}
+          />
+          {errors.password && <ErrorText>Password is required</ErrorText>}
         </UpperSection>
         <BtnWrapper $fullwidth $direction="column">
-          <ContinueCTA $fullwidth $alignitems="center" $justifycontent="center">
+          <ContinueCTA
+            as="button"
+            type="submit"
+            $fullwidth
+            $alignitems="center"
+            $justifycontent="center"
+          >
             {$fromSignup ? "Sign Up" : "Log in"} <ButtonIcon />
           </ContinueCTA>
           <OrSection $alignitems="center" $justifycontent="center" $fullwidth>
@@ -84,6 +118,12 @@ const LoginForm = ({ $fromSignup = false }) => {
 };
 
 export default LoginForm;
+
+const ErrorText = styled.div`
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+`;
 
 const ExtraTxt = styled.div`
   opacity: 0.7;
@@ -240,13 +280,15 @@ const InputField = styled.input`
   }
 `;
 
-const FormSection = styled(Flex)`
+const FormSection = styled.form`
   padding: 25px 17px;
   border-radius: 24px;
   backdrop-filter: blur(16.3px);
   border: solid 6px rgba(54, 54, 54, 0.37);
   background-color: rgba(32, 32, 32, 0.7);
-
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   gap: 25px;
 `;
 
