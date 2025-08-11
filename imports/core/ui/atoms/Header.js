@@ -2,22 +2,35 @@
 
 import Flex from "lib/atoms/Flex";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import SearchIcon from "/imports/core/ui/assets/SearchIcon";
 import CloseIcon from "/imports/core/ui/assets/CloseIcon";
 import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
 import ExpandIcon from "/imports/core/ui/assets/ExpandIcon";
+import MenuIcon from "/imports/core/ui/assets/MenuIcon";
+
+export const BREAKPOINTS = {
+  xs: 350,
+  sm: 768,
+  md: 920,
+  lg: 1200,
+};
 
 const Header = () => {
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <HeaderContainer $fullwidth>
       <Left $alignitems="center">
         <Logo onClick={() => router.push("/")}>
-          <Image src="/logo.png" alt="Logo" width={100} height={40} />
+          <Image src="/static/logo.png" alt="Logo" width={100} height={40} />
         </Logo>
         <Navs>
           <NavLink onClick={() => router.push("/")}>Home</NavLink>
@@ -41,6 +54,30 @@ const Header = () => {
 
         <LoginButton onClick={() => router.push("/login")}>Login</LoginButton>
       </RightSection>
+      <MenuIconWrapper onClick={toggleMenu}>
+        <MenuIcon />
+      </MenuIconWrapper>
+      {isMenuOpen && (
+        <DropdownMenu>
+          <Navs $direction="column">
+            <NavLink onClick={() => router.push("/")}>Home</NavLink>
+            <NavLink onClick={() => router.push("/about")}>About</NavLink>
+          </Navs>
+          <Search>
+            <SearchWrapper $alignitems="center" $gap="8px">
+              <SearchIcon />
+              <SearchBar type="text" placeholder="Search" />
+            </SearchWrapper>
+            <CloseIcon />
+          </Search>
+          <CategoryTitle>
+            <VuesaxIcon />
+            <Text>Categories</Text>
+            <ExpandIcon />
+          </CategoryTitle>
+          <LoginButton onClick={() => router.push("/login")}>Login</LoginButton>
+        </DropdownMenu>
+      )}
     </HeaderContainer>
   );
 };
@@ -55,6 +92,10 @@ const HeaderContainer = styled(Flex)`
   z-index: 1000;
   width: 100%;
   padding: 40px;
+
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    padding: 20px;
+  }
 `;
 
 const Left = styled(Flex)`
@@ -79,11 +120,19 @@ const Navs = styled(Flex)`
   gap: 14px;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
 `;
 
 const RightSection = styled(Flex)`
   width: 544px;
   gap: 14px;
+
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    display: none;
+  }
 `;
 
 const CategoryTitle = styled(Flex)`
@@ -157,4 +206,48 @@ const LoginButton = styled.button`
     inset -2.9px -2.9px 2.9px 0 rgba(255, 255, 255, 0.17);
   border: solid 1.4px rgba(255, 126, 55, 0.2);
   background-image: linear-gradient(144deg, #ff670a -18%, #ef8a4c 121%);
+`;
+
+const MenuIconWrapper = styled.div`
+  display: none;
+  cursor: pointer;
+
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    display: block;
+  }
+`;
+
+const DropdownMenu = styled.div`
+  display: none;
+
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1001;
+
+    > ${Navs} {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    > ${Search} {
+      width: 100%;
+    }
+
+    > ${CategoryTitle} {
+      width: 100%;
+    }
+
+    > ${LoginButton} {
+      width: 100%;
+    }
+  }
 `;
