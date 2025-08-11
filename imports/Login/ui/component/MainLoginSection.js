@@ -1,7 +1,7 @@
-import React from "react";
+import LoginForm from "@/imports/Login/ui/component/LoginForm";
 
 const MainLoginSection = () => {
-  return <div>MainLoginSection</div>;
+  return <LoginForm />;
 };
 
 export default MainLoginSection;
