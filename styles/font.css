@@ -1,19 +1,25 @@
 @font-face {
-  font-family: "Helvetica";
-  src: url("/fonts/helvetica-light.ttf") format("truetype");
+  font-family: "Helvetica light";
+  src: url("/fonts/HelveticaNowDisplay-Light.ttf") format("truetype");
   font-weight: 300;
 }
 @font-face {
-  font-family: "Helvetica";
-  src: url("/fonts/Helvetica.ttf") format("truetype");
+  font-family: "Helvetica regular";
+  src: url("/fonts/HelveticaNowDisplay-Regular.ttf") format("truetype");
   font-weight: 400;
 }
 @font-face {
-  font-family: "Helvetica";
-  src: url("/fonts/Helvetica-Bold.ttf") format("truetype");
+  font-family: "Helvetica medium";
+  src: url("/fonts/HelveticaNowDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Helvetica bold";
+  src: url("/fonts/HelveticaNowDisplay-Bold.ttf") format("truetype");
   font-weight: 700;
 }
 @font-face {
-  font-family: "Helvetica Rounded Bold";
-  src: url("/fonts/helvetica-rounded-bold.otf") format("opentype");
+  font-family: "Helvetica extra Bold";
+  src: url("/fonts/HelveticaNowDisplay-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
 }
