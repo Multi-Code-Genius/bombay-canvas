@@ -20,8 +20,8 @@ const Header = () => {
           <Image src="/logo.png" alt="Logo" width={100} height={40} />
         </Logo>
         <Navs>
-          <NavLink>Home</NavLink>
-          <NavLink>About</NavLink>
+          <NavLink onClick={() => router.push("/")}>Home</NavLink>
+          <NavLink onClick={() => router.push("/about")}>About</NavLink>
         </Navs>
       </Left>
       <RightSection $alignitems="center">

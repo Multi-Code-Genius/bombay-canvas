@@ -1,22 +1,22 @@
 "use client";
 
+import useWindowSize from "lib/hooks/useWindowSize";
 import React from "react";
 import styled from "styled-components";
-import Image from "next/image";
 
 const Shadow = () => {
-  return (
-    <Div>
-      <Image src="/ellipse.png" alt="ellipse" width={100} height={40} />
-      <Image src="/logo.png" alt="Logo" width={100} height={40} />
-    </Div>
-  );
+  return <Div />;
 };
 
 export default Shadow;
 
 const Div = styled.div`
-  position: absolute;
+  background-image: url("/static/ellipse.png");
+  top: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
   width: 100%;
-  top: 20px;
+  transform: rotate(-180deg);
+  padding: 15%;
 `;
