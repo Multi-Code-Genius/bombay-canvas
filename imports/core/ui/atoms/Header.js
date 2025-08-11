@@ -59,7 +59,7 @@ const HeaderContainer = styled(Flex)`
 
 const Left = styled(Flex)`
   align-items: center;
-  gap: 17px;
+  gap: 37px;
 `;
 
 const Logo = styled.div`
