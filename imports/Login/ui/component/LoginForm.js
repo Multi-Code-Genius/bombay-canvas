@@ -35,7 +35,7 @@ const LoginForm = ({ $fromSignup = false }) => {
         </UpperSection>
         <BtnWrapper $fullwidth $direction="column">
           <ContinueCTA $fullwidth $alignitems="center" $justifycontent="center">
-            {$fromSignup ? "Sign in" : "Log in"} <ButtonIcon />
+            {$fromSignup ? "Sign Up" : "Log in"} <ButtonIcon />
           </ContinueCTA>
           <OrSection $alignitems="center" $justifycontent="center" $fullwidth>
             <Line />
@@ -53,7 +53,7 @@ const LoginForm = ({ $fromSignup = false }) => {
           <TermsCheckbox $alignitems="center">
             <CheckboxInput type="checkbox" id="terms" />
             <MyLabel htmlFor="terms">
-              I agree to the <span>Terms of Service</span> and
+              I agree to the <span>Terms of Service</span> and{" "}
               <span>Privacy Policy</span>
             </MyLabel>
           </TermsCheckbox>
@@ -235,14 +235,14 @@ const TitleSection = styled(Flex)`
 `;
 
 const MainTitle = styled.div`
-  font-family: "HelveticaRegular";
+  font-family: "HelveticaLight";
   font-size: 84px;
   letter-spacing: -2.52px;
   text-align: center;
   color: #fff;
 
   span {
-    font-family: "HelveticaBold";
+    font-family: "HelveticaMedium";
   }
 `;
 
