@@ -1,4 +1,4 @@
-import LoginForm from "/imports/Login/ui/component/LoginForm";
+import LoginForm from "../../imports/Login/ui/components/LoginForm";
 
 const page = () => {
   return <LoginForm $fromSignup={true} />;

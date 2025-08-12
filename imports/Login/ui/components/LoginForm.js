@@ -56,8 +56,6 @@ const LoginForm = ({ $fromSignup = false }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: idToken }),
       });
-
-      console.log(await res.json());
     } catch (err) {
       console.error("Google Login Error:", err);
     }
