@@ -8,11 +8,16 @@ import ButtonIcon from "/imports/Login/ui/assets/ButtonIcon";
 import GoogleLogin from "/imports/Login/ui/assets/GoogleLogin";
 import Flex from "/lib/atoms/Flex";
 import { useLogin, useRequestOtp } from "api/auth";
+import EyeIcon from "/imports/core/ui/assets/EyeIcon";
+import EyeSlashIcon from "/imports/core/ui/assets/EyeSlashIcon";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "config/firebaseConfig";
 
 const LoginForm = ({ $fromSignup = false }) => {
   const router = useRouter();
   const { mutate, isPending, isSuccess } = useRequestOtp();
   const { mutate: loginMutate } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -38,6 +43,23 @@ const LoginForm = ({ $fromSignup = false }) => {
         password: data.password.trim(),
       });
       return;
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      const res = await fetch("http://localhost:5000/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: idToken }),
+      });
+
+      console.log(await res.json());
+    } catch (err) {
+      console.error("Google Login Error:", err);
     }
   };
 
@@ -74,15 +96,37 @@ const LoginForm = ({ $fromSignup = false }) => {
           )}
           <InputField
             placeholder="Email"
-            {...register("email", { required: true })}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
           />
-          {errors.email && <ErrorText>Email is required</ErrorText>}
-          <InputField
-            placeholder="Your Password"
-            type="password"
-            {...register("password", { required: true })}
-          />
-          {errors.password && <ErrorText>Password is required</ErrorText>}
+          {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+          <PasswordWrapper>
+            <InputField
+              placeholder="Your Password"
+              type={showPassword ? "text" : "password"}
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+                pattern: {
+                  value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/,
+                  message:
+                    "Password must contain at least one letter, one number and one special character",
+                },
+              })}
+            />
+            <EyeIconWrapper onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+            </EyeIconWrapper>
+          </PasswordWrapper>
+          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
         </UpperSection>
         <BtnWrapper $fullwidth $direction="column">
           <ContinueCTA
@@ -103,6 +147,7 @@ const LoginForm = ({ $fromSignup = false }) => {
             $alignitems="center"
             $fullwidth
             $justifycontent="center"
+            onClick={handleLogin}
           >
             <GoogleLogin />
             <CTATxt>{$fromSignup ? "Sign in" : "Log in"} with Google</CTATxt>
@@ -133,6 +178,19 @@ const LoginForm = ({ $fromSignup = false }) => {
 };
 
 export default LoginForm;
+
+const PasswordWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const EyeIconWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  cursor: pointer;
+`;
 
 const ErrorText = styled.div`
   color: red;
