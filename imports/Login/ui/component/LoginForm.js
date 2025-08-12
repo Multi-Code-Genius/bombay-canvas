@@ -1,15 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import ButtonIcon from "/imports/Login/ui/assets/ButtonIcon";
 import GoogleLogin from "/imports/Login/ui/assets/GoogleLogin";
 import Flex from "/lib/atoms/Flex";
+import { useLogin, useRequestOtp } from "api/auth";
 
 const LoginForm = ({ $fromSignup = false }) => {
   const router = useRouter();
+  const { mutate, isPending, isSuccess } = useRequestOtp();
+  const { mutate: loginMutate } = useLogin();
 
   const {
     register,
@@ -23,7 +26,19 @@ const LoginForm = ({ $fromSignup = false }) => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    if (!$fromSignup) {
+      return loginMutate({
+        email: data.email.trim(),
+        password: data.password.trim(),
+      });
+    } else {
+      mutate({
+        email: data.email.trim(),
+        name: data.fullname.trim(),
+        password: data.password.trim(),
+      });
+      return;
+    }
   };
 
   return (
