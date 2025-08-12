@@ -1,9 +1,10 @@
 "use client";
 
 import Flex from "lib/atoms/Flex";
+import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import styled from "styled-components";
 import SearchIcon from "/imports/core/ui/assets/SearchIcon";
 import CloseIcon from "/imports/core/ui/assets/CloseIcon";
@@ -13,26 +14,38 @@ import MenuIcon from "/imports/core/ui/assets/MenuIcon";
 
 const Header = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLinkClick = (path) => {
-    router.push(path);
+  const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleLoginClick = () => {
+    router.push("/login");
   };
 
   return (
     <HeaderContainer $fullwidth>
       <Left $alignitems="center">
-        <Logo onClick={() => handleLinkClick("/")}>
-          <Image src="/static/logo.png" alt="Logo" width={100} height={40} />
+        <Logo>
+          <Link href="/">
+            <Image src="/static/logo.png" alt="Logo" width={100} height={40} />
+          </Link>
         </Logo>
         <Navs>
-          <NavLink onClick={() => handleLinkClick("/")}>Home</NavLink>
-          <NavLink onClick={() => handleLinkClick("/about")}>About</NavLink>
+          <NavLink href="/" active={pathname === "/"}>
+            Home
+            {pathname === "/" && <BorderBottom />}
+          </NavLink>
+          <NavLink href="/about" active={pathname === "/about"}>
+            About
+            {pathname === "/about" && <BorderBottom />}
+          </NavLink>
         </Navs>
       </Left>
       <RightSection $alignitems="center">
@@ -49,17 +62,29 @@ const Header = () => {
           <ExpandIcon />
         </CategoryTitle>
 
-        <LoginButton onClick={() => handleLinkClick("/login")}>
-          Login
-        </LoginButton>
+        <LoginButton onClick={handleLoginClick}>Login</LoginButton>
       </RightSection>
       <MenuIconWrapper onClick={toggleMenu}>
         <MenuIcon open={isMenuOpen} />
       </MenuIconWrapper>
       <DropdownMenu open={isMenuOpen}>
         <Navs $direction="column">
-          <NavLink onClick={() => handleLinkClick("/")}>Home</NavLink>
-          <NavLink onClick={() => handleLinkClick("/about")}>About</NavLink>
+          <NavLink
+            href="/"
+            active={pathname === "/"}
+            onClick={() => closeMenu()}
+          >
+            Home
+            {pathname === "/" && <BorderBottom />}
+          </NavLink>
+          <NavLink
+            href="/about"
+            active={pathname === "/about"}
+            onClick={() => closeMenu()}
+          >
+            About
+            {pathname === "/about" && <BorderBottom />}
+          </NavLink>
         </Navs>
         <Search>
           <SearchWrapper $alignitems="center" $gap="8px">
@@ -73,9 +98,7 @@ const Header = () => {
           <Text>Categories</Text>
           <ExpandIcon />
         </CategoryTitle>
-        <LoginButton onClick={() => handleLinkClick("/login")}>
-          Login
-        </LoginButton>
+        <LoginButton onClick={handleLoginClick}>Login</LoginButton>
       </DropdownMenu>
     </HeaderContainer>
   );
@@ -145,15 +168,27 @@ const CategoryTitle = styled(Flex)`
   background-color: rgba(0, 0, 0, 0.37);
 `;
 
-const NavLink = styled.a`
-  width: 41px;
-  opacity: 0.5;
+const NavLink = styled(Link)`
+  opacity: ${({ active }) => (active ? 1 : 0.5)};
   font-family: "HelveticaMedium", sans-serif;
   font-size: 16px;
   letter-spacing: -0.8px;
   text-align: center;
   color: #fff;
   cursor: pointer;
+  position: relative;
+  padding-bottom: 5px;
+`;
+
+const BorderBottom = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 2px;
 `;
 
 const SearchWrapper = styled(Flex)`
