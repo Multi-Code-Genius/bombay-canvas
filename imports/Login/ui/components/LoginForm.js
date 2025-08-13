@@ -195,12 +195,20 @@ const EyeIconWrapper = styled.div`
   right: 16px;
   transform: translateY(-50%);
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    right: 12px;
+  }
 `;
 
 const ErrorText = styled.div`
   color: red;
   font-size: 12px;
   margin-top: 4px;
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
 `;
 
 const ExtraTxt = styled.div`
@@ -215,6 +223,14 @@ const ExtraTxt = styled.div`
     font-family: "HelveticaBold";
     text-decoration: underline;
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 16px;
   }
 `;
 
@@ -248,6 +264,10 @@ const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
 
 const TermsCheckbox = styled(Flex)`
   gap: 8px;
+
+  @media (max-width: 768px) {
+    gap: 6px;
+  }
 `;
 
 const MyLabel = styled.label`
@@ -261,6 +281,10 @@ const MyLabel = styled.label`
     font-family: "HelveticaBold";
     color: #fff;
   }
+
+  @media (max-width: 480px) {
+    font-size: 11.5px;
+  }
 `;
 
 const CTATxt = styled.div`
@@ -269,6 +293,14 @@ const CTATxt = styled.div`
   line-height: 1.4;
   letter-spacing: 0.2px;
   color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const GoogleLoginCTA = styled(Flex)`
@@ -277,6 +309,15 @@ const GoogleLoginCTA = styled(Flex)`
   border-radius: 12px;
   border: 1px solid #414141;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    padding: 14px 10px;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 10px;
+  }
 `;
 
 const Txt = styled.div`
@@ -286,10 +327,26 @@ const Txt = styled.div`
   line-height: 1.4;
   letter-spacing: 0.2px;
   color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const OrSection = styled(Flex)`
   gap: 24px;
+
+  @media (max-width: 768px) {
+    gap: 18px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 14px;
+  }
 `;
 
 const Line = styled(Flex)`
@@ -297,10 +354,26 @@ const Line = styled(Flex)`
   height: 1px;
   opacity: 0.32;
   background-color: #fff;
+
+  @media (max-width: 768px) {
+    width: 40px;
+  }
+
+  @media (max-width: 480px) {
+    width: 32px;
+  }
 `;
 
 const BtnWrapper = styled(Flex)`
   gap: 10px;
+
+  @media (max-width: 768px) {
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 6px;
+  }
 `;
 
 const ContinueCTA = styled(Flex)`
@@ -324,10 +397,28 @@ const ContinueCTA = styled(Flex)`
   > svg {
     margin-left: 6px;
   }
+
+  @media (max-width: 768px) {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 11px;
+    font-size: 14px;
+  }
 `;
 
 const UpperSection = styled(Flex)`
   gap: 12px;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
 `;
 
 const Label = styled.div`
@@ -336,6 +427,14 @@ const Label = styled.div`
   font-size: 16.3px;
   font-weight: 500;
   color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const InputField = styled.input`
@@ -356,6 +455,24 @@ const InputField = styled.input`
     font-size: 12.5px;
     color: #fff;
   }
+
+  @media (max-width: 768px) {
+    padding: 14px 16px;
+    font-size: 14px;
+
+    &::placeholder {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 14px;
+    font-size: 13.5px;
+
+    &::placeholder {
+      font-size: 13.5px;
+    }
+  }
 `;
 
 const FormSection = styled.form`
@@ -368,6 +485,16 @@ const FormSection = styled.form`
   flex-direction: column;
   width: 100%;
   gap: 25px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+    gap: 18px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 18px 14px;
+    gap: 16px;
+  }
 `;
 
 const SubTitle = styled.div`
@@ -378,10 +505,26 @@ const SubTitle = styled.div`
   text-align: center;
   color: #fff;
   width: 100%;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 const TitleSection = styled(Flex)`
   gap: 27px;
+
+  @media (max-width: 768px) {
+    gap: 18px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 14px;
+  }
 `;
 
 const MainTitle = styled.div`
@@ -394,6 +537,20 @@ const MainTitle = styled.div`
   span {
     font-family: "HelveticaMedium";
   }
+
+  @media (max-width: 1024px) {
+    font-size: 72px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 48px;
+    letter-spacing: -1.6px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 36px;
+    letter-spacing: -1.1px;
+  }
 `;
 
 const MainSection = styled(Flex)`
@@ -402,4 +559,20 @@ const MainSection = styled(Flex)`
   width: 95%;
   margin: 0 auto;
   gap: 42px;
+
+  @media (max-width: 1024px) {
+    width: 96%;
+  }
+
+  @media (max-width: 768px) {
+    width: 94%;
+    gap: 28px;
+    min-height: calc(100vh - 112px);
+  }
+
+  @media (max-width: 480px) {
+    width: 92%;
+    gap: 22px;
+    min-height: calc(100vh - 108px);
+  }
 `;

@@ -36,16 +36,19 @@ const Explore = () => {
     infinite: false,
     speed: 1000,
     slidesToShow: 6,
-    slidesToScroll: 6,
+    slidesToScroll: 4,
     nextArrow: <ArrowButton />,
     prevArrow: <ArrowButton />,
     responsive: [
-      { breakpoint: 1536, settings: { slidesToShow: 6, slidesToScroll: 6 } },
-      { breakpoint: 1280, settings: { slidesToShow: 5, slidesToScroll: 5 } },
+      { breakpoint: 1536, settings: { slidesToShow: 6, slidesToScroll: 4 } },
+      { breakpoint: 1280, settings: { slidesToShow: 5, slidesToScroll: 4 } },
       { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4 } },
       { breakpoint: 768, settings: { slidesToShow: 3, slidesToScroll: 3 } },
       { breakpoint: 640, settings: { slidesToShow: 2.2, slidesToScroll: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1.3, slidesToScroll: 1, arrows: false } },
+      {
+        breakpoint: 480,
+        settings: { slidesToShow: 1.3, slidesToScroll: 1, arrows: false },
+      },
     ],
   };
 
@@ -235,6 +238,7 @@ const ArrowButtonUI = styled.button`
 
   svg {
     transform: ${({ $side }) => ($side === "left" ? "scaleX(-1)" : "none")};
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
   }
 
   @media (max-width: 768px) {
