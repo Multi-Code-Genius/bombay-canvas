@@ -1,7 +1,6 @@
-import Header from "imports/core/ui/atoms/Header";
+import Shadow from "imports/core/ui/atoms/Shadow";
 import ProviderLayout from "/lib/ProviderLayout";
 import StyledComponentsRegistry from "/lib/StyledComponentsRegistry";
-import Shadow from "imports/core/ui/atoms/Shadow";
 
 export default function RootLayout({ children }) {
   return (
@@ -46,8 +45,8 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning={true}>
         <StyledComponentsRegistry>
           <ProviderLayout>
-            {/* <Shadow /> */}
-            <Header />
+            <Shadow />
+
             {children}
           </ProviderLayout>
         </StyledComponentsRegistry>

@@ -28,6 +28,17 @@ a {
   box-sizing: border-box;
 }
 
+.Slider {
+/* margin-bottom: 31px; */
+position: relative;
+}
+
+
+
+ .slick-prev:before, .slick-next:before {
+  display: none;
+ }
+
 `;
 
 export default GlobalStyles;

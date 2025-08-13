@@ -12,6 +12,7 @@ import EyeIcon from "/imports/core/ui/assets/EyeIcon";
 import EyeSlashIcon from "/imports/core/ui/assets/EyeSlashIcon";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "config/firebaseConfig";
+import Header from "imports/core/ui/atoms/Header";
 
 const LoginForm = ({ $fromSignup = false }) => {
   const router = useRouter();
@@ -62,116 +63,122 @@ const LoginForm = ({ $fromSignup = false }) => {
   };
 
   return (
-    <MainSection
-      $direction="column"
-      $fullwidth
-      $alignitems="center"
-      $justifycontent="center"
-    >
-      <TitleSection $direction="column">
-        <MainTitle
-          dangerouslySetInnerHTML={{
-            __html: $fromSignup
-              ? `Let's Get <span>You Started</span>`
-              : ` Welcome <span>Back!</span>`,
-          }}
-        />
-        <SubTitle>
-          Log iLorem ipsum dolor sit amet, consectetur adipiscing
-        </SubTitle>
-      </TitleSection>
-      <FormSection onSubmit={handleSubmit(onSubmit)}>
-        <UpperSection $fullwidth $direction="column">
-          <Label>Your Information</Label>
-          {$fromSignup && (
-            <>
-              <InputField
-                placeholder="Your Fullname"
-                {...register("fullname", { required: $fromSignup })}
-              />
-              {errors.fullname && <ErrorText>Fullname is required</ErrorText>}
-            </>
-          )}
-          <InputField
-            placeholder="Email"
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
+    <>
+      <Header />
+      <MainSection
+        $direction="column"
+        $fullwidth
+        $alignitems="center"
+        $justifycontent="center"
+      >
+        <TitleSection $direction="column">
+          <MainTitle
+            dangerouslySetInnerHTML={{
+              __html: $fromSignup
+                ? `Let's Get <span>You Started</span>`
+                : ` Welcome <span>Back!</span>`,
+            }}
           />
-          {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
-          <PasswordWrapper>
+          <SubTitle>
+            Log iLorem ipsum dolor sit amet, consectetur adipiscing
+          </SubTitle>
+        </TitleSection>
+        <FormSection onSubmit={handleSubmit(onSubmit)}>
+          <UpperSection $fullwidth $direction="column">
+            <Label>Your Information</Label>
+            {$fromSignup && (
+              <>
+                <InputField
+                  placeholder="Your Fullname"
+                  {...register("fullname", { required: $fromSignup })}
+                />
+                {errors.fullname && <ErrorText>Fullname is required</ErrorText>}
+              </>
+            )}
             <InputField
-              placeholder="Your Password"
-              type={showPassword ? "text" : "password"}
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters",
-                },
+              placeholder="Email"
+              {...register("email", {
+                required: "Email is required",
                 pattern: {
-                  value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/,
-                  message:
-                    "Password must contain at least one letter, one number and one special character",
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
                 },
               })}
             />
-            <EyeIconWrapper onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
-            </EyeIconWrapper>
-          </PasswordWrapper>
-          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
-        </UpperSection>
-        <BtnWrapper $fullwidth $direction="column">
-          <ContinueCTA
-            as="button"
-            type="submit"
-            $fullwidth
-            $alignitems="center"
-            $justifycontent="center"
-          >
-            {$fromSignup ? "Sign Up" : "Log in"} <ButtonIcon />
-          </ContinueCTA>
-          <OrSection $alignitems="center" $justifycontent="center" $fullwidth>
-            <Line />
-            <Txt>or</Txt>
-            <Line />
-          </OrSection>
-          <GoogleLoginCTA
-            $alignitems="center"
-            $fullwidth
-            $justifycontent="center"
-            onClick={handleLogin}
-          >
-            <GoogleLogin />
-            <CTATxt>{$fromSignup ? "Sign in" : "Log in"} with Google</CTATxt>
-          </GoogleLoginCTA>
-          <TermsCheckbox $alignitems="center">
-            <CheckboxInput type="checkbox" id="terms" />
-            <MyLabel htmlFor="terms">
-              I agree to the <span>Terms of Service</span> and{" "}
-              <span>Privacy Policy</span>
-            </MyLabel>
-          </TermsCheckbox>
-        </BtnWrapper>
-      </FormSection>
-      <ExtraTxt>
-        {$fromSignup ? (
-          <Fragment>
-            Already have an account?{" "}
-            <span onClick={handleRedirect}>Log in</span>
-          </Fragment>
-        ) : (
-          <Fragment>
-            Don't have an account? <span onClick={handleRedirect}>Sign in</span>
-          </Fragment>
-        )}
-      </ExtraTxt>
-    </MainSection>
+            {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+            <PasswordWrapper>
+              <InputField
+                placeholder="Your Password"
+                type={showPassword ? "text" : "password"}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/,
+                    message:
+                      "Password must contain at least one letter, one number and one special character",
+                  },
+                })}
+              />
+              <EyeIconWrapper onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+              </EyeIconWrapper>
+            </PasswordWrapper>
+            {errors.password && (
+              <ErrorText>{errors.password.message}</ErrorText>
+            )}
+          </UpperSection>
+          <BtnWrapper $fullwidth $direction="column">
+            <ContinueCTA
+              as="button"
+              type="submit"
+              $fullwidth
+              $alignitems="center"
+              $justifycontent="center"
+            >
+              {$fromSignup ? "Sign Up" : "Log in"} <ButtonIcon />
+            </ContinueCTA>
+            <OrSection $alignitems="center" $justifycontent="center" $fullwidth>
+              <Line />
+              <Txt>or</Txt>
+              <Line />
+            </OrSection>
+            <GoogleLoginCTA
+              $alignitems="center"
+              $fullwidth
+              $justifycontent="center"
+              onClick={handleLogin}
+            >
+              <GoogleLogin />
+              <CTATxt>{$fromSignup ? "Sign in" : "Log in"} with Google</CTATxt>
+            </GoogleLoginCTA>
+            <TermsCheckbox $alignitems="center">
+              <CheckboxInput type="checkbox" id="terms" />
+              <MyLabel htmlFor="terms">
+                I agree to the <span>Terms of Service</span> and{" "}
+                <span>Privacy Policy</span>
+              </MyLabel>
+            </TermsCheckbox>
+          </BtnWrapper>
+        </FormSection>
+        <ExtraTxt>
+          {$fromSignup ? (
+            <Fragment>
+              Already have an account?{" "}
+              <span onClick={handleRedirect}>Log in</span>
+            </Fragment>
+          ) : (
+            <Fragment>
+              Don't have an account?{" "}
+              <span onClick={handleRedirect}>Sign in</span>
+            </Fragment>
+          )}
+        </ExtraTxt>
+      </MainSection>
+    </>
   );
 };
 

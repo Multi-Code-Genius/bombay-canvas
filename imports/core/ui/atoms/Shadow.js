@@ -1,16 +1,16 @@
 "use client";
 
-import useWindowSize from "lib/hooks/useWindowSize";
 import React from "react";
 import styled from "styled-components";
 
 const Shadow = () => {
-  return <Div />;
+  return <Div></Div>;
 };
 
 export default Shadow;
 
 const Div = styled.div`
+  z-index: 1;
   background-image: url("/static/ellipse.png");
   top: 0;
   background-repeat: no-repeat;
@@ -18,5 +18,5 @@ const Div = styled.div`
   position: fixed;
   width: 100%;
   transform: rotate(-180deg);
-  padding: 15%;
+  padding: 13%;
 `;

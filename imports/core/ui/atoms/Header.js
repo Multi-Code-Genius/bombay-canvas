@@ -38,11 +38,11 @@ const Header = () => {
           </Link>
         </Logo>
         <Navs>
-          <NavLink href="/" active={pathname === "/"}>
+          <NavLink href="/" active={`${pathname === "/"}`}>
             Home
             {pathname === "/" && <BorderBottom />}
           </NavLink>
-          <NavLink href="/about" active={pathname === "/about"}>
+          <NavLink href="/about" active={`${pathname === "/about"}`}>
             About
             {pathname === "/about" && <BorderBottom />}
           </NavLink>
@@ -71,7 +71,7 @@ const Header = () => {
         <Navs $direction="column">
           <NavLink
             href="/"
-            active={pathname === "/"}
+            active={`${pathname === "/"}`}
             onClick={() => closeMenu()}
           >
             Home
@@ -79,7 +79,7 @@ const Header = () => {
           </NavLink>
           <NavLink
             href="/about"
-            active={pathname === "/about"}
+            active={`${pathname === "/about"}`}
             onClick={() => closeMenu()}
           >
             About
