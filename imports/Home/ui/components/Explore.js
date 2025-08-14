@@ -34,9 +34,12 @@ const Explore = () => {
   const settings = {
     dots: false,
     infinite: false,
-    speed: 1000,
+    speed: 500,
     slidesToShow: 6,
     slidesToScroll: 4,
+    swipeToSlide: true,
+    touchThreshold: 10,
+    adaptiveHeight: true,
     nextArrow: <ArrowButton />,
     prevArrow: <ArrowButton />,
     responsive: [
@@ -44,10 +47,17 @@ const Explore = () => {
       { breakpoint: 1280, settings: { slidesToShow: 5, slidesToScroll: 4 } },
       { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4 } },
       { breakpoint: 768, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-      { breakpoint: 640, settings: { slidesToShow: 2.2, slidesToScroll: 2 } },
+
       {
         breakpoint: 480,
-        settings: { slidesToShow: 1.3, slidesToScroll: 1, arrows: false },
+        settings: {
+          slidesToShow: 1.15,
+          slidesToScroll: 1,
+          // arrows: false,
+          // dots: true,
+          centerMode: true,
+          centerPadding: "12px",
+        },
       },
     ],
   };
@@ -102,12 +112,11 @@ export default Explore;
 
 const Div = styled.div`
   position: relative;
-  padding-left: 40px;
+  padding: 0 40px;
   background-color: black;
 
   @media (max-width: 768px) {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 0 16px;
   }
 `;
 
@@ -120,7 +129,7 @@ const HeaderText = styled.div`
   color: #fff;
 
   span {
-    font-weight: "HelveticaBold";
+    font-family: "HelveticaBold";
   }
 
   @media (max-width: 768px) {
@@ -152,69 +161,42 @@ const Card = styled.div`
 
 const Video = styled(Flex)`
   position: absolute;
-  left: 10.3px;
-  bottom: 10.2px;
-  width: 109px;
-  padding: 2.5px;
+  left: clamp(6px, 2vw, 12px);
+  bottom: clamp(6px, 2vw, 12px);
+  padding: 4px 6px;
   align-items: center;
-  gap: 5px;
-  border-radius: 27.7px;
+  gap: 6px;
+  border-radius: 24px;
   -webkit-backdrop-filter: blur(11.6px);
   backdrop-filter: blur(11.6px);
   border: solid 0.4px rgba(255, 255, 255, 0.2);
   background-color: rgba(0, 0, 0, 0.36);
+  white-space: nowrap;
 
   @media (max-width: 768px) {
-    left: 8px;
-    bottom: 8px;
-    width: 95px;
-    gap: 4px;
-    border-radius: 22px;
+    gap: 5px;
+    border-radius: 20px;
   }
 
   @media (max-width: 480px) {
-    left: 6px;
-    bottom: 6px;
-    width: 85px;
+    gap: 4px;
   }
 `;
 
 const AvatarWrapper = styled.div`
-  width: 24px;
-  height: 24px;
+  width: clamp(20px, 3.5vw, 24px);
+  height: clamp(20px, 3.5vw, 24px);
   border-radius: 50%;
   overflow: hidden;
-
-  @media (max-width: 768px) {
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 480px) {
-    width: 20px;
-    height: 20px;
-  }
 `;
 
 const Name = styled.div`
-  width: 63.5px;
   font-family: "HelveticaRegular";
-  font-size: 11.6px;
+  font-size: clamp(10px, 2.8vw, 12px);
   letter-spacing: -0.35px;
   color: #fff;
-
-  padding: 0 0.9px 0 0;
+  padding-right: 2px;
   line-height: 1.42;
-  letter-spacing: -0.35px;
-
-  @media (max-width: 768px) {
-    font-size: 10.5px;
-    width: auto;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
 `;
 
 const ArrowButtonUI = styled.button`
@@ -225,11 +207,19 @@ const ArrowButtonUI = styled.button`
   cursor: pointer;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  background-image: linear-gradient(272deg, #000 133%, rgba(0, 0, 0, 0.14) 8%);
+
+  padding-left: ${({ $side }) => ($side === "left" ? "63px" : "35px")};
+  padding-right: ${({ $side }) => ($side === "left" ? "35px" : "63px")};
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1.7) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
   background-image: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.72)
+    rgba(0, 0, 0, 0)
   );
 
   display: flex;
@@ -242,14 +232,10 @@ const ArrowButtonUI = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 64px;
+    width: 56px;
   }
 
-  @media (max-width: 480px) {
-    width: 48px;
-  }
-
-  @media (max-width: 400px) {
-    display: none; /* rely on swipe on very small screens */
+  @media (max-width: 640px) {
+    display: none;
   }
 `;

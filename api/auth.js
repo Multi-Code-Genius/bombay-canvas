@@ -97,3 +97,49 @@ export const useLogin = () => {
     },
   });
 };
+
+export const googleLogin = async (idToken) => {
+  try {
+    const response = await api("/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: idToken,
+      }),
+    });
+
+    const resp = await response;
+    return resp;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("login Error", error.message);
+    } else {
+      console.log("login Error", error);
+    }
+  }
+};
+
+export const useGoogleLogin = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await googleLogin(data);
+      return response;
+    },
+    onSuccess: async (data) => {
+      if (data.token) {
+        await useAuthStore
+          .getState()
+          .saveToken(data.token)
+          .then(() => {
+            router.push("/");
+          });
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log("Login Failed", error.message);
+    },
+  });
+};

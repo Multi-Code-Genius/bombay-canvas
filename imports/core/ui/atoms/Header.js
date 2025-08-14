@@ -11,11 +11,19 @@ import CloseIcon from "/imports/core/ui/assets/CloseIcon";
 import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
 import ExpandIcon from "/imports/core/ui/assets/ExpandIcon";
 import MenuIcon from "/imports/core/ui/assets/MenuIcon";
+import { useUserData } from "api/user";
+import { useAuthStore } from "store/authStore";
+import { getInitials } from "lib/hooks/getIntials";
 
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(useAuthStore.getState().token);
+  const { data } = useUserData(true);
+  const token = useAuthStore((s) => s.token);
+
+  const userName = data?.userData?.name || "";
+  const initials = getInitials(userName);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,6 +36,12 @@ const Header = () => {
   const handleLoginClick = () => {
     router.push("/login");
   };
+
+  const handleProfileClick = () => {
+    router.push("/profile");
+  };
+
+  const isLoggedIn = Boolean(token);
 
   return (
     <HeaderContainer $fullwidth>
@@ -62,7 +76,13 @@ const Header = () => {
           <ExpandIcon />
         </CategoryTitle>
 
-        <LoginButton onClick={handleLoginClick}>Login</LoginButton>
+        {isLoggedIn ? (
+          <Avatar onClick={handleProfileClick} title={userName}>
+            <AvatarText>{initials || "U"}</AvatarText>
+          </Avatar>
+        ) : (
+          <LoginButton onClick={handleLoginClick}>Login</LoginButton>
+        )}
       </RightSection>
       <MenuIconWrapper onClick={toggleMenu}>
         <MenuIcon open={isMenuOpen} />
@@ -98,7 +118,13 @@ const Header = () => {
           <Text>Categories</Text>
           <ExpandIcon />
         </CategoryTitle>
-        <LoginButton onClick={handleLoginClick}>Login</LoginButton>
+        {isLoggedIn ? (
+          <Avatar onClick={handleProfileClick} title={userName} $fullwidth>
+            <AvatarText>{initials || "U"}</AvatarText>
+          </Avatar>
+        ) : (
+          <LoginButton onClick={handleLoginClick}>Login</LoginButton>
+        )}
       </DropdownMenu>
     </HeaderContainer>
   );
@@ -242,6 +268,35 @@ const LoginButton = styled.button`
   background-image: linear-gradient(144deg, #ff670a -18%, #ef8a4c 121%);
 `;
 
+const Avatar = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  background-image: linear-gradient(144deg, #3a3a3a -18%, #1f1f1f 121%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  ${({ $fullwidth }) =>
+    $fullwidth &&
+    `
+      width: 100%;
+      height: 48px;
+      border-radius: 8px;
+    `}
+`;
+
+const AvatarText = styled.span`
+  font-family: "HelveticaMedium", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+`;
+
 const MenuIconWrapper = styled.div`
   display: none;
   cursor: pointer;
@@ -286,6 +341,10 @@ const DropdownMenu = styled.div`
     }
 
     > ${LoginButton} {
+      width: 100%;
+    }
+
+    > ${Avatar} {
       width: 100%;
     }
   }

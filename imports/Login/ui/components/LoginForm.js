@@ -7,7 +7,7 @@ import styled from "styled-components";
 import ButtonIcon from "/imports/Login/ui/assets/ButtonIcon";
 import GoogleLogin from "/imports/Login/ui/assets/GoogleLogin";
 import Flex from "/lib/atoms/Flex";
-import { useLogin, useRequestOtp } from "api/auth";
+import { useGoogleLogin, useLogin, useRequestOtp } from "api/auth";
 import EyeIcon from "/imports/core/ui/assets/EyeIcon";
 import EyeSlashIcon from "/imports/core/ui/assets/EyeSlashIcon";
 import { signInWithPopup } from "firebase/auth";
@@ -18,6 +18,7 @@ const LoginForm = ({ $fromSignup = false }) => {
   const router = useRouter();
   const { mutate, isPending, isSuccess } = useRequestOtp();
   const { mutate: loginMutate } = useLogin();
+  const { mutate: googleLoginMutate } = useGoogleLogin();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -47,16 +48,12 @@ const LoginForm = ({ $fromSignup = false }) => {
     }
   };
 
-  const handleLogin = async () => {
+  const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const idToken = await result.user.getIdToken();
 
-      const res = await fetch("http://localhost:5000/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: idToken }),
-      });
+      googleLoginMutate(idToken);
     } catch (err) {
       console.error("Google Login Error:", err);
     }
@@ -150,7 +147,7 @@ const LoginForm = ({ $fromSignup = false }) => {
               $alignitems="center"
               $fullwidth
               $justifycontent="center"
-              onClick={handleLogin}
+              onClick={handleGoogleLogin}
             >
               <GoogleLogin />
               <CTATxt>{$fromSignup ? "Sign in" : "Log in"} with Google</CTATxt>

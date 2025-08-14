@@ -9,9 +9,3 @@ const page = () => {
 };
 
 export default page;
-
-const Div = styled.div`
-  color: #fff;
-  font-size: 50px;
-  font-family: "HelveticaLight";
-`;
