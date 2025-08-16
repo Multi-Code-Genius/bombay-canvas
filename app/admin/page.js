@@ -55,7 +55,7 @@ export default function AdminPage() {
     // Tabs
     const tabs = ["Overview", "Users", "Movies", "Genres"];
     const [activeTab, setActiveTab] = useState("Overview");
-    
+
     // Movies view state - either 'list' or 'form'
     const [moviesView, setMoviesView] = useState("list");
 
@@ -375,7 +375,9 @@ export default function AdminPage() {
                     <MoviesHeader>
                       <div>
                         <Title>Movies Management</Title>
-                        <SmallHint>Manage your movies and TV series collection.</SmallHint>
+                        <SmallHint>
+                          Manage your movies and TV series collection.
+                        </SmallHint>
                       </div>
                       <SubmitBtn
                         as="button"
@@ -390,7 +392,7 @@ export default function AdminPage() {
                         + Add Movie
                       </SubmitBtn>
                     </MoviesHeader>
-                    
+
                     <MoviesGrid>
                       {movies.map((m) => (
                         <MovieCard key={m.id}>
@@ -402,7 +404,7 @@ export default function AdminPage() {
                             </MovieMeta>
                             {m.genres && m.genres.length > 0 && (
                               <MovieGenres>
-                                {m.genres.map(genre => (
+                                {m.genres.map((genre) => (
                                   <GenreChip key={genre}>{genre}</GenreChip>
                                 ))}
                               </MovieGenres>
@@ -428,7 +430,10 @@ export default function AdminPage() {
                         <EmptyMoviesState>
                           <div>🎬</div>
                           <h3>No movies yet</h3>
-                          <p>Start building your collection by adding your first movie.</p>
+                          <p>
+                            Start building your collection by adding your first
+                            movie.
+                          </p>
                           <SubmitBtn
                             as="button"
                             type="button"
@@ -449,12 +454,13 @@ export default function AdminPage() {
                   <MovieFormView>
                     <FormHeader>
                       <div>
-                        <Title>{movie.id ? "Edit Movie" : "Add New Movie"}</Title>
+                        <Title>
+                          {movie.id ? "Edit Movie" : "Add New Movie"}
+                        </Title>
                         <SmallHint>
-                          {movie.id 
-                            ? `Editing: ${movie.title || "Untitled Movie"}` 
-                            : "Fill in the details to add a new movie to your collection."
-                          }
+                          {movie.id
+                            ? `Editing: ${movie.title || "Untitled Movie"}`
+                            : "Fill in the details to add a new movie to your collection."}
                         </SmallHint>
                       </div>
                       <SecondaryBtn
@@ -467,7 +473,7 @@ export default function AdminPage() {
                         ← Back to List
                       </SecondaryBtn>
                     </FormHeader>
-                    
+
                     <MovieForm onSubmit={onSave}>
                       {/* Basic Information Section */}
                       <FormSection>
@@ -477,17 +483,21 @@ export default function AdminPage() {
                             <Label>Movie Title *</Label>
                             <Input
                               value={movie.title}
-                              onChange={(e) => setField("title", e.target.value)}
+                              onChange={(e) =>
+                                setField("title", e.target.value)
+                              }
                               placeholder="Enter movie title"
                               required
                             />
                           </FormField>
-                          
+
                           <FormField>
                             <Label>Description</Label>
                             <Textarea
                               value={movie.description}
-                              onChange={(e) => setField("description", e.target.value)}
+                              onChange={(e) =>
+                                setField("description", e.target.value)
+                              }
                               placeholder="Brief description of the movie"
                               rows={3}
                             />
@@ -509,27 +519,31 @@ export default function AdminPage() {
                               <option value="SERIES">TV Series</option>
                             </Select>
                           </FormField>
-                          
+
                           <FormField>
                             <Label>Duration (minutes) *</Label>
                             <Input
                               type="number"
                               min={1}
                               value={movie.duration}
-                              onChange={(e) => setField("duration", Number(e.target.value))}
+                              onChange={(e) =>
+                                setField("duration", Number(e.target.value))
+                              }
                               placeholder="120"
                             />
                           </FormField>
-                          
+
                           <FormField>
                             <Label>Release Date</Label>
                             <Input
                               type="date"
                               value={movie.releaseDate}
-                              onChange={(e) => setField("releaseDate", e.target.value)}
+                              onChange={(e) =>
+                                setField("releaseDate", e.target.value)
+                              }
                             />
                           </FormField>
-                          
+
                           <FormField>
                             <Label>Genres</Label>
                             <GenreContainer>
@@ -558,7 +572,9 @@ export default function AdminPage() {
                               <FileInput
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => setField("posterImage", e.target.files[0])}
+                                onChange={(e) =>
+                                  setField("posterImage", e.target.files[0])
+                                }
                                 id="poster-upload"
                               />
                               <FileUploadLabel htmlFor="poster-upload">
@@ -569,20 +585,24 @@ export default function AdminPage() {
                                 ) : (
                                   <FileUploadText>
                                     📷 Choose Image
-                                    <FileUploadHint>JPG, PNG, GIF</FileUploadHint>
+                                    <FileUploadHint>
+                                      JPG, PNG, GIF
+                                    </FileUploadHint>
                                   </FileUploadText>
                                 )}
                               </FileUploadLabel>
                             </FileUploadArea>
                           </FormField>
-                          
+
                           <FormField>
                             <Label>Trailer Video</Label>
                             <FileUploadArea>
                               <FileInput
                                 type="file"
                                 accept="video/mp4,video/avi,video/mov,video/wmv"
-                                onChange={(e) => setField("trailerVideo", e.target.files[0])}
+                                onChange={(e) =>
+                                  setField("trailerVideo", e.target.files[0])
+                                }
                                 id="trailer-upload"
                               />
                               <FileUploadLabel htmlFor="trailer-upload">
@@ -593,20 +613,24 @@ export default function AdminPage() {
                                 ) : (
                                   <FileUploadText>
                                     🎬 Choose Trailer
-                                    <FileUploadHint>MP4, AVI, MOV</FileUploadHint>
+                                    <FileUploadHint>
+                                      MP4, AVI, MOV
+                                    </FileUploadHint>
                                   </FileUploadText>
                                 )}
                               </FileUploadLabel>
                             </FileUploadArea>
                           </FormField>
-                          
+
                           <FormField>
                             <Label>Main Video *</Label>
                             <FileUploadArea>
                               <FileInput
                                 type="file"
                                 accept="video/mp4"
-                                onChange={(e) => setField("movieVideo", e.target.files[0])}
+                                onChange={(e) =>
+                                  setField("movieVideo", e.target.files[0])
+                                }
                                 id="movie-upload"
                               />
                               <FileUploadLabel htmlFor="movie-upload">
@@ -635,13 +659,15 @@ export default function AdminPage() {
                               + Add Episode
                             </SecondaryBtn>
                           </SectionTitle>
-                          
+
                           {movie.episodes.length > 0 ? (
                             <EpisodeContainer>
                               {movie.episodes.map((ep) => (
                                 <EpisodeCard key={ep.id}>
                                   <EpisodeHeader>
-                                    <EpisodeTitle>Episode {ep.episodeNo}</EpisodeTitle>
+                                    <EpisodeTitle>
+                                      Episode {ep.episodeNo}
+                                    </EpisodeTitle>
                                     <DangerBtn
                                       type="button"
                                       onClick={() => removeEpisode(ep.id)}
@@ -649,58 +675,90 @@ export default function AdminPage() {
                                       Remove
                                     </DangerBtn>
                                   </EpisodeHeader>
-                                  
+
                                   <EpisodeGrid>
                                     <FormField>
                                       <SmallLabel>Title</SmallLabel>
                                       <SmallInput
                                         value={ep.title}
-                                        onChange={(e) => updateEpisode(ep.id, "title", e.target.value)}
+                                        onChange={(e) =>
+                                          updateEpisode(
+                                            ep.id,
+                                            "title",
+                                            e.target.value
+                                          )
+                                        }
                                         placeholder="Episode title"
                                       />
                                     </FormField>
-                                    
+
                                     <FormField>
                                       <SmallLabel>Season</SmallLabel>
                                       <SmallInput
                                         type="number"
                                         min={1}
                                         value={ep.season}
-                                        onChange={(e) => updateEpisode(ep.id, "season", Number(e.target.value))}
+                                        onChange={(e) =>
+                                          updateEpisode(
+                                            ep.id,
+                                            "season",
+                                            Number(e.target.value)
+                                          )
+                                        }
                                       />
                                     </FormField>
-                                    
+
                                     <FormField>
                                       <SmallLabel>Episode No.</SmallLabel>
                                       <SmallInput
                                         type="number"
                                         min={1}
                                         value={ep.episodeNo}
-                                        onChange={(e) => updateEpisode(ep.id, "episodeNo", Number(e.target.value))}
+                                        onChange={(e) =>
+                                          updateEpisode(
+                                            ep.id,
+                                            "episodeNo",
+                                            Number(e.target.value)
+                                          )
+                                        }
                                       />
                                     </FormField>
-                                    
+
                                     <FormField>
                                       <SmallLabel>Duration (min)</SmallLabel>
                                       <SmallInput
                                         type="number"
                                         min={1}
                                         value={ep.duration}
-                                        onChange={(e) => updateEpisode(ep.id, "duration", Number(e.target.value))}
+                                        onChange={(e) =>
+                                          updateEpisode(
+                                            ep.id,
+                                            "duration",
+                                            Number(e.target.value)
+                                          )
+                                        }
                                       />
                                     </FormField>
                                   </EpisodeGrid>
-                                  
+
                                   <FormField>
                                     <SmallLabel>Episode Video (MP4)</SmallLabel>
                                     <FileUploadArea>
                                       <FileInput
                                         type="file"
                                         accept="video/mp4"
-                                        onChange={(e) => updateEpisode(ep.id, "episodeVideo", e.target.files[0])}
+                                        onChange={(e) =>
+                                          updateEpisode(
+                                            ep.id,
+                                            "episodeVideo",
+                                            e.target.files[0]
+                                          )
+                                        }
                                         id={`episode-${ep.id}-upload`}
                                       />
-                                      <FileUploadLabel htmlFor={`episode-${ep.id}-upload`}>
+                                      <FileUploadLabel
+                                        htmlFor={`episode-${ep.id}-upload`}
+                                      >
                                         {ep.episodeVideo ? (
                                           <FileSelected>
                                             ✓ {ep.episodeVideo.name}
@@ -708,7 +766,9 @@ export default function AdminPage() {
                                         ) : (
                                           <FileUploadText>
                                             🎥 Choose Episode Video
-                                            <FileUploadHint>MP4 only</FileUploadHint>
+                                            <FileUploadHint>
+                                              MP4 only
+                                            </FileUploadHint>
                                           </FileUploadText>
                                         )}
                                       </FileUploadLabel>
@@ -719,13 +779,13 @@ export default function AdminPage() {
                             </EpisodeContainer>
                           ) : (
                             <EmptyEpisodes>
-                              No episodes added yet. Click "Add Episode" to get started.
+                              No episodes added yet. Click "Add Episode" to get
+                              started.
                             </EmptyEpisodes>
                           )}
                         </FormSection>
                       )}
 
-                      {/* Action Buttons */}
                       <FormActions>
                         <SubmitBtn
                           as="button"
@@ -735,8 +795,8 @@ export default function AdminPage() {
                         >
                           {movie.id ? "Update Movie" : "Create Movie"}
                         </SubmitBtn>
-                        <SecondaryBtn 
-                          type="button" 
+                        <SecondaryBtn
+                          type="button"
                           onClick={() => {
                             setMoviesView("list");
                             setMovie(defaultMovie);
@@ -793,7 +853,7 @@ const CardsGrid = styled.div`
   gap: 16px;
   height: 100%;
   overflow: hidden;
-  
+
   @media (max-width: 1200px) {
     grid-template-columns: 1fr;
   }
@@ -1246,21 +1306,21 @@ const CompactList = styled.div`
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
-  
+
   /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(239, 138, 76, 0.3);
     border-radius: 2px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(239, 138, 76, 0.5);
   }
@@ -1274,21 +1334,21 @@ const CompactForm = styled(Form)`
   min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
-  
+
   /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(239, 138, 76, 0.3);
     border-radius: 2px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(239, 138, 76, 0.5);
   }
@@ -1298,7 +1358,7 @@ const FormGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px 16px;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -1316,21 +1376,21 @@ const EpisodeScrollableList = styled.div`
   border: 1px solid #414141;
   border-radius: 8px;
   padding: 8px;
-  
+
   /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(239, 138, 76, 0.3);
     border-radius: 2px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(239, 138, 76, 0.5);
   }
@@ -1344,21 +1404,21 @@ const MovieForm = styled.form`
   flex: 1;
   overflow-y: auto;
   padding-right: 6px;
-  
+
   /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(239, 138, 76, 0.3);
     border-radius: 2px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(239, 138, 76, 0.5);
   }
@@ -1398,7 +1458,7 @@ const TwoColumnGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -1408,11 +1468,11 @@ const ThreeColumnGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
-  
+
   @media (max-width: 900px) {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
@@ -1434,7 +1494,7 @@ const GenreTag = styled.button`
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: #ef8a4c;
     background: #ef8a4c11;
@@ -1455,12 +1515,12 @@ const FileUploadLabel = styled.label`
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: #ef8a4c;
     background: rgba(239, 138, 76, 0.05);
   }
-  
+
   input[type="file"] {
     position: absolute;
     opacity: 0;
@@ -1501,21 +1561,21 @@ const EpisodeContainer = styled.div`
   gap: 16px;
   max-height: 400px;
   overflow-y: auto;
-  
+
   /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(239, 138, 76, 0.3);
     border-radius: 2px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(239, 138, 76, 0.5);
   }
@@ -1547,11 +1607,11 @@ const EpisodeGrid = styled.div`
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 12px;
   margin-bottom: 16px;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
@@ -1591,7 +1651,7 @@ const MoviesHeader = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
@@ -1605,25 +1665,25 @@ const MoviesGrid = styled.div`
   flex: 1;
   overflow-y: auto;
   padding-right: 6px;
-  
+
   /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(239, 138, 76, 0.3);
     border-radius: 2px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(239, 138, 76, 0.5);
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -1638,7 +1698,7 @@ const MovieCard = styled.div`
   flex-direction: column;
   gap: 16px;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: #ef8a4c;
     background: rgba(239, 138, 76, 0.05);
@@ -1672,9 +1732,11 @@ const MovieType = styled.span`
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  background: ${({ $type }) => $type === "SERIES" ? "#4cef8a22" : "#8a8aef22"};
-  border: 1px solid ${({ $type }) => $type === "SERIES" ? "#4cef8a" : "#8a8aef"};
-  color: ${({ $type }) => $type === "SERIES" ? "#4cef8a" : "#8a8aef"};
+  background: ${({ $type }) =>
+    $type === "SERIES" ? "#4cef8a22" : "#8a8aef22"};
+  border: 1px solid
+    ${({ $type }) => ($type === "SERIES" ? "#4cef8a" : "#8a8aef")};
+  color: ${({ $type }) => ($type === "SERIES" ? "#4cef8a" : "#8a8aef")};
 `;
 
 const MovieDuration = styled.span`
@@ -1714,20 +1776,20 @@ const EmptyMoviesState = styled.div`
   text-align: center;
   padding: 60px 20px;
   color: #fff;
-  
+
   div {
     font-size: 48px;
     margin-bottom: 16px;
     opacity: 0.7;
   }
-  
+
   h3 {
     margin: 0 0 8px 0;
     font-family: "HelveticaBold";
     font-size: 24px;
     color: #fff;
   }
-  
+
   p {
     margin: 0 0 24px 0;
     opacity: 0.6;
@@ -1751,7 +1813,7 @@ const FormHeader = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
