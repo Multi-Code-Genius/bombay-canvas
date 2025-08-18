@@ -240,7 +240,7 @@ const Search = styled(Flex)`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 7px 12px;
+  padding: 7.5px 12px;
   border-radius: 8px;
   -webkit-backdrop-filter: blur(20.4px);
   backdrop-filter: blur(20.4px);
