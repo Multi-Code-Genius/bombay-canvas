@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import styled from "styled-components";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Pause, VolumeOff, VolumeX } from "lucide-react";
 
 export default function VideoPlayer() {
   const videoRef = useRef(null);
@@ -67,66 +67,68 @@ export default function VideoPlayer() {
         muted={muted}
       />
 
-      <CenterButton onClick={togglePlay}>
-        {playing ? (
-          <PauseIcon />
-        ) : (
+      <CtaWrapper>
+        <SideButtonLeft onClick={() => seek(-10)}>
           <svg
-            width="51"
-            height="58"
-            viewBox="0 0 51 58"
+            width="53"
+            height="53"
+            viewBox="0 0 53 53"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M9.985.921C5.561-1.676 0 1.528 0 6.675v44.302c0 5.147 5.561 8.352 9.985 5.754L47.713 34.58c4.383-2.573 4.383-8.934 0-11.507L9.985.92z"
+              d="M20.272 36.32v-9.843l-2.868.898v-2.06l5.148-1.48V36.32h-2.28zM31.23 36.584c-.967 0-1.814-.258-2.54-.775-.725-.528-1.29-1.268-1.693-2.218-.391-.963-.587-2.096-.587-3.399 0-1.291.196-2.418.587-3.38.404-.963.968-1.703 1.694-2.22.725-.527 1.572-.791 2.54-.791.967 0 1.813.264 2.539.792.726.516 1.284 1.256 1.676 2.218.403.963.605 2.09.605 3.381 0 1.303-.202 2.436-.605 3.398-.392.951-.95 1.69-1.676 2.22-.726.516-1.572.774-2.54.774zm0-2.078c.76 0 1.365-.381 1.814-1.144.461-.763.691-1.82.691-3.17 0-1.35-.23-2.406-.69-3.17-.45-.762-1.055-1.144-1.815-1.144s-1.37.382-1.831 1.145c-.45.763-.674 1.82-.674 3.17 0 1.35.225 2.406.674 3.169.46.763 1.071 1.144 1.831 1.144z"
+              fill="#fff"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M31.792 4.687 27.92 9.11a32.07 32.07 0 0 1 4.966 1.248c2.576.873 5.127 2.12 6.918 3.73a20.876 20.876 0 0 1 6.566 11.83 21.126 21.126 0 0 1-2.014 13.434c-2.13 4.121-5.558 7.394-9.732 9.291a20.03 20.03 0 0 1-13.286 1.172c-4.432-1.139-8.36-3.762-11.153-7.45a21.036 21.036 0 0 1-4.248-12.882 1.344 1.344 0 0 1 1.343-1.345c.736.006 1.327.62 1.32 1.37a18.287 18.287 0 0 0 3.694 11.198 17.699 17.699 0 0 0 9.695 6.476c3.853.99 7.92.631 11.55-1.018A17.863 17.863 0 0 0 42 38.086a18.366 18.366 0 0 0 1.75-11.68 18.148 18.148 0 0 0-5.707-10.283c-1.413-1.27-3.585-2.372-5.996-3.19a29.642 29.642 0 0 0-3.51-.95l3.253 3.804-2.008 1.784-5.573-6.517a1.377 1.377 0 0 1 .01-1.796l5.585-6.378 1.988 1.807zm-7.76-.098-4.37 5.537 4.376 5.109-2.007 1.785-5.11-5.965a1.377 1.377 0 0 1-.035-1.744l5.07-6.423 2.075 1.701z"
               fill="#fff"
             />
           </svg>
-        )}
-      </CenterButton>
+        </SideButtonLeft>
 
-      <SideButtonLeft onClick={() => seek(-10)}>
-        <svg
-          width="53"
-          height="53"
-          viewBox="0 0 53 53"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M20.272 36.32v-9.843l-2.868.898v-2.06l5.148-1.48V36.32h-2.28zM31.23 36.584c-.967 0-1.814-.258-2.54-.775-.725-.528-1.29-1.268-1.693-2.218-.391-.963-.587-2.096-.587-3.399 0-1.291.196-2.418.587-3.38.404-.963.968-1.703 1.694-2.22.725-.527 1.572-.791 2.54-.791.967 0 1.813.264 2.539.792.726.516 1.284 1.256 1.676 2.218.403.963.605 2.09.605 3.381 0 1.303-.202 2.436-.605 3.398-.392.951-.95 1.69-1.676 2.22-.726.516-1.572.774-2.54.774zm0-2.078c.76 0 1.365-.381 1.814-1.144.461-.763.691-1.82.691-3.17 0-1.35-.23-2.406-.69-3.17-.45-.762-1.055-1.144-1.815-1.144s-1.37.382-1.831 1.145c-.45.763-.674 1.82-.674 3.17 0 1.35.225 2.406.674 3.169.46.763 1.071 1.144 1.831 1.144z"
-            fill="#fff"
-          />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M31.792 4.687 27.92 9.11a32.07 32.07 0 0 1 4.966 1.248c2.576.873 5.127 2.12 6.918 3.73a20.876 20.876 0 0 1 6.566 11.83 21.126 21.126 0 0 1-2.014 13.434c-2.13 4.121-5.558 7.394-9.732 9.291a20.03 20.03 0 0 1-13.286 1.172c-4.432-1.139-8.36-3.762-11.153-7.45a21.036 21.036 0 0 1-4.248-12.882 1.344 1.344 0 0 1 1.343-1.345c.736.006 1.327.62 1.32 1.37a18.287 18.287 0 0 0 3.694 11.198 17.699 17.699 0 0 0 9.695 6.476c3.853.99 7.92.631 11.55-1.018A17.863 17.863 0 0 0 42 38.086a18.366 18.366 0 0 0 1.75-11.68 18.148 18.148 0 0 0-5.707-10.283c-1.413-1.27-3.585-2.372-5.996-3.19a29.642 29.642 0 0 0-3.51-.95l3.253 3.804-2.008 1.784-5.573-6.517a1.377 1.377 0 0 1 .01-1.796l5.585-6.378 1.988 1.807zm-7.76-.098-4.37 5.537 4.376 5.109-2.007 1.785-5.11-5.965a1.377 1.377 0 0 1-.035-1.744l5.07-6.423 2.075 1.701z"
-            fill="#fff"
-          />
-        </svg>
-      </SideButtonLeft>
+        <CenterButton onClick={togglePlay}>
+          {playing ? (
+            <PauseIcon />
+          ) : (
+            <svg
+              width="51"
+              height="58"
+              viewBox="0 0 51 58"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.985.921C5.561-1.676 0 1.528 0 6.675v44.302c0 5.147 5.561 8.352 9.985 5.754L47.713 34.58c4.383-2.573 4.383-8.934 0-11.507L9.985.92z"
+                fill="#fff"
+              />
+            </svg>
+          )}
+        </CenterButton>
 
-      <SideButtonRight onClick={() => seek(10)}>
-        <svg
-          width="53"
-          height="53"
-          viewBox="0 0 53 53"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M19.46 36.32v-9.843l-2.867.898v-2.06l5.148-1.48V36.32h-2.28zM30.419 36.584c-.968 0-1.814-.258-2.54-.775-.725-.528-1.29-1.268-1.693-2.218-.391-.963-.587-2.096-.587-3.399 0-1.291.196-2.418.587-3.38.403-.963.968-1.703 1.693-2.22.726-.527 1.572-.791 2.54-.791s1.814.264 2.54.792c.725.516 1.284 1.256 1.675 2.218.404.963.605 2.09.605 3.381 0 1.303-.201 2.436-.604 3.398-.392.951-.95 1.69-1.676 2.22-.726.516-1.573.774-2.54.774zm0-2.078c.76 0 1.365-.381 1.814-1.144.46-.763.691-1.82.691-3.17 0-1.35-.23-2.406-.69-3.17-.45-.762-1.055-1.144-1.815-1.144s-1.37.382-1.831 1.145c-.45.763-.674 1.82-.674 3.17 0 1.35.224 2.406.674 3.169.46.763 1.07 1.144 1.831 1.144z"
-            fill="#fff"
-          />
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="m20.851 4.687 3.871 4.422a32.07 32.07 0 0 0-4.966 1.248c-2.576.873-5.127 2.12-6.918 3.73a20.876 20.876 0 0 0-6.566 11.83A21.126 21.126 0 0 0 8.286 39.35c2.13 4.121 5.558 7.394 9.732 9.291a20.03 20.03 0 0 0 13.286 1.172c4.432-1.139 8.36-3.762 11.153-7.45a21.036 21.036 0 0 0 4.248-12.882 1.344 1.344 0 0 0-1.343-1.345 1.345 1.345 0 0 0-1.32 1.37 18.288 18.288 0 0 1-3.694 11.198 17.699 17.699 0 0 1-9.695 6.476c-3.853.99-7.92.631-11.55-1.018a17.862 17.862 0 0 1-8.46-8.077 18.365 18.365 0 0 1-1.75-11.68A18.148 18.148 0 0 1 14.6 16.123c1.412-1.27 3.585-2.372 5.996-3.19a29.644 29.644 0 0 1 3.51-.95l-3.253 3.804 2.008 1.784 5.572-6.517a1.377 1.377 0 0 0-.01-1.796L22.84 2.88 20.85 4.687zm7.76-.098 4.37 5.537-4.376 5.109 2.007 1.785 5.11-5.965c.425-.496.44-1.23.035-1.744l-5.07-6.423-2.075 1.701z"
-            fill="#fff"
-          />
-        </svg>
-      </SideButtonRight>
+        <SideButtonRight onClick={() => seek(10)}>
+          <svg
+            width="53"
+            height="53"
+            viewBox="0 0 53 53"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19.46 36.32v-9.843l-2.867.898v-2.06l5.148-1.48V36.32h-2.28zM30.419 36.584c-.968 0-1.814-.258-2.54-.775-.725-.528-1.29-1.268-1.693-2.218-.391-.963-.587-2.096-.587-3.399 0-1.291.196-2.418.587-3.38.403-.963.968-1.703 1.693-2.22.726-.527 1.572-.791 2.54-.791s1.814.264 2.54.792c.725.516 1.284 1.256 1.675 2.218.404.963.605 2.09.605 3.381 0 1.303-.201 2.436-.604 3.398-.392.951-.95 1.69-1.676 2.22-.726.516-1.573.774-2.54.774zm0-2.078c.76 0 1.365-.381 1.814-1.144.46-.763.691-1.82.691-3.17 0-1.35-.23-2.406-.69-3.17-.45-.762-1.055-1.144-1.815-1.144s-1.37.382-1.831 1.145c-.45.763-.674 1.82-.674 3.17 0 1.35.224 2.406.674 3.169.46.763 1.07 1.144 1.831 1.144z"
+              fill="#fff"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="m20.851 4.687 3.871 4.422a32.07 32.07 0 0 0-4.966 1.248c-2.576.873-5.127 2.12-6.918 3.73a20.876 20.876 0 0 0-6.566 11.83A21.126 21.126 0 0 0 8.286 39.35c2.13 4.121 5.558 7.394 9.732 9.291a20.03 20.03 0 0 0 13.286 1.172c4.432-1.139 8.36-3.762 11.153-7.45a21.036 21.036 0 0 0 4.248-12.882 1.344 1.344 0 0 0-1.343-1.345 1.345 1.345 0 0 0-1.32 1.37 18.288 18.288 0 0 1-3.694 11.198 17.699 17.699 0 0 1-9.695 6.476c-3.853.99-7.92.631-11.55-1.018a17.862 17.862 0 0 1-8.46-8.077 18.365 18.365 0 0 1-1.75-11.68A18.148 18.148 0 0 1 14.6 16.123c1.412-1.27 3.585-2.372 5.996-3.19a29.644 29.644 0 0 1 3.51-.95l-3.253 3.804 2.008 1.784 5.572-6.517a1.377 1.377 0 0 0-.01-1.796L22.84 2.88 20.85 4.687zm7.76-.098 4.37 5.537-4.376 5.109 2.007 1.785 5.11-5.965c.425-.496.44-1.23.035-1.744l-5.07-6.423-2.075 1.701z"
+              fill="#fff"
+            />
+          </svg>
+        </SideButtonRight>
+      </CtaWrapper>
 
       <MuteButton onClick={toggleMute}>
         {muted ? (
@@ -160,16 +162,21 @@ export default function VideoPlayer() {
 
       <BottomControls>
         <ProgressBar
-          type="range"
+          min="0"
+          max="100"
           value={progress}
+          style={{
+            "--progress": `${progress}%`,
+          }}
           onChange={(e) => {
+            const val = parseFloat(e.target.value);
             if (videoRef.current) {
-              const newTime =
-                (parseFloat(e.target.value) / 100) * videoRef.current.duration;
+              const newTime = (val / 100) * videoRef.current.duration;
               videoRef.current.currentTime = newTime;
             }
           }}
         />
+
         <TimeText>
           {formatTime(videoRef.current?.currentTime || 0)}/
           {formatTime(duration)}
@@ -193,86 +200,135 @@ const StyledVideo = styled.video`
   object-fit: cover;
 `;
 
+const CtaWrapper = styled.div`
+  display: flex;
+  gap: 35px;
+  position: absolute;
+  left: 90px;
+  top: 45%;
+`;
+
 const CenterButton = styled.button`
   display: flex;
-  position: absolute;
-  top: 46%;
-  right: 42%;
+  /* position: absolute; */
+  cursor: pointer;
+  /* top: 46%; */
+  /* right: 42%; */
   align-items: center;
+  background-color: transparent;
+  border: none;
   justify-content: center;
 `;
 
 const PauseIcon = styled(Pause)`
-  width: 56px;
-  height: 56px;
+  width: 51px;
+  height: 58px;
+  cursor: pointer;
   color: white;
   border-radius: 50%;
 `;
 
 const SideButtonLeft = styled.button`
-  position: absolute;
+  /* position: absolute;
   top: 50%;
-  left: 16px;
+  left: 118px; */
+  cursor: pointer;
   border: none;
-  transform: translateY(-50%);
+  background-color: transparent;
+  /* transform: translateY(-50%); */
 `;
 
 const SideButtonRight = styled.button`
-  position: absolute;
+  /* position: absolute;
   top: 50%;
-  right: 16px;
+  left: 118px; */
+  cursor: pointer;
   border: none;
-  transform: translateY(-50%);
+  background-color: transparent;
+  /* transform: translateY(-50%); */
 `;
 
 const MuteButton = styled.button`
   position: absolute;
   top: 12px;
   right: 12px;
+  cursor: pointer;
   padding: 6px;
   border: none;
   border-radius: 50%;
+  background: transparent;
 
   &:hover {
     background: transparent;
   }
 `;
 
-const VolumeXIcon = styled(VolumeX)`
-  width: 22px;
-  height: 22px;
+const VolumeXIcon = styled(VolumeOff)`
+  width: 34px;
+  height: 26px;
+  cursor: pointer;
+
   color: white;
 `;
 
 const BottomControls = styled.div`
   position: absolute;
-  bottom: 12px;
-  left: 0;
-  width: 100%;
+  bottom: 27px;
+  cursor: pointer;
+  cursor: pointer;
+  left: 25.5px;
+  right: 26px;
+  width: 412px;
   padding: 0 16px;
   display: flex;
   align-items: center;
   gap: 8px;
 `;
 
-const ProgressBar = styled.input`
+const ProgressBar = styled.input.attrs({ type: "range" })`
   flex: 1;
-  appearance: none;
-  height: 3.8px;
-  background: rgba(255, 255, 255, 0.5);
+  height: 4px;
   border-radius: 2px;
+  appearance: none;
+  background: linear-gradient(
+    to right,
+    white 0%,
+    white var(--progress, 0%),
+    #808080 var(--progress, 0%),
+    #808080 100%
+  );
 
   &::-webkit-slider-thumb {
-    appearance: none;
-    width: 12px;
-    height: 12px;
+    -webkit-appearance: none;
+    width: 15.2px;
+    height: 15.2px;
     background: white;
     border-radius: 50%;
     cursor: pointer;
+    border: none;
+    position: relative;
+    z-index: 2;
+  }
+
+  &::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: #808080;
+  }
+
+  &::-moz-range-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: white;
   }
 `;
 
 const TimeText = styled.span`
-  color: white;
-  font-size: 12px;
+  width: 76.1px;
+  height: 22px;
+  font-family: "HelveticaRegular";
+  font-size: 15.2px;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fff;
 `;

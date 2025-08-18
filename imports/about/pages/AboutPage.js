@@ -59,7 +59,7 @@ const AboutPage = () => {
           <Div>
             <EpisodeTitle>Episodes</EpisodeTitle>
             <EpisodeBoxWrapper>
-              {Array.from({ length: 3 }).map((_, index) => {
+              {Array.from({ length: 6 }).map((_, index) => {
                 return (
                   <EpisodeBox $active={index === 0}>
                     <InnerContent>
@@ -98,28 +98,33 @@ const AboutPage = () => {
 export default AboutPage;
 
 const Frame = styled(Flex)`
-  align-items: center;
   justify-content: center;
   gap: 31px;
   margin: auto;
+  padding-top: 16px;
+  padding-bottom: 63px;
+  /* background-color: white; */
 `;
 
 const VideoWrapper = styled(Flex)`
-  width: 412.1px;
+  width: 463px;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin: 0 26px 27px 25.5px;
+  /* margin: 0 26px 27px 25.5px; */
 `;
 
 const RightSection = styled(Flex)`
   flex-direction: column;
+  /* width: 824px; */
+  justify-content: center;
+  align-items: center;
   gap: 21px;
 `;
 
 const MovieInfo = styled(Flex)`
   align-items: flex-end;
-  gap: 74px;
+  gap: 95px;
   padding: 20px;
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
@@ -140,12 +145,12 @@ const Above = styled(Flex)`
 `;
 
 const InfoCta = styled(Flex)`
-  width: 122px;
+  min-width: 122px;
   cursor: pointer;
   justify-content: center;
   align-items: center;
   gap: 4px;
-  padding: 7px 0;
+  padding: 8px 0;
   border-radius: 10px;
   box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
@@ -168,6 +173,7 @@ const Name = styled.div`
   width: 63.5px;
   font-family: "HelveticaRegular";
   font-size: 11.6px;
+  line-height: 24px;
   letter-spacing: -0.35px;
   color: #fff;
 
@@ -185,6 +191,7 @@ const AvatarWrapper = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
+
   overflow: hidden;
 
   @media (max-width: 768px) {
@@ -212,6 +219,7 @@ const Episode = styled.div`
 const Year = styled.div`
   font-family: "HelveticaRegular";
   font-size: 16px;
+  line-height: 24px;
   color: #bcbcbc;
 `;
 const Quality = styled(Flex)`
@@ -227,6 +235,7 @@ const Quality = styled(Flex)`
 const HD = styled.span`
   font-family: "HelveticaRegular";
   font-size: 11px;
+  line-height: 24px;
   color: #e5e5e5;
 `;
 
@@ -249,6 +258,7 @@ const Description = styled.div`
   font-size: 18px;
   line-height: 1.44;
   color: #fff;
+  margin-top: 2px;
 `;
 
 const Genres = styled(Flex)`
@@ -272,7 +282,9 @@ const GenresText = styled.span`
 const Div = styled(Flex)`
   gap: 16px;
   flex-direction: column;
-  /* padding: 20px 47px 42px 20px; */
+  max-height: 509px;
+
+  padding: 20px 20px 42px 20px;
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
 `;
@@ -322,6 +334,7 @@ const Minute = styled.div`
 
 const EpisodeBoxWrapper = styled(Flex)`
   flex-direction: column;
+  overflow-y: auto;
 `;
 
 const OfferWrapper = styled(Flex)`
