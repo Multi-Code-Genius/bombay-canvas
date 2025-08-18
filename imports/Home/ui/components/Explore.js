@@ -52,12 +52,18 @@ const Explore = () => {
       setSettings({
         dots: false,
         infinite: false,
-        speed: 500,
+        speed: 1500,
         slidesToShow: 5,
         slidesToScroll: 4,
-        swipeToSlide: true,
+
         touchThreshold: 10,
         adaptiveHeight: true,
+
+        swipe: false,
+        draggable: false,
+        swipeToSlide: false,
+        touchMove: false,
+
         slidesToShow,
         slidesToScroll,
         nextArrow: <ArrowButton />,

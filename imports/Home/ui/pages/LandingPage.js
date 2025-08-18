@@ -29,5 +29,5 @@ const ExploreWrapper = styled.div`
   flex-direction: column;
   gap: 42px;
   background-color: black;
-  margin-bottom: 31px;
+  padding-bottom: 31px;
 `;

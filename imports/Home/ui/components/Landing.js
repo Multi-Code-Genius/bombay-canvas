@@ -189,8 +189,10 @@ const Buttons = styled(Flex)`
   gap: 5.7px;
   color: white;
   font-family: "HelveticaMedium";
-  padding: 9.5px;
+  font-size: 16px;
+  padding: 8px;
   border-radius: 8px;
+  line-height: 24px;
   box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
@@ -215,12 +217,12 @@ const Buttons = styled(Flex)`
 `;
 
 const InfoCta = styled(Flex)`
-  width: 122px;
+  min-width: 122px;
   cursor: pointer;
   justify-content: center;
   align-items: center;
   gap: 4px;
-  padding: 7px 0;
+  padding: 8px 0;
   border-radius: 10px;
   box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),

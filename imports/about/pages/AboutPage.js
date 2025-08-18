@@ -362,6 +362,7 @@ const Ellipse = styled(Flex)`
   align-items: center;
   width: 29.5px;
   height: 29.5px;
+  padding-left: 2px;
   border-radius: 50%;
   -webkit-backdrop-filter: blur(9.3px);
   backdrop-filter: blur(9.3px);
