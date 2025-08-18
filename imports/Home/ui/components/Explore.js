@@ -140,6 +140,7 @@ const Div = styled.div`
   padding: 0 40px;
   background-color: black;
   gap: 24px;
+  z-index: 10;
 
   @media (max-width: 768px) {
     padding: 0 16px;

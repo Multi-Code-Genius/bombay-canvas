@@ -103,6 +103,8 @@ const Frame = styled(Flex)`
   margin: auto;
   padding-top: 16px;
   padding-bottom: 63px;
+  z-index: 10;
+  position: relative;
   /* background-color: white; */
 `;
 

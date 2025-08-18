@@ -10,7 +10,7 @@ const Shadow = () => {
 export default Shadow;
 
 const Div = styled.div`
-  z-index: 1;
+  z-index: 5;
   background-image: url("/static/ellipse.png");
   top: 0;
   background-repeat: no-repeat;
