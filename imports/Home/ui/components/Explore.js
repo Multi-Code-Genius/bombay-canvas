@@ -49,20 +49,20 @@ const Explore = () => {
     const updateSettings = () => {
       const width = window.innerWidth;
       const { slidesToShow, slidesToScroll } = getSlidesSettings(width);
+
+      const isSmallScreen = width <= 768;
+
       setSettings({
         dots: false,
         infinite: false,
         speed: 1500,
-        slidesToShow: 5,
-        slidesToScroll: 4,
-
-        touchThreshold: 10,
         adaptiveHeight: true,
+        touchThreshold: 10,
 
-        swipe: false,
-        draggable: false,
-        swipeToSlide: false,
-        touchMove: false,
+        swipe: isSmallScreen,
+        draggable: isSmallScreen,
+        swipeToSlide: isSmallScreen,
+        touchMove: isSmallScreen,
 
         slidesToShow,
         slidesToScroll,
