@@ -33,6 +33,13 @@ a {
 position: relative;
 }
 
+.slick-slide{
+   margin-right: 13px;
+   max-width: 259px;
+   overflow: hidden;
+   border-radius: 22.7px;
+}
+
 
 
  .slick-prev:before, .slick-next:before {

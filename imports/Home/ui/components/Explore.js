@@ -2,13 +2,23 @@
 
 import Flex from "lib/atoms/Flex";
 import styled from "styled-components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ArrowIcon from "/imports/Home/ui/assets/ArrowIcon";
+import { useRouter } from "next/navigation";
+
+const getSlidesSettings = (width) => {
+  if (width < 640) return { slidesToShow: 1, slidesToScroll: 1 };
+  if (width < 768) return { slidesToShow: 2, slidesToScroll: 2 };
+  if (width < 1024) return { slidesToShow: 3, slidesToScroll: 3 };
+  if (width < 1280) return { slidesToShow: 3, slidesToScroll: 3 };
+  if (width < 1536) return { slidesToShow: 4, slidesToScroll: 4 };
+  return { slidesToShow: 4, slidesToScroll: 4 };
+};
 
 const Explore = () => {
   function ArrowButton({ className, onClick }) {
@@ -31,36 +41,55 @@ const Explore = () => {
     );
   }
 
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 4,
-    swipeToSlide: true,
-    touchThreshold: 10,
-    adaptiveHeight: true,
-    nextArrow: <ArrowButton />,
-    prevArrow: <ArrowButton />,
-    responsive: [
-      { breakpoint: 1536, settings: { slidesToShow: 6, slidesToScroll: 4 } },
-      { breakpoint: 1280, settings: { slidesToShow: 5, slidesToScroll: 4 } },
-      { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4 } },
-      { breakpoint: 768, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+  const router = useRouter();
 
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1.15,
-          slidesToScroll: 1,
-          // arrows: false,
-          // dots: true,
-          centerMode: true,
-          centerPadding: "12px",
-        },
-      },
-    ],
-  };
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const updateSettings = () => {
+      const width = window.innerWidth;
+      const { slidesToShow, slidesToScroll } = getSlidesSettings(width);
+      setSettings({
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 5,
+        slidesToScroll: 4,
+        swipeToSlide: true,
+        touchThreshold: 10,
+        adaptiveHeight: true,
+        slidesToShow,
+        slidesToScroll,
+        nextArrow: <ArrowButton />,
+        prevArrow: <ArrowButton />,
+        responsive: [
+          {
+            breakpoint: 1536,
+            settings: { slidesToShow: 4, slidesToScroll: 4 },
+          },
+          {
+            breakpoint: 1280,
+            settings: { slidesToShow: 3, slidesToScroll: 3 },
+          },
+          {
+            breakpoint: 1024,
+            settings: { slidesToShow: 3, slidesToScroll: 3 },
+          },
+          { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+          {
+            breakpoint: 640,
+            settings: { slidesToShow: 1.15, slidesToScroll: 1 },
+          },
+        ],
+      });
+    };
+
+    updateSettings();
+    window.addEventListener("resize", updateSettings);
+    return () => window.removeEventListener("resize", updateSettings);
+  }, []);
+
+  if (!settings) return null;
 
   return (
     <Div>
@@ -71,36 +100,18 @@ const Explore = () => {
 
       <Slider className="Slider" {...settings}>
         {Array.from({ length: 50 }).map((_, index) => (
-          <Card key={index} style={{ padding: "0 6.5px" }}>
-            <div
-              style={{
-                borderRadius: 12,
-                overflow: "hidden",
-                transform: "translateZ(0)",
-              }}
-            >
-              <img
-                src={"/static/filmCard.png"}
-                alt={`Slide ${index}`}
-                style={{
-                  width: "100%",
-                  display: "block",
-                  borderRadius: 12,
-                  transition: "transform 200ms ease",
-                }}
-              />
-              <Video>
-                <AvatarWrapper>
-                  <Image
-                    src="/static/avtar.jpg"
-                    width={24}
-                    height={24}
-                    alt="Avatar"
-                  />
-                </AvatarWrapper>
-                <Name>James Smith</Name>
-              </Video>
-            </div>
+          <Card onClick={() => router.push(`video/${index}`)} key={index}>
+            <Video>
+              <AvatarWrapper>
+                <Image
+                  src="/static/avtar.jpg"
+                  width={24}
+                  height={24}
+                  alt="Avatar"
+                />
+              </AvatarWrapper>
+              <Name>James Smith</Name>
+            </Video>
           </Card>
         ))}
       </Slider>
@@ -111,9 +122,12 @@ const Explore = () => {
 export default Explore;
 
 const Div = styled.div`
+  display: flex;
+  flex-direction: column;
   position: relative;
   padding: 0 40px;
   background-color: black;
+  gap: 24px;
 
   @media (max-width: 768px) {
     padding: 0 16px;
@@ -125,7 +139,6 @@ const HeaderText = styled.div`
   font-size: 34px;
   line-height: 1.2;
   letter-spacing: -1.7px;
-  padding: 24px 0 24px 0;
   color: #fff;
 
   span {
@@ -146,24 +159,21 @@ const HeaderText = styled.div`
 `;
 
 const Card = styled.div`
-  width: 259.7px;
-  padding: 0 6.5px 0 6.5px;
-  border-radius: 22.7px;
+  width: 100%;
+  height: 413px;
   position: relative;
   align-items: center;
   justify-content: center;
-
-  @media (max-width: 768px) {
-    width: auto; /* let Slick determine width for smaller screens */
-    border-radius: 16px;
-  }
+  background-image: url("/static/filmCard.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 const Video = styled(Flex)`
   position: absolute;
   left: clamp(6px, 2vw, 12px);
   bottom: clamp(6px, 2vw, 12px);
-  padding: 4px 6px;
+  padding: 4px 9px 4px 3px;
   align-items: center;
   gap: 6px;
   border-radius: 24px;
@@ -172,6 +182,7 @@ const Video = styled(Flex)`
   border: solid 0.4px rgba(255, 255, 255, 0.2);
   background-color: rgba(0, 0, 0, 0.36);
   white-space: nowrap;
+  z-index: 100;
 
   @media (max-width: 768px) {
     gap: 5px;

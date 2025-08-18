@@ -3,167 +3,121 @@ import Flex from "lib/atoms/Flex";
 import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
+import PlayButtonIcon from "imports/Home/ui/assets/PlayButtonIcon";
+import VideoPlayer from "../components/VideoPlayer";
+import Header from "imports/core/ui/atoms/Header";
 
 const AboutPage = () => {
   return (
-    <Frame>
-      <VideoWrapper>
-        <Story></Story>
-      </VideoWrapper>
-      <RightSection>
-        <MovieInfo>
-          <Content>
-            <Above>
-              <InfoCta>
-                <AvatarWrapper>
-                  <Image
-                    src="/static/avtar.jpg"
-                    width={24}
-                    height={24}
-                    alt="Avatar"
-                  />
-                </AvatarWrapper>
+    <>
+      <Header />
+      <Frame>
+        <VideoWrapper>
+          <VideoPlayer />
+        </VideoWrapper>
+        <RightSection>
+          <MovieInfo>
+            <Content>
+              <Above>
+                <InfoCta>
+                  <AvatarWrapper>
+                    <Image
+                      src="/static/avtar.jpg"
+                      width={24}
+                      height={24}
+                      alt="Avatar"
+                    />
+                  </AvatarWrapper>
 
-                <Name>James Smith</Name>
-              </InfoCta>
-              <VideoQuolity>
-                <Episode>Episode 1</Episode>
-                <Year>2024</Year>
-                <Quality>
-                  <HD>HD</HD>
-                </Quality>
-              </VideoQuolity>
-              <Lable>
-                <Text>Lorem ipsum</Text>
-              </Lable>
-              <Description>
-                Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit.Suspendisse varius enim in eros elementum tristique. orem
-                ipsum dolor sit amet, consectetur adipiscing elit.Suspendisse
-                varius enim in eros elementum tristique.
-              </Description>
-            </Above>
-          </Content>
-          <Genres>
-            <GenresText>
-              <span>Genres: </span>
-              Lorem , dolor, ipsum dolor
-            </GenresText>
-          </Genres>
-        </MovieInfo>
-        <Div>
-          <EpisodeTitle>Episodes</EpisodeTitle>
-          <EpisodeBoxWrapper>
-            <EpisodeBox>
-              <InnerContent>
-                <NumberWrapper>
-                  <Number>1</Number>
-                  <MovieCard class="MovieCard"></MovieCard>
-                </NumberWrapper>
-                <TextWrapper>
-                  <OfferWrapper>
-                    <OffterText>The Offer</OffterText>
-                    <Minute>55m</Minute>
-                  </OfferWrapper>
+                  <Name>James Smith</Name>
+                </InfoCta>
+                <VideoQuolity>
+                  <Episode>Episode 1</Episode>
+                  <Year>2024</Year>
+                  <Quality>
+                    <HD>HD</HD>
+                  </Quality>
+                </VideoQuolity>
+                <Lable>
+                  <Text>Lorem ipsum</Text>
+                </Lable>
+                <Description>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing
+                  elit.Suspendisse varius enim in eros elementum tristique. orem
+                  ipsum dolor sit amet, consectetur adipiscing elit.Suspendisse
+                  varius enim in eros elementum tristique.
+                </Description>
+              </Above>
+            </Content>
+            <Genres>
+              <GenresText>
+                <span>Genres: </span>
+                Lorem , dolor, ipsum dolor
+              </GenresText>
+            </Genres>
+          </MovieInfo>
+          <Div>
+            <EpisodeTitle>Episodes</EpisodeTitle>
+            <EpisodeBoxWrapper>
+              {Array.from({ length: 3 }).map((_, index) => {
+                return (
+                  <EpisodeBox $active={index === 0}>
+                    <InnerContent>
+                      <NumberWrapper>
+                        <Number>{index + 1}</Number>
+                        <MovieCard>
+                          <Ellipse>
+                            <PlayButtonIcon width={13} height={13} />
+                          </Ellipse>
+                        </MovieCard>
+                      </NumberWrapper>
+                      <TextWrapper>
+                        <OfferWrapper>
+                          <OffterText>The Offer</OffterText>
+                          <Minute>55m</Minute>
+                        </OfferWrapper>
 
-                  <LargeText>
-                    lLorem ipsum dolor sit amet, consectetur adipiscing eLorem
-                    ipsum dolor sit amet, consectetur adipiscing
-                    elit.Suspendisse varius enim in eros
-                  </LargeText>
-                </TextWrapper>
-              </InnerContent>
-            </EpisodeBox>
-            <EpisodeBox>
-              <InnerContent>
-                <NumberWrapper>
-                  <Number>1</Number>
-                  <MovieCard class="MovieCard"></MovieCard>
-                </NumberWrapper>
-                <TextWrapper>
-                  <OfferWrapper>
-                    <OffterText>The Offer</OffterText>
-                    <Minute>55m</Minute>
-                  </OfferWrapper>
-
-                  <LargeText>
-                    lLorem ipsum dolor sit amet, consectetur adipiscing eLorem
-                    ipsum dolor sit amet, consectetur adipiscing
-                    elit.Suspendisse varius enim in eros
-                  </LargeText>
-                </TextWrapper>
-              </InnerContent>
-            </EpisodeBox>
-            <EpisodeBox>
-              <InnerContent>
-                <NumberWrapper>
-                  <Number>1</Number>
-                  <MovieCard class="MovieCard"></MovieCard>
-                </NumberWrapper>
-                <TextWrapper>
-                  <OfferWrapper>
-                    <OffterText>The Offer</OffterText>
-                    <Minute>55m</Minute>
-                  </OfferWrapper>
-
-                  <LargeText>
-                    lLorem ipsum dolor sit amet, consectetur adipiscing eLorem
-                    ipsum dolor sit amet, consectetur adipiscing
-                    elit.Suspendisse varius enim in eros
-                  </LargeText>
-                </TextWrapper>
-              </InnerContent>
-            </EpisodeBox>{" "}
-          </EpisodeBoxWrapper>
-        </Div>
-      </RightSection>
-    </Frame>
+                        <LargeText>
+                          lLorem ipsum dolor sit amet, consectetur adipiscing
+                          eLorem ipsum dolor sit amet, consectetur adipiscing
+                          elit.Suspendisse varius enim in eros
+                        </LargeText>
+                      </TextWrapper>
+                    </InnerContent>
+                  </EpisodeBox>
+                );
+              })}
+            </EpisodeBoxWrapper>
+          </Div>
+        </RightSection>
+      </Frame>
+    </>
   );
 };
 
 export default AboutPage;
 
 const Frame = styled(Flex)`
-  width: 1248.6px;
   align-items: center;
+  justify-content: center;
   gap: 31px;
-  margin: 136px 95.4px 0 96px;
-  padding: 0;
+  margin: auto;
 `;
 
 const VideoWrapper = styled(Flex)`
   width: 412.1px;
-  height: 770.5px;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   margin: 0 26px 27px 25.5px;
-  padding: 0;
-`;
-
-const Story = styled.div`
-  width: 463.6px;
-  height: 824.2px;
-  flex-grow: 0;
-  padding: 26.6px 0 0;
-  transform: rotate(-180deg);
-  border-radius: 15px;
-  border: solid 8px rgba(0, 0, 0, 0.14);
-  background-color: #fff;
 `;
 
 const RightSection = styled(Flex)`
-  height: 824px;
-  flex-grow: 1;
   flex-direction: column;
-  align-items: stretch;
   gap: 21px;
-  padding: 0;
 `;
 
 const MovieInfo = styled(Flex)`
-  height: 294px;
-  align-self: stretch;
   align-items: flex-end;
   gap: 74px;
   padding: 20px;
@@ -181,11 +135,8 @@ const Content = styled(Flex)`
 `;
 
 const Above = styled(Flex)`
-  height: 128px;
-  align-self: stretch;
   flex-direction: column;
   gap: 14px;
-  padding: 0;
 `;
 
 const InfoCta = styled(Flex)`
@@ -248,30 +199,22 @@ const AvatarWrapper = styled.div`
 `;
 
 const VideoQuolity = styled(Flex)`
-  width: 482px;
-
   align-items: center;
   gap: 8px;
-  padding: 0;
 `;
 
 const Episode = styled.div`
-  width: 69px;
-
   font-family: "HelveticaBold";
   font-size: 16px;
   color: #bcbcbc;
 `;
 
 const Year = styled.div`
-  width: 36px;
-
   font-family: "HelveticaRegular";
   font-size: 16px;
   color: #bcbcbc;
 `;
 const Quality = styled(Flex)`
-  width: 29px;
   height: 16px;
   justify-content: center;
   align-items: center;
@@ -282,24 +225,18 @@ const Quality = styled(Flex)`
 `;
 
 const HD = styled.span`
-  width: 16px;
-
   font-family: "HelveticaRegular";
   font-size: 11px;
   color: #e5e5e5;
 `;
 
 const Lable = styled(Flex)`
-  width: 245px;
-
   align-items: center;
   gap: 10.4px;
-  padding: 0;
 `;
 
 const Text = styled.span`
   width: 184px;
-
   font-family: "HelveticaBold";
   font-size: 32px;
   letter-spacing: -0.44px;
@@ -314,22 +251,14 @@ const Description = styled.div`
   color: #fff;
 `;
 
-const Genres = styled.div`
-  width: 206px;
-  height: 254px;
-  flex-grow: 0;
-  display: flex;
+const Genres = styled(Flex)`
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
   gap: 14px;
-  padding: 0;
 `;
 
 const GenresText = styled.span`
-  width: 206px;
-  height: 20px;
-  flex-grow: 0;
   font-family: "HelveticaRegular";
   font-size: 14px;
   line-height: 1.43;
@@ -340,11 +269,10 @@ const GenresText = styled.span`
   }
 `;
 
-const Div = styled.div`
-  height: 509px;
-  align-self: stretch;
-  flex-grow: 0;
-  padding: 20px 47px 42px 20px;
+const Div = styled(Flex)`
+  gap: 16px;
+  flex-direction: column;
+  /* padding: 20px 47px 42px 20px; */
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
 `;
@@ -355,41 +283,30 @@ const EpisodeTitle = styled.div`
   flex-grow: 0;
   font-family: "HelveticaMedium";
   font-size: 24px;
-
-  text-align: left;
   color: #fff;
 `;
 const EpisodeBox = styled(Flex)`
-  .Frame-144 {
-    width: 714px;
-    height: 134px;
-    flex-direction: column;
-    gap: 10px;
-    padding: 16px 40px 16px 16px;
-    border-radius: 4px;
-    background-color: #222;
-  }
+  /* width: 714px; */
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 40px 16px 16px;
+  border-radius: 4px;
+  background: ${({ $active }) => ($active ? "#222" : "transparent")};
 `;
 
 const InnerContent = styled(Flex)`
   width: 670px;
-  height: 102px;
   gap: 14px;
   align-items: center;
-  padding: 0;
+  padding: 15px 0;
 `;
 
 const OffterText = styled.span`
-  width: 140px;
-  height: 24px;
-  flex-grow: 0;
   font-family: "HelveticaRegular";
   font-size: 16px;
   color: #fff;
 `;
 const LargeText = styled.span`
-  height: 40px;
-  flex-grow: 1;
   font-family: "HelveticaRegular";
   font-size: 14px;
   line-height: 1.43;
@@ -397,9 +314,6 @@ const LargeText = styled.span`
 `;
 
 const Minute = styled.div`
-  width: 35px;
-  height: 24px;
-  flex-grow: 0;
   font-family: "HelveticaRegular";
   font-size: 16px;
   text-align: right;
@@ -418,28 +332,38 @@ const TextWrapper = styled(Flex)`
   flex-direction: column;
 `;
 const NumberWrapper = styled(Flex)`
-  width: 204px;
-  height: 72px;
   align-items: center;
-  padding: 0;
 `;
 const Number = styled.span`
   width: 51px;
-  height: 29px;
-  flex-grow: 0;
   font-family: "HelveticaRegular";
   font-size: 24px;
-
   line-height: 1.25;
   text-align: center;
   color: #dcdcdc;
 `;
 
-const MovieCard = styled.div`
+const MovieCard = styled(Flex)`
+  background: url("/static/video.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   width: 153px;
-  height: 72px;
-  flex-grow: 0;
-  padding: 0 12px 0 13px;
+  justify-content: center;
+  align-items: center;
+  padding: 21px 12px 21px 12px;
   border-radius: 8px;
   background-color: #3a3a3a;
+  position: relative;
+`;
+
+const Ellipse = styled(Flex)`
+  justify-content: center;
+  align-items: center;
+  width: 29.5px;
+  height: 29.5px;
+  border-radius: 50%;
+  -webkit-backdrop-filter: blur(9.3px);
+  backdrop-filter: blur(9.3px);
+  background-color: rgba(255, 255, 255, 0.24);
 `;

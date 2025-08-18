@@ -77,7 +77,7 @@ const Header = () => {
         </CategoryTitle>
 
         {isLoggedIn ? (
-          <Avatar onClick={handleProfileClick} title={userName}>
+          <Avatar onClick={handleProfileClick} title={userName || ""}>
             <AvatarText>{initials || "U"}</AvatarText>
           </Avatar>
         ) : (
@@ -244,7 +244,8 @@ const Search = styled(Flex)`
   border-radius: 8px;
   -webkit-backdrop-filter: blur(20.4px);
   backdrop-filter: blur(20.4px);
-  border: solid 1px rgba(255, 255, 255, 0.2);
+  outline: solid 1px rgba(255, 255, 255, 0.2) !important;
+  border: none;
   background-color: rgba(15, 15, 15, 0.12);
 `;
 

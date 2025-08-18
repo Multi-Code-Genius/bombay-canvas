@@ -25,7 +25,7 @@ const Landing = () => {
         </Para>
         <CtaWrappers>
           <Buttons>
-            <PlayButtonIcon />
+            <PlayButtonIcon width={17} height={19} />
             Play
           </Buttons>
           <InfoCta>
@@ -129,7 +129,7 @@ const Range = styled(Flex)`
 `;
 
 const MainTitle = styled.div`
-  font-family: "HelveticaRegular";
+  font-family: "HelveticaLight";
   font-size: 57.6px;
   letter-spacing: -2.31px;
   color: #fff;
@@ -187,8 +187,9 @@ const Buttons = styled(Flex)`
   align-items: center;
   cursor: pointer;
   gap: 5.7px;
+  color: white;
   font-family: "HelveticaMedium";
-  padding: 9px;
+  padding: 9.5px;
   border-radius: 8px;
   box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
