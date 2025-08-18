@@ -837,6 +837,8 @@ const Main = styled(Flex)`
   height: 100vh;
   padding: 16px;
   gap: 16px;
+  z-index: 10;
+  position: relative;
   overflow: hidden;
 `;
 
@@ -1502,11 +1504,15 @@ const GenreTag = styled.button`
 `;
 
 const FileUploadArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   position: relative;
 `;
 
 const FileUploadLabel = styled.label`
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1697,6 +1703,7 @@ const MovieCard = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-height: 190px;
   transition: all 0.2s ease;
 
   &:hover {

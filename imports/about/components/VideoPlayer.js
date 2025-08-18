@@ -61,7 +61,7 @@ export default function VideoPlayer() {
     <Container>
       <StyledVideo
         ref={videoRef}
-        src="https://videos.pexels.com/video-files/5147455/5147455-hd_1080_1920_30fps.mp4"
+        src="https://videos.pexels.com/video-files/26654027/11984840_1080_1920_30fps.mp4"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
