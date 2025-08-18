@@ -233,12 +233,6 @@ const InfoCta = styled(Flex)`
     rgba(14, 14, 14, 0.71) -91%,
     #000 112%
   );
-
-  @media (max-width: 768px) {
-    width: auto;
-    padding: 6px 10px;
-    gap: 6px;
-  }
 `;
 
 const Name = styled.div`
@@ -247,15 +241,6 @@ const Name = styled.div`
   font-size: 11.6px;
   letter-spacing: -0.35px;
   color: #fff;
-
-  @media (max-width: 768px) {
-    width: auto;
-    font-size: 11px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10.5px;
-  }
 `;
 
 const AvatarWrapper = styled.div`
@@ -263,16 +248,6 @@ const AvatarWrapper = styled.div`
   height: 24px;
   border-radius: 50%;
   overflow: hidden;
-
-  @media (max-width: 768px) {
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 480px) {
-    width: 20px;
-    height: 20px;
-  }
 `;
 
 const Duration = styled.div`

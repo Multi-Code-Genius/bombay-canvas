@@ -374,6 +374,7 @@ const Ellipse = styled(Flex)`
   justify-content: center;
   align-items: center;
   width: 29.5px;
+  cursor: pointer;
   height: 29.5px;
   padding-left: 2px;
   border-radius: 50%;

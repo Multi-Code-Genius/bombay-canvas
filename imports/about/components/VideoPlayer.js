@@ -204,7 +204,7 @@ const CtaWrapper = styled.div`
   display: flex;
   gap: 35px;
   position: absolute;
-  left: 90px;
+  left: 21%;
   top: 45%;
 `;
 
