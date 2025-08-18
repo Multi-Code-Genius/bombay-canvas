@@ -64,27 +64,33 @@ const Explore = () => {
         swipeToSlide: isSmallScreen,
         touchMove: isSmallScreen,
 
-        slidesToShow,
-        slidesToScroll,
+        slidesToShow: isSmallScreen ? 1 : slidesToShow,
+        slidesToScroll: isSmallScreen ? 1 : slidesToScroll,
+
+        centerMode: isSmallScreen, // 👈 center single card
+        centerPadding: isSmallScreen ? "20px" : "0px",
+
         nextArrow: <ArrowButton />,
         prevArrow: <ArrowButton />,
+
         responsive: [
           {
-            breakpoint: 1536,
-            settings: { slidesToShow: 4, slidesToScroll: 4 },
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              centerMode: true,
+              centerPadding: "0px", // or "20px" if you want peeking
+            },
           },
-          {
-            breakpoint: 1280,
-            settings: { slidesToShow: 3, slidesToScroll: 3 },
-          },
-          {
-            breakpoint: 1024,
-            settings: { slidesToShow: 3, slidesToScroll: 3 },
-          },
-          { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
           {
             breakpoint: 640,
-            settings: { slidesToShow: 1.15, slidesToScroll: 1 },
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              centerMode: true,
+              centerPadding: "20px",
+            },
           },
         ],
       });

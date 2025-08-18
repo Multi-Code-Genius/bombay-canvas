@@ -1,15 +1,39 @@
 "use client";
 
 import Header from "imports/core/ui/atoms/Header";
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import Flex from "lib/atoms/Flex";
 import PlayButtonIcon from "/imports/Home/ui/assets/PlayButtonIcon";
 
 const Landing = () => {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+
+    setIsPlaying(!isPlaying);
+  };
+
   return (
     <Layout>
+      <BackgroundVideo
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        src="https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
+        type="video/mp4"
+      ></BackgroundVideo>
       <Header />
       <Content>
         <Image src="/static/logo.png" alt="Logo" width={75} height={32} />
@@ -24,9 +48,9 @@ const Landing = () => {
           consectetur adipiscing elit.Suspendisse varius enim in
         </Para>
         <CtaWrappers>
-          <Buttons>
+          <Buttons onClick={togglePlay}>
             <PlayButtonIcon width={17} height={19} />
-            Play
+            {isPlaying ? "Pause" : "Play"}
           </Buttons>
           <InfoCta>
             <AvatarWrapper>
@@ -57,8 +81,7 @@ const Layout = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  padding-bottom: 45%;
-  background: url("/static/card-image.png") top/cover no-repeat;
+  overflow: hidden;
 
   &::after {
     content: "";
@@ -72,13 +95,11 @@ const Layout = styled.div`
       rgba(0, 0, 0, 1.7) 0%,
       rgba(0, 0, 0, 0) 100%
     );
+    z-index: 2;
   }
 
   @media (max-width: 768px) {
-    padding-bottom: 0;
     height: 70vh;
-    background-position: center;
-    overflow-x: hidden;
 
     &::after {
       height: 55%;
@@ -90,13 +111,23 @@ const Layout = styled.div`
   }
 `;
 
+const BackgroundVideo = styled.video`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* behaves like background-size: cover */
+  z-index: 1;
+`;
+
 const Content = styled(Flex)`
   position: absolute;
   bottom: 10%;
   left: 40px;
   flex-direction: column;
   gap: 20px;
-  z-index: 1;
+  z-index: 3;
 
   @media (max-width: 768px) {
     left: 16px;

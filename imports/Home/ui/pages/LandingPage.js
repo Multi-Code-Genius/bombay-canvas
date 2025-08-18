@@ -5,7 +5,6 @@ import React from "react";
 import Landing from "imports/Home/ui/components/Landing";
 import Explore from "../components/Explore";
 import styled from "styled-components";
-import Flex from "lib/atoms/Flex";
 
 export default function LandingPage() {
   return (
