@@ -105,20 +105,27 @@ const Frame = styled(Flex)`
   padding-bottom: 63px;
   z-index: 10;
   position: relative;
-  /* background-color: white; */
-`;
 
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 16px;
+  }
+`;
 const VideoWrapper = styled(Flex)`
   width: 463px;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* margin: 0 26px 27px 25.5px; */
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const RightSection = styled(Flex)`
   flex-direction: column;
-  /* width: 824px; */
   justify-content: center;
   align-items: center;
   gap: 21px;
@@ -130,15 +137,24 @@ const MovieInfo = styled(Flex)`
   padding: 20px;
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
 `;
 
 const Content = styled(Flex)`
   width: 435px;
-  height: 248px;
+  height: auto;
   flex-direction: column;
-  align-items: stretch;
   gap: 16px;
-  padding: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    gap: 12px;
+  }
 `;
 
 const Above = styled(Flex)`
@@ -158,6 +174,7 @@ const InfoCta = styled(Flex)`
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);
+
   background-image: linear-gradient(
     109deg,
     rgba(14, 14, 14, 0.71) -91%,
@@ -216,6 +233,10 @@ const Episode = styled.div`
   font-family: "HelveticaBold";
   font-size: 16px;
   color: #bcbcbc;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const Year = styled.div`
@@ -223,6 +244,10 @@ const Year = styled.div`
   font-size: 16px;
   line-height: 24px;
   color: #bcbcbc;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 const Quality = styled(Flex)`
   height: 16px;
@@ -247,11 +272,17 @@ const Lable = styled(Flex)`
 `;
 
 const Text = styled.span`
-  width: 184px;
   font-family: "HelveticaBold";
   font-size: 32px;
   letter-spacing: -0.44px;
   color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 const Description = styled.div`
@@ -260,7 +291,14 @@ const Description = styled.div`
   font-size: 18px;
   line-height: 1.44;
   color: #fff;
-  margin-top: 2px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+  @media (max-width: 480px) {
+    font-size: 14px;
+    line-height: 1.4;
+  }
 `;
 
 const Genres = styled(Flex)`
@@ -279,25 +317,36 @@ const GenresText = styled.span`
   span {
     color: #777;
   }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const Div = styled(Flex)`
   gap: 16px;
   flex-direction: column;
   max-height: 509px;
-
-  padding: 20px 20px 42px 20px;
+  padding: 20px;
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
+  width: 100%;
 `;
 
 const EpisodeTitle = styled.div`
-  width: 488px;
+  /* width: 488px;
   height: 29px;
-  flex-grow: 0;
+  flex-grow: 0; */
   font-family: "HelveticaMedium";
   font-size: 24px;
   color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 const EpisodeBox = styled(Flex)`
   /* width: 714px; */
@@ -312,7 +361,12 @@ const InnerContent = styled(Flex)`
   width: 670px;
   gap: 14px;
   align-items: center;
-  padding: 15px 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const OffterText = styled.span`
@@ -325,6 +379,11 @@ const LargeText = styled.span`
   font-size: 14px;
   line-height: 1.43;
   color: #d2d2d2;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    line-height: 1.4;
+  }
 `;
 
 const Minute = styled.div`
@@ -356,20 +415,29 @@ const Number = styled.span`
   line-height: 1.25;
   text-align: center;
   color: #dcdcdc;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+    width: 40px;
+  }
 `;
 
 const MovieCard = styled(Flex)`
-  background: url("/static/video.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background: url("/static/video.jpg") center/cover no-repeat;
   width: 153px;
+  height: 90px;
   justify-content: center;
   align-items: center;
-  padding: 21px 12px 21px 12px;
   border-radius: 8px;
-  background-color: #3a3a3a;
-  position: relative;
+
+  @media (max-width: 768px) {
+    width: 120px;
+    height: 72px;
+  }
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 60px;
+  }
 `;
 
 const Ellipse = styled(Flex)`

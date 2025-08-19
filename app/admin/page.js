@@ -4,7 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import Cookies from "js-cookie";
 import Flex from "/lib/atoms/Flex";
-import Header from "imports/core/ui/atoms/Header";
+import { useAllUserData, useUpdateRole } from "api/user";
+import {
+  useAddMovies,
+  useDeleteMovie,
+  useEditMovies,
+  useMoviesData,
+} from "api/movies";
 
 // Admin page with inline login and a static Dashboard UI (no backend integration)
 export default function AdminPage() {
@@ -59,6 +65,15 @@ export default function AdminPage() {
     // Movies view state - either 'list' or 'form'
     const [moviesView, setMoviesView] = useState("list");
 
+    const { data } = useAllUserData();
+    const { mutate } = useUpdateRole();
+    const { data: movieData } = useMoviesData();
+    const { mutate: deteleMovie } = useDeleteMovie();
+    const { mutate: addMovies } = useAddMovies();
+    const { mutate: updateMovies } = useEditMovies();
+
+    console.log("movieData", movieData?.allMovies);
+
     // Movie form state (single editor)
     const defaultMovie = useMemo(
       () => ({
@@ -78,76 +93,31 @@ export default function AdminPage() {
     );
 
     const [movie, setMovie] = useState(defaultMovie);
-    const [movies, setMovies] = useState([
-      {
-        id: "m1",
-        title: "The First Dawn",
-        type: "MOVIE",
-        genres: ["drama", "thriller"],
-        duration: 120,
-      },
-      {
-        id: "m2",
-        title: "Galactic Trails",
-        type: "SERIES",
-        genres: ["sci-fi"],
-        duration: 45,
-      },
-      {
-        id: "m3",
-        title: "Ocean's Mystery",
-        type: "MOVIE",
-        genres: ["action", "adventure"],
-        duration: 135,
-      },
-      {
-        id: "m4",
-        title: "Tech Chronicles",
-        type: "SERIES",
-        genres: ["drama", "sci-fi"],
-        duration: 50,
-      },
-    ]);
+    const [originalMovie, setOriginalMovie] = useState(null);
+    const [movies, setMovies] = useState([]);
     const [savedJson, setSavedJson] = useState(null);
+    console.log("savedJson", savedJson);
 
-    // Static users (mock) - now with state for role updates
     const [userQuery, setUserQuery] = useState("");
-    const [users, setUsers] = useState([
-      {
-        id: "u1",
-        name: "Alice Johnson",
-        email: "alice@example.com",
-        role: "USER",
-        createdAt: "2024-06-10",
-      },
-      {
-        id: "u2",
-        name: "Bob Singh",
-        email: "bob@example.com",
-        role: "ADMIN",
-        createdAt: "2024-08-01",
-      },
-      {
-        id: "u3",
-        name: "Caro Diaz",
-        email: "caro@example.com",
-        role: "USER",
-        createdAt: "2025-01-12",
-      },
-      {
-        id: "u4",
-        name: "Dev Kumar",
-        email: "dev@example.com",
-        role: "CREATOR",
-        createdAt: "2025-03-20",
-      },
-    ]);
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+      setMovies(movieData?.allMovies);
+    }, [movieData]);
+
+    useEffect(() => {
+      setUsers(data?.AllUser);
+    }, [data]);
 
     // Available roles
     const availableRoles = ["USER", "ADMIN", "CREATOR"];
 
     // Function to update user role
     const updateUserRole = (userId, newRole) => {
+      mutate({
+        role: newRole.toLowerCase(),
+        userId,
+      });
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user.id === userId ? { ...user, role: newRole } : user
@@ -155,7 +125,7 @@ export default function AdminPage() {
       );
     };
 
-    const filteredUsers = users.filter(
+    const filteredUsers = users?.filter(
       (u) =>
         u.name.toLowerCase().includes(userQuery.toLowerCase()) ||
         u.email.toLowerCase().includes(userQuery.toLowerCase()) ||
@@ -221,25 +191,49 @@ export default function AdminPage() {
     const onSave = (e) => {
       e.preventDefault();
       // Mock save: store or update in local movies array and show JSON preview
-      if (movie.id) {
+      if (movie.id && originalMovie) {
+        const updatedFields = {};
+        updatedFields.movieId = movie.id;
+        Object.keys(movie).forEach((key) => {
+          const originalValue = originalMovie[key];
+          const currentValue = movie[key];
+
+          if (key === "genres" || key === "episodes") {
+            if (
+              JSON.stringify(originalValue) !== JSON.stringify(currentValue)
+            ) {
+              updatedFields[key] = currentValue;
+            }
+          } else if (originalValue !== currentValue) {
+            updatedFields[key] = currentValue;
+          }
+        });
+
+        console.log("Only updated fields:", updatedFields);
+        updateMovies(updatedFields);
+
         setMovies((arr) =>
           arr.map((m) => (m.id === movie.id ? { ...m, ...movie } : m))
         );
+        setSavedJson(updatedFields);
       } else {
+        addMovies(movie);
         const id = crypto.randomUUID ? crypto.randomUUID() : `m_${Date.now()}`;
         setMovies((arr) => [...arr, { ...movie, id }]);
         setMovie((m) => ({ ...m, id }));
+        setSavedJson(movie);
       }
-      setSavedJson(movie);
+
       // Go back to movies list view after saving
       setMoviesView("list");
+      setOriginalMovie(null);
     };
 
     const onEditMovie = (id) => {
-      const m = movies.find((x) => x.id === id);
+      const m = movies?.find((x) => x.id === id);
       if (!m) return;
-      // Fill missing fields for editing
-      setMovie({
+
+      const movieToEdit = {
         id: m.id,
         title: m.title || "",
         description: m.description || "",
@@ -251,11 +245,14 @@ export default function AdminPage() {
         type: m.type || "MOVIE",
         genres: m.genres || [],
         episodes: m.episodes || [],
-      });
+      };
+      setMovie(movieToEdit);
+      setOriginalMovie(movieToEdit);
       setMoviesView("form");
     };
 
     const onDeleteMovie = (id) => {
+      deteleMovie(id);
       setMovies((arr) => arr.filter((m) => m.id !== id));
       if (movie.id === id) setMovie(defaultMovie);
     };
@@ -263,6 +260,7 @@ export default function AdminPage() {
     const onReset = () => {
       setMovie(defaultMovie);
       setSavedJson(null);
+      setOriginalMovie(null);
     };
 
     return (
@@ -298,11 +296,11 @@ export default function AdminPage() {
                 <Kpis>
                   <KpiBox>
                     <KpiTitle>Total Users</KpiTitle>
-                    <KpiValue>{users.length}</KpiValue>
+                    <KpiValue>{users?.length}</KpiValue>
                   </KpiBox>
                   <KpiBox>
                     <KpiTitle>Total Movies</KpiTitle>
-                    <KpiValue>{movies.length}</KpiValue>
+                    <KpiValue>{movies?.length}</KpiValue>
                   </KpiBox>
                 </Kpis>
               </Card>
@@ -329,7 +327,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((u) => (
+                    {filteredUsers?.map((u) => (
                       <tr key={u.id}>
                         <td>{u.name}</td>
                         <td>{u.email}</td>
@@ -353,7 +351,7 @@ export default function AdminPage() {
                         </td>
                       </tr>
                     ))}
-                    {filteredUsers.length === 0 && (
+                    {filteredUsers?.length === 0 && (
                       <tr>
                         <td
                           colSpan={5}
@@ -394,7 +392,7 @@ export default function AdminPage() {
                     </MoviesHeader>
 
                     <MoviesGrid>
-                      {movies.map((m) => (
+                      {movies?.map((m) => (
                         <MovieCard key={m.id}>
                           <MovieInfo>
                             <MovieTitle>{m.title}</MovieTitle>
@@ -405,7 +403,9 @@ export default function AdminPage() {
                             {m.genres && m.genres.length > 0 && (
                               <MovieGenres>
                                 {m.genres.map((genre) => (
-                                  <GenreChip key={genre}>{genre}</GenreChip>
+                                  <GenreChip key={genre?.id}>
+                                    {genre?.name}
+                                  </GenreChip>
                                 ))}
                               </MovieGenres>
                             )}
@@ -426,7 +426,7 @@ export default function AdminPage() {
                           </MovieActions>
                         </MovieCard>
                       ))}
-                      {movies.length === 0 && (
+                      {movies?.length === 0 && (
                         <EmptyMoviesState>
                           <div>🎬</div>
                           <h3>No movies yet</h3>
@@ -468,6 +468,7 @@ export default function AdminPage() {
                         onClick={() => {
                           setMoviesView("list");
                           setMovie(defaultMovie);
+                          setOriginalMovie(null);
                         }}
                       >
                         ← Back to List
@@ -800,6 +801,7 @@ export default function AdminPage() {
                           onClick={() => {
                             setMoviesView("list");
                             setMovie(defaultMovie);
+                            setOriginalMovie(null);
                           }}
                         >
                           Cancel
@@ -1665,8 +1667,9 @@ const MoviesHeader = styled.div`
 `;
 
 const MoviesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  display: flex;
+  /* grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); */
+  flex-direction: column;
   gap: 16px;
   flex: 1;
   overflow-y: auto;
