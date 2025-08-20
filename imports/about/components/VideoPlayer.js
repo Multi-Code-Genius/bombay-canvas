@@ -211,7 +211,7 @@ const CenterButton = styled.button`
 
   @media (max-width: 640px) {
     top: 50%;
-    right: 45%;
+    right: 50%;
     transform: translate(50%, -50%);
     svg {
       width: 36px;
