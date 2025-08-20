@@ -101,12 +101,12 @@ const Frame = styled(Flex)`
   justify-content: center;
   gap: 31px;
   margin: auto;
-  padding-top: 16px;
-  padding-bottom: 63px;
+
+  padding-bottom: 20px;
   z-index: 10;
   position: relative;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     flex-direction: column;
     align-items: center;
     gap: 24px;
@@ -114,7 +114,7 @@ const Frame = styled(Flex)`
   }
 `;
 const VideoWrapper = styled(Flex)`
-  width: 463px;
+  width: 390px;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -133,7 +133,7 @@ const RightSection = styled(Flex)`
 
 const MovieInfo = styled(Flex)`
   align-items: flex-end;
-  gap: 95px;
+  gap: 74px;
   padding: 20px;
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
@@ -142,6 +142,10 @@ const MovieInfo = styled(Flex)`
     flex-direction: column;
     gap: 16px;
     padding: 16px;
+  }
+
+  @media (max-width: 1200px) {
+    width: 100%;
   }
 `;
 
@@ -291,6 +295,7 @@ const Description = styled.div`
   font-size: 18px;
   line-height: 1.44;
   color: #fff;
+  margin-top: 2px;
 
   @media (max-width: 768px) {
     font-size: 16px;
@@ -326,7 +331,7 @@ const GenresText = styled.span`
 const Div = styled(Flex)`
   gap: 16px;
   flex-direction: column;
-  max-height: 509px;
+  max-height: 384px;
   padding: 20px;
   border-radius: 15px;
   background-color: rgba(9, 9, 9, 0.28);
@@ -334,9 +339,6 @@ const Div = styled(Flex)`
 `;
 
 const EpisodeTitle = styled.div`
-  /* width: 488px;
-  height: 29px;
-  flex-grow: 0; */
   font-family: "HelveticaMedium";
   font-size: 24px;
   color: #fff;
@@ -349,7 +351,6 @@ const EpisodeTitle = styled.div`
   }
 `;
 const EpisodeBox = styled(Flex)`
-  /* width: 714px; */
   flex-direction: column;
   gap: 10px;
   padding: 16px 40px 16px 16px;
@@ -425,7 +426,7 @@ const Number = styled.span`
 const MovieCard = styled(Flex)`
   background: url("/static/video.jpg") center/cover no-repeat;
   width: 153px;
-  height: 90px;
+  height: 72px;
   justify-content: center;
   align-items: center;
   border-radius: 8px;

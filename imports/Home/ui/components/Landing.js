@@ -36,7 +36,7 @@ const Landing = () => {
       ></BackgroundVideo>
       <Header />
       <Content>
-        <Image src="/static/logo.png" alt="Logo" width={75} height={32} />
+        <Image src="/static/logo.png" alt="Logo" width={91} height={35} />
         <MainTitle
           dangerouslySetInnerHTML={{
             __html: `Lorem ipsum <span>dolor sit amet</span>`,
@@ -50,7 +50,7 @@ const Landing = () => {
         <CtaWrappers>
           <Buttons onClick={togglePlay}>
             <PlayButtonIcon width={17} height={19} />
-            {isPlaying ? "Pause" : "Play"}
+            {isPlaying ? "Pause" : " Play"}
           </Buttons>
           <InfoCta>
             <AvatarWrapper>
@@ -213,7 +213,7 @@ const CtaWrappers = styled(Flex)`
 `;
 
 const Buttons = styled(Flex)`
-  width: 119.5px;
+  min-width: 119.5px;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -267,7 +267,7 @@ const InfoCta = styled(Flex)`
 `;
 
 const Name = styled.div`
-  width: 63.5px;
+  min-width: 63.5px;
   font-family: "HelveticaRegular";
   font-size: 11.6px;
   letter-spacing: -0.35px;

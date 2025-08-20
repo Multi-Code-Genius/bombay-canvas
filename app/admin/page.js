@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import Cookies from "js-cookie";
 import Flex from "/lib/atoms/Flex";
+import LoginForm from "/imports/Auth/Components/LoginForm";
 import { useAllUserData, useUpdateRole } from "api/user";
 import {
   useAddMovies,
@@ -12,57 +13,22 @@ import {
   useMoviesData,
 } from "api/movies";
 
-// Admin page with inline login and a static Dashboard UI (no backend integration)
 export default function AdminPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
 
-  // Demo credentials (adjust as needed)
-  const DEMO_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@example.com";
-  const DEMO_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
-
   useEffect(() => {
-    // Restore session from cookie
     const flag = Cookies.get("adminAccess");
     if (flag === "true") setIsAuthed(true);
   }, []);
 
-  const onLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const ok =
-        email.trim() === DEMO_EMAIL && password.trim() === DEMO_PASSWORD;
-      if (!ok) {
-        setError("Invalid admin credentials");
-        return;
-      }
-      Cookies.set("adminAccess", "true", { expires: 1 });
-      setIsAuthed(true);
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <>
-      <Dashboard />
-    </>
+    <>{isAuthed ? <Dashboard /> : <LoginForm setIsAuthed={setIsAuthed} />}</>
   );
 
   function Dashboard() {
-    // Tabs
     const tabs = ["Overview", "Users", "Movies", "Genres"];
     const [activeTab, setActiveTab] = useState("Overview");
 
-    // Movies view state - either 'list' or 'form'
     const [moviesView, setMoviesView] = useState("list");
 
     const { data } = useAllUserData();
@@ -74,7 +40,6 @@ export default function AdminPage() {
 
     console.log("movieData", movieData?.allMovies);
 
-    // Movie form state (single editor)
     const defaultMovie = useMemo(
       () => ({
         id: undefined,
@@ -85,8 +50,8 @@ export default function AdminPage() {
         posterImage: null,
         trailerVideo: null,
         movieVideo: null,
-        type: "MOVIE", // MOVIE or SERIES
-        genres: [], // ids or names (static UI only)
+        type: "MOVIE",
+        genres: [],
         episodes: [],
       }),
       []
@@ -109,10 +74,8 @@ export default function AdminPage() {
       setUsers(data?.AllUser);
     }, [data]);
 
-    // Available roles
     const availableRoles = ["USER", "ADMIN", "CREATOR"];
 
-    // Function to update user role
     const updateUserRole = (userId, newRole) => {
       mutate({
         role: newRole.toLowerCase(),
@@ -190,7 +153,7 @@ export default function AdminPage() {
 
     const onSave = (e) => {
       e.preventDefault();
-      // Mock save: store or update in local movies array and show JSON preview
+
       if (movie.id && originalMovie) {
         const updatedFields = {};
         updatedFields.movieId = movie.id;
@@ -224,7 +187,6 @@ export default function AdminPage() {
         setSavedJson(movie);
       }
 
-      // Go back to movies list view after saving
       setMoviesView("list");
       setOriginalMovie(null);
     };
@@ -327,30 +289,33 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers?.map((u) => (
-                      <tr key={u.id}>
-                        <td>{u.name}</td>
-                        <td>{u.email}</td>
-                        <td>
-                          <RoleBadge $role={u.role}>{u.role}</RoleBadge>
-                        </td>
-                        <td>{u.createdAt}</td>
-                        <td>
-                          <RoleSelect
-                            value={u.role}
-                            onChange={(e) =>
-                              updateUserRole(u.id, e.target.value)
-                            }
-                          >
-                            {availableRoles.map((role) => (
-                              <option key={role} value={role}>
-                                {role}
-                              </option>
-                            ))}
-                          </RoleSelect>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredUsers?.map((u) => {
+                      console.log("u", u);
+                      return (
+                        <tr key={u.id}>
+                          <td>{u.name}</td>
+                          <td>{u.email}</td>
+                          <td>
+                            <RoleBadge $role={u.role}>{u.role}</RoleBadge>
+                          </td>
+                          <td>{u.createdAt}</td>
+                          <td>
+                            <RoleSelect
+                              value={u.role}
+                              onChange={(e) =>
+                                updateUserRole(u.id, e.target.value)
+                              }
+                            >
+                              {availableRoles.map((role) => (
+                                <option key={role} value={role}>
+                                  {role}
+                                </option>
+                              ))}
+                            </RoleSelect>
+                          </td>
+                        </tr>
+                      );
+                    })}
                     {filteredUsers?.length === 0 && (
                       <tr>
                         <td
@@ -476,7 +441,6 @@ export default function AdminPage() {
                     </FormHeader>
 
                     <MovieForm onSubmit={onSave}>
-                      {/* Basic Information Section */}
                       <FormSection>
                         <SectionTitle>Basic Information</SectionTitle>
                         <FieldGroup>
@@ -506,7 +470,6 @@ export default function AdminPage() {
                         </FieldGroup>
                       </FormSection>
 
-                      {/* Movie Details Section */}
                       <FormSection>
                         <SectionTitle>Movie Details</SectionTitle>
                         <TwoColumnGrid>
@@ -563,7 +526,6 @@ export default function AdminPage() {
                         </TwoColumnGrid>
                       </FormSection>
 
-                      {/* Media Files Section */}
                       <FormSection>
                         <SectionTitle>Media Files</SectionTitle>
                         <ThreeColumnGrid>
@@ -651,7 +613,6 @@ export default function AdminPage() {
                         </ThreeColumnGrid>
                       </FormSection>
 
-                      {/* Episodes Section (for Series only) */}
                       {movie.type === "SERIES" && (
                         <FormSection>
                           <SectionTitle>
@@ -851,18 +812,6 @@ const PageTitle = styled.h1`
   color: #fff;
 `;
 
-const CardsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  height: 100%;
-  overflow: hidden;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
 const DashboardLayout = styled.div`
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -954,43 +903,6 @@ const Table = styled.table`
   }
 `;
 
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const ListItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px;
-  border: 1px solid #414141;
-  border-radius: 8px;
-`;
-
-const ListTitle = styled.div`
-  font-family: "HelveticaBold";
-  color: #fff;
-`;
-
-const ListMeta = styled.div`
-  opacity: 0.6;
-  font-size: 12px;
-`;
-
-const ListActions = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const EmptyState = styled.div`
-  opacity: 0.6;
-  text-align: center;
-  padding: 12px;
-`;
-
 const Card = styled(Flex)`
   width: 100%;
   gap: 16px;
@@ -1071,16 +983,6 @@ const Select = styled.select`
   outline: none;
 `;
 
-const ErrorText = styled.div`
-  color: #ff7373;
-  font-size: 13px;
-`;
-
-const Actions = styled(Flex)`
-  gap: 8px;
-  margin-top: 8px;
-`;
-
 const SubmitBtn = styled(Flex)`
   padding: 12px;
   cursor: pointer;
@@ -1108,12 +1010,6 @@ const DangerBtn = styled(SecondaryBtn)`
   color: #ff8a8a;
 `;
 
-const Hint = styled.div`
-  opacity: 0.5;
-  font-size: 12px;
-  color: #fff;
-`;
-
 const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -1128,50 +1024,6 @@ const Tag = styled.button`
   color: #fff;
   font-size: 12px;
   cursor: pointer;
-`;
-
-const EpisodeList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const EpisodeItem = styled(Flex)`
-  gap: 8px;
-  padding: 12px;
-  border: 1px dashed #414141;
-  border-radius: 8px;
-`;
-
-const EpisodeActions = styled(Flex)`
-  margin-top: 8px;
-  justify-content: flex-end;
-`;
-
-const Row = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const Col = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-`;
-
-const Pre = styled.pre`
-  margin: 0;
-  padding: 12px;
-  border-radius: 8px;
-  background: #0f0f0f;
-  color: #eaeaea;
-  max-height: 400px;
-  overflow: auto;
 `;
 
 const RoleBadge = styled.span`
@@ -1276,131 +1128,6 @@ const FileInput = styled.input`
   }
 `;
 
-const FilePreview = styled.div`
-  font-size: 12px;
-  color: #4cef8a;
-  opacity: 0.8;
-  margin-top: 4px;
-  padding: 4px 8px;
-  background: rgba(76, 239, 138, 0.1);
-  border: 1px solid rgba(76, 239, 138, 0.3);
-  border-radius: 4px;
-  display: inline-block;
-`;
-
-const MovieListCard = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  max-height: calc(100vh - 160px);
-`;
-
-const MovieFormCard = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  max-height: calc(100vh - 160px);
-`;
-
-const CompactList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: 4px;
-
-  /* Subtle scrollbar */
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(239, 138, 76, 0.3);
-    border-radius: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgba(239, 138, 76, 0.5);
-  }
-`;
-
-const CompactForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding-right: 4px;
-
-  /* Subtle scrollbar */
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(239, 138, 76, 0.3);
-    border-radius: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgba(239, 138, 76, 0.5);
-  }
-`;
-
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px 16px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const FullWidthSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const EpisodeScrollableList = styled.div`
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #414141;
-  border-radius: 8px;
-  padding: 8px;
-
-  /* Subtle scrollbar */
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(239, 138, 76, 0.3);
-    border-radius: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgba(239, 138, 76, 0.5);
-  }
-`;
-
-/* New Movie Form Styled Components */
 const MovieForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -1409,7 +1136,6 @@ const MovieForm = styled.form`
   overflow-y: auto;
   padding-right: 6px;
 
-  /* Subtle scrollbar */
   &::-webkit-scrollbar {
     width: 4px;
   }
