@@ -20,7 +20,7 @@ const getSlidesSettings = (width) => {
   return { slidesToShow: 4, slidesToScroll: 4 };
 };
 
-const Explore = () => {
+const Explore = ({ creator }) => {
   function ArrowButton({ className, onClick }) {
     const side = className?.includes("slick-prev")
       ? "left"
@@ -101,19 +101,27 @@ const Explore = () => {
     return () => window.removeEventListener("resize", updateSettings);
   }, []);
 
+  const handlerCreator = (e, i) => {
+    console.log("e,i", e, i);
+    e.stopPropagation();
+    router.push(`/creator/${i}`);
+  };
+
   if (!settings) return null;
 
   return (
     <Div>
-      <HeaderText>
-        Explore and Learn
-        <span> AI Tools</span>
-      </HeaderText>
+      {!creator && (
+        <HeaderText>
+          Explore and Learn
+          <span> AI Tools</span>
+        </HeaderText>
+      )}
 
       <Slider className="Slider" {...settings}>
         {Array.from({ length: 50 }).map((_, index) => (
           <Card onClick={() => router.push(`video/${index}`)} key={index}>
-            <Video>
+            <Video onClick={(e) => handlerCreator(e, index)}>
               <AvatarWrapper>
                 <Image
                   src="/static/avtar.jpg"
@@ -186,6 +194,7 @@ const Video = styled(Flex)`
   position: absolute;
   left: clamp(6px, 2vw, 12px);
   bottom: clamp(6px, 2vw, 12px);
+  cursor: pointer;
   padding: 4px 9px 4px 3px;
   align-items: center;
   gap: 6px;
