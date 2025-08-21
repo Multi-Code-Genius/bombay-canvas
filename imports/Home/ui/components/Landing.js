@@ -6,9 +6,11 @@ import styled from "styled-components";
 import Image from "next/image";
 import Flex from "lib/atoms/Flex";
 import PlayButtonIcon from "/imports/Home/ui/assets/PlayButtonIcon";
+import { useRouter } from "next/navigation";
 
 const Landing = () => {
   const videoRef = useRef(null);
+  const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(true);
 
   const togglePlay = () => {
@@ -52,7 +54,7 @@ const Landing = () => {
             <PlayButtonIcon width={17} height={19} />
             {isPlaying ? "Pause" : " Play"}
           </Buttons>
-          <InfoCta>
+          <InfoCta onClick={() => router.push("/creator/1")}>
             <AvatarWrapper>
               <Image
                 src="/static/avtar.jpg"

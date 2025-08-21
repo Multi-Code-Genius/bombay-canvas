@@ -3,7 +3,7 @@
 import React from "react";
 
 import Landing from "imports/Home/ui/components/Landing";
-import Explore from "../components/Explore";
+import Explore from "imports/Home/ui/components/Explore";
 import styled from "styled-components";
 
 export default function LandingPage() {

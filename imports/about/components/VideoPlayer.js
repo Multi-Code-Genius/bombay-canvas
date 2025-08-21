@@ -2,11 +2,11 @@
 
 import { useRef, useState } from "react";
 import styled from "styled-components";
-import { Pause, VolumeOff, VolumeX } from "lucide-react";
+import { Pause, VolumeOff } from "lucide-react";
 
-export default function VideoPlayer() {
+export default function VideoPlayer({ playing, setPlaying }) {
   const videoRef = useRef(null);
-  const [playing, setPlaying] = useState(false);
+
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);

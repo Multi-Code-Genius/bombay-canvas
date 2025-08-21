@@ -1,36 +1,32 @@
 "use client";
 import Flex from "lib/atoms/Flex";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import PlayButtonIcon from "imports/Home/ui/assets/PlayButtonIcon";
 import VideoPlayer from "../components/VideoPlayer";
 import Header from "imports/core/ui/atoms/Header";
+import { useRouter } from "next/navigation";
 
 const AboutPage = () => {
+  const router = useRouter();
+  const [playing, setPlaying] = useState(false);
+
+  const handlerCreator = (e, i = 1) => {
+    router.push(`/creator/${i}`);
+  };
+
   return (
     <>
       <Header />
       <Frame>
         <VideoWrapper>
-          <VideoPlayer />
+          <VideoPlayer playing={playing} setPlaying={setPlaying} />
         </VideoWrapper>
-        <RightSection>
+        <RightSection $isBlur={playing}>
           <MovieInfo>
             <Content>
               <Above>
-                <InfoCta>
-                  <AvatarWrapper>
-                    <Image
-                      src="/static/avtar.jpg"
-                      width={24}
-                      height={24}
-                      alt="Avatar"
-                    />
-                  </AvatarWrapper>
-
-                  <Name>James Smith</Name>
-                </InfoCta>
                 <VideoQuolity>
                   <Episode>Episode 1</Episode>
                   <Year>2024</Year>
@@ -50,6 +46,21 @@ const AboutPage = () => {
               </Above>
             </Content>
             <Genres>
+              <Creator>
+                <By>By</By>{" "}
+                <InfoCta onClick={() => handlerCreator()}>
+                  <AvatarWrapper>
+                    <Image
+                      src="/static/avtar.jpg"
+                      width={24}
+                      height={24}
+                      alt="Avatar"
+                    />
+                  </AvatarWrapper>
+
+                  <Name>James Smith</Name>
+                </InfoCta>
+              </Creator>
               <GenresText>
                 <span>Genres: </span>
                 Lorem , dolor, ipsum dolor
@@ -129,6 +140,8 @@ const RightSection = styled(Flex)`
   justify-content: center;
   align-items: center;
   gap: 21px;
+  /* opacity: 0.3; */
+  opacity: ${({ $isBlur }) => ($isBlur ? "0.3" : "1")};
 `;
 
 const MovieInfo = styled(Flex)`
@@ -306,11 +319,18 @@ const Description = styled.div`
   }
 `;
 
-const Genres = styled(Flex)`
+const Genres = styled.div`
+  display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: flex-end;
-  gap: 14px;
+  gap: 137px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 0;
+  }
 `;
 
 const GenresText = styled.span`
@@ -452,4 +472,18 @@ const Ellipse = styled(Flex)`
   -webkit-backdrop-filter: blur(9.3px);
   backdrop-filter: blur(9.3px);
   background-color: rgba(255, 255, 255, 0.24);
+`;
+
+const Creator = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+`;
+
+const By = styled.span`
+  font-family: "HelveticaRegular";
+  font-size: 14px;
+  line-height: 1.43;
+  color: #777;
 `;

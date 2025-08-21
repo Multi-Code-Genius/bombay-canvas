@@ -120,7 +120,7 @@ const Explore = ({ creator }) => {
 
       <Slider className="Slider" {...settings}>
         {Array.from({ length: 50 }).map((_, index) => (
-          <Card onClick={() => router.push(`video/${index}`)} key={index}>
+          <Card onClick={() => router.push(`/video/${index}`)} key={index}>
             <Video onClick={(e) => handlerCreator(e, index)}>
               <AvatarWrapper>
                 <Image
