@@ -69,6 +69,8 @@ export default function VideoPlayer({ playing, setPlaying }) {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
+        preload="auto"
+        poster="/static/videoImage.png"
       />
 
       <Controls className="controls">
@@ -122,7 +124,7 @@ const Container = styled.div`
   overflow: hidden;
 
   .controls {
-    opacity: ${(props) => (props.playing ? 0 : 1)};
+    opacity: ${({ $playing }) => ($playing ? "0" : "1")};
     transition: opacity 0.3s ease;
   }
 
