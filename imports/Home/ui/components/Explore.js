@@ -21,6 +21,15 @@ const getSlidesSettings = (width) => {
 };
 
 const Explore = ({ creator }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreen = () => setIsMobile(window.innerWidth < 640);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
   function ArrowButton({ className, onClick }) {
     const side = className?.includes("slick-prev")
       ? "left"
@@ -54,7 +63,7 @@ const Explore = ({ creator }) => {
 
       setSettings({
         dots: false,
-        infinite: false,
+        infinite: true,
         speed: 1500,
         adaptiveHeight: true,
         touchThreshold: 10,
@@ -67,7 +76,7 @@ const Explore = ({ creator }) => {
         slidesToShow: isSmallScreen ? 1 : slidesToShow,
         slidesToScroll: isSmallScreen ? 1 : slidesToScroll,
 
-        centerMode: isSmallScreen, // 👈 center single card
+        centerMode: isSmallScreen,
         centerPadding: isSmallScreen ? "20px" : "0px",
 
         nextArrow: <ArrowButton />,
@@ -80,7 +89,7 @@ const Explore = ({ creator }) => {
               slidesToShow: 1,
               slidesToScroll: 1,
               centerMode: true,
-              centerPadding: "0px", // or "20px" if you want peeking
+              centerPadding: "0px",
             },
           },
           {
@@ -118,23 +127,43 @@ const Explore = ({ creator }) => {
         </HeaderText>
       )}
 
-      <Slider className="Slider" {...settings}>
-        {Array.from({ length: 50 }).map((_, index) => (
-          <Card onClick={() => router.push(`/video/${index}`)} key={index}>
-            <Video onClick={(e) => handlerCreator(e, index)}>
-              <AvatarWrapper>
-                <Image
-                  src="/static/avtar.jpg"
-                  width={24}
-                  height={24}
-                  alt="Avatar"
-                />
-              </AvatarWrapper>
-              <Name>James Smith</Name>
-            </Video>
-          </Card>
-        ))}
-      </Slider>
+      {isMobile ? (
+        <ScrollRow>
+          {Array.from({ length: 50 }).map((_, index) => (
+            <Card key={index} onClick={() => router.push(`/video/${index}`)}>
+              <Video onClick={(e) => handlerCreator(e, index)}>
+                <AvatarWrapper>
+                  <Image
+                    src="/static/avtar.jpg"
+                    width={24}
+                    height={24}
+                    alt="Avatar"
+                  />
+                </AvatarWrapper>
+                <Name>James Smith</Name>
+              </Video>
+            </Card>
+          ))}
+        </ScrollRow>
+      ) : (
+        <Slider className="Slider" {...settings}>
+          {Array.from({ length: 50 }).map((_, index) => (
+            <Card key={index} onClick={() => router.push(`/video/${index}`)}>
+              <Video onClick={(e) => handlerCreator(e, index)}>
+                <AvatarWrapper>
+                  <Image
+                    src="/static/avtar.jpg"
+                    width={24}
+                    height={24}
+                    alt="Avatar"
+                  />
+                </AvatarWrapper>
+                <Name>James Smith</Name>
+              </Video>
+            </Card>
+          ))}
+        </Slider>
+      )}
     </Div>
   );
 };
@@ -181,13 +210,23 @@ const HeaderText = styled.div`
 
 const Card = styled.div`
   width: 100%;
-  height: 413px;
+  /* height: 413px; */
   position: relative;
   align-items: center;
   justify-content: center;
   background-image: url("/static/filmCard.png");
   background-repeat: no-repeat;
   background-size: cover;
+
+  @media (max-width: 640px) {
+    /* height: 200px; */
+    padding-top: 62%;
+    width: 39%;
+  }
+  @media (min-width: 640px) {
+    /* height: 200px; */
+    height: 413px;
+  }
 `;
 
 const Video = styled(Flex)`
@@ -270,5 +309,23 @@ const ArrowButtonUI = styled.button`
 
   @media (max-width: 640px) {
     display: none;
+  }
+`;
+
+const ScrollRow = styled.div`
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+
+  &::-webkit-scrollbar {
+    display: none; /* hide scrollbar thumb */
+  }
+
+  > div {
+    flex: 0 0 auto; /* prevent shrinking */
+    scroll-snap-align: start; /* snap each card */
   }
 `;
