@@ -63,7 +63,7 @@ const Explore = ({ creator }) => {
 
       setSettings({
         dots: false,
-        infinite: true,
+        infinite: false,
         speed: 1500,
         adaptiveHeight: true,
         touchThreshold: 10,
