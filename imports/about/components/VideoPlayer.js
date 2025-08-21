@@ -62,7 +62,7 @@ export default function VideoPlayer({ playing, setPlaying }) {
   };
 
   return (
-    <Container playing={playing}>
+    <Container $playing={playing}>
       <StyledVideo
         ref={videoRef}
         src="https://videos.pexels.com/video-files/26654027/11984840_1080_1920_30fps.mp4"

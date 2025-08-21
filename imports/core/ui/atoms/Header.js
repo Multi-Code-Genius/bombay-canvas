@@ -18,7 +18,7 @@ import { getInitials } from "lib/hooks/getIntials";
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(useAuthStore.getState().token);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data } = useUserData(true);
   const token = useAuthStore((s) => s.token);
 

@@ -140,7 +140,6 @@ const RightSection = styled(Flex)`
   justify-content: center;
   align-items: center;
   gap: 21px;
-  /* opacity: 0.3; */
   opacity: ${({ $isBlur }) => ($isBlur ? "0.3" : "1")};
 `;
 
