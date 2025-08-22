@@ -741,7 +741,7 @@ export default function AdminPage() {
                             </EpisodeContainer>
                           ) : (
                             <EmptyEpisodes>
-                              No episodes added yet. Click "Add Episode" to get
+                              No episodes added yet. Click &quot;Add Episode&quot; to get
                               started.
                             </EmptyEpisodes>
                           )}

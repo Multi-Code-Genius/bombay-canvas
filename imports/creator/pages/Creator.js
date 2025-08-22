@@ -4,15 +4,14 @@ import React from "react";
 
 import styled from "styled-components";
 import CreatorLanding from "imports/creator/components/CreatorLanding";
-import Explore from "imports/Home/ui/components/Explore";
+import CreatorGrids from "../components/CreatorGrids";
 
 export default function Creator() {
   return (
     <Layout>
       <CreatorLanding />
       <ExploreWrapper>
-        <Explore creator />
-        <Explore creator />
+        <CreatorGrids />
       </ExploreWrapper>
     </Layout>
   );
