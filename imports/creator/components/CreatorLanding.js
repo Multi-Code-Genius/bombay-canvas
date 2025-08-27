@@ -1,28 +1,13 @@
 "use client";
 
 import Header from "imports/core/ui/atoms/Header";
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Flex from "lib/atoms/Flex";
 import YoutubeIcon from "imports/creator/assets/YoutubeIcon";
 import InstagramIcon from "imports/creator/assets/InstagramIcon";
 
 const CreatorLanding = () => {
-  const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
-
-    setIsPlaying(!isPlaying);
-  };
-
   return (
     <Layout>
       <Header />

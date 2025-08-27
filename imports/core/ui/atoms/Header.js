@@ -19,7 +19,7 @@ const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { data } = useUserData(true);
+  const { data } = useUserData(!!useAuthStore.getState().token);
   const token = useAuthStore((s) => s.token);
 
   const userName = data?.userData?.name || "";

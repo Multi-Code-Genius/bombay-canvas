@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDws7bw5aD-LqV2oMuM3EOV3oavo0RVpnA",
-  authDomain: "bombay-canvas.firebaseapp.com",
-  projectId: "bombay-canvas",
-  storageBucket: "bombay-canvas.firebasestorage.app",
-  messagingSenderId: "145295638585",
-  appId: "1:145295638585:web:986ea42f4238675fbb0de8",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBAE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBAE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSEGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
