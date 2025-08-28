@@ -64,14 +64,20 @@ export default function VideoPlayer({ movie, playing, setPlaying }) {
   return (
     <Container $playing={playing}>
       <StyledVideo
-        ref={videoRef}
-        src={movie?.trailerUrl}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
         preload="auto"
         poster={movie?.posterUrl ?? "/static/videoImage.png"}
-      />
+        ref={videoRef}
+        controls
+      >
+        <source
+          src={`${process.env.NEXT_PUBLIC_BASE_URL}/api/movie/video/cmevcpasy000pa3irpqc5af5w/cmevcplct000ta3irhxit9xzz`}
+          type="video/mp4"
+        />
+        Your browser does not support video playback.
+      </StyledVideo>
 
       <Controls className="controls">
         <SideButtonLeft onClick={() => seek(-10)}>

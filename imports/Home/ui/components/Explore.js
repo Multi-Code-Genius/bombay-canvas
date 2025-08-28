@@ -10,7 +10,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ArrowIcon from "/imports/Home/ui/assets/ArrowIcon";
 import { useRouter } from "next/navigation";
-import { useMoviesData } from "api/movies";
 import SkeletonCard from "imports/core/ui/atoms/SkeletonCard";
 
 const getSlidesSettings = (width) => {
@@ -22,11 +21,8 @@ const getSlidesSettings = (width) => {
   return { slidesToShow: 4, slidesToScroll: 4 };
 };
 
-const Explore = ({ creator }) => {
+const Explore = ({ movieData, isLoading }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const { data: movieData, isLoading } = useMoviesData();
-
-  console.log("first", movieData?.allMovies[0]);
 
   useEffect(() => {
     const checkScreen = () => setIsMobile(window.innerWidth < 640);
@@ -155,7 +151,7 @@ const Explore = ({ creator }) => {
 
       {isMobile ? (
         <ScrollRow>
-          {movieData?.allMovies.map((movie, index) => (
+          {movieData?.map((movie, index) => (
             <Card
               $bgImage={movie?.posterUrl}
               key={index}
@@ -177,8 +173,7 @@ const Explore = ({ creator }) => {
         </ScrollRow>
       ) : (
         <Slider className="Slider" {...settings}>
-          {movieData?.allMovies.map((movie, index) => {
-            console.log("movie", movie);
+          {movieData?.map((movie, index) => {
             return (
               <Card
                 $bgImage={movie?.posterUrl}

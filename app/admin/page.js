@@ -6,12 +6,7 @@ import Cookies from "js-cookie";
 import Flex from "/lib/atoms/Flex";
 import LoginForm from "/imports/Auth/Components/LoginForm";
 import { useAllUserData, useUpdateRole, useUserData } from "api/user";
-import {
-  useAddMovies,
-  useDeleteMovie,
-  useEditMovies,
-  useMoviesData,
-} from "api/movies";
+import { useDeleteMovie, useEditMovies, useMoviesData } from "api/movies";
 import { useAuthStore } from "store/authStore";
 import { useUploadMovie } from "lib/hooks/useUploadMovie";
 
@@ -30,6 +25,7 @@ export default function AdminPage() {
   function Dashboard() {
     const tabs = ["Overview", "Users", "Movies", "Genres"];
     const [activeTab, setActiveTab] = useState("Overview");
+    const [isUploading, setIsUploading] = useState(false);
 
     const [moviesView, setMoviesView] = useState("list");
     const { data: user } = useUserData(!!useAuthStore.getState().token);
@@ -45,7 +41,22 @@ export default function AdminPage() {
       useAuthStore.getState().token
     );
 
-    console.log("movieData", user?.userData?.id);
+    useEffect(() => {
+      const beforeUnload = (e) => {
+        if (isUploading) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      };
+
+      if (isUploading) {
+        window.addEventListener("beforeunload", beforeUnload);
+      }
+
+      return () => {
+        window.removeEventListener("beforeunload", beforeUnload);
+      };
+    }, [isUploading]);
 
     const defaultMovie = useMemo(
       () => ({
@@ -58,7 +69,7 @@ export default function AdminPage() {
         posterImage: null,
         trailerVideo: null,
         movieVideo: null,
-        type: "MOVIE",
+        type: "SERIES",
         genres: [],
         episodes: [],
       }),
@@ -69,7 +80,6 @@ export default function AdminPage() {
     const [originalMovie, setOriginalMovie] = useState(null);
     const [movies, setMovies] = useState([]);
     const [savedJson, setSavedJson] = useState(null);
-    console.log("savedJson", savedJson);
 
     const [userQuery, setUserQuery] = useState("");
     const [users, setUsers] = useState([]);
@@ -162,6 +172,8 @@ export default function AdminPage() {
     const onSave = async (e) => {
       e.preventDefault();
 
+      console.log("movie", movie);
+
       if (movie.id && originalMovie) {
         const updatedFields = {};
         updatedFields.movieId = movie.id;
@@ -223,6 +235,7 @@ export default function AdminPage() {
         );
         setSavedJson(updatedFields);
       } else {
+        setIsUploading(true);
         await uploadMovie({
           title: movie.title,
           description: "A sci-fi thriller about dreams within dreams.",
@@ -235,7 +248,7 @@ export default function AdminPage() {
           trailerVideo: movie.trailerVideo,
           movieVideo: movie.movieVideo,
           episodes: movie.episodes,
-        });
+        }).finally(() => setIsUploading(false));
         const id = crypto.randomUUID ? crypto.randomUUID() : `m_${Date.now()}`;
         setMovies((arr) => [...arr, { ...movie, id }]);
         setMovie((m) => ({ ...m, id }));
@@ -534,7 +547,6 @@ export default function AdminPage() {
                               value={movie.type}
                               onChange={(e) => setField("type", e.target.value)}
                             >
-                              <option value="MOVIE">Movie</option>
                               <option value="SERIES">TV Series</option>
                             </Select>
                           </FormField>
@@ -640,7 +652,7 @@ export default function AdminPage() {
                             </FileUploadArea>
                           </FormField>
 
-                          <FormField>
+                          {/* <FormField>
                             <Label>Main Video *</Label>
                             <FileUploadArea>
                               <FileInput
@@ -664,7 +676,7 @@ export default function AdminPage() {
                                 )}
                               </FileUploadLabel>
                             </FileUploadArea>
-                          </FormField>
+                          </FormField> */}
                         </ThreeColumnGrid>
                       </FormSection>
 
@@ -679,12 +691,10 @@ export default function AdminPage() {
 
                           {movie.episodes.length > 0 ? (
                             <EpisodeContainer>
-                              {movie.episodes.map((ep) => (
+                              {movie.episodes.map((ep, i) => (
                                 <EpisodeCard key={ep.id}>
                                   <EpisodeHeader>
-                                    <EpisodeTitle>
-                                      Episode {ep.episodeNo}
-                                    </EpisodeTitle>
+                                    <EpisodeTitle>Episode {i + 1}</EpisodeTitle>
                                     <DangerBtn
                                       type="button"
                                       onClick={() => removeEpisode(ep.id)}
@@ -730,7 +740,7 @@ export default function AdminPage() {
                                       <SmallInput
                                         type="number"
                                         min={1}
-                                        value={ep.episodeNo}
+                                        value={i + 1}
                                         onChange={(e) =>
                                           updateEpisode(
                                             ep.id,
@@ -815,7 +825,7 @@ export default function AdminPage() {
                             ? movie.id
                               ? "Update Movie"
                               : "Create Movie"
-                            : "Creating Movie"}
+                            : "Uploading Movies..."}
                         </SubmitBtn>
                         <SecondaryBtn
                           type="button"

@@ -5,14 +5,17 @@ import React from "react";
 import Landing from "imports/Home/ui/components/Landing";
 import Explore from "imports/Home/ui/components/Explore";
 import styled from "styled-components";
+import { useMoviesData } from "api/movies";
 
 export default function LandingPage() {
+  const { data, isLoading } = useMoviesData();
+
   return (
     <Layout>
-      <Landing />
+      <Landing movieData={data?.allMovies} isLoading={isLoading} />
       <ExploreWrapper>
-        <Explore />
-        <Explore />
+        <Explore movieData={data?.allMovies} isLoading={isLoading} />
+        <Explore movieData={data?.allMovies} isLoading={isLoading} />
       </ExploreWrapper>
     </Layout>
   );

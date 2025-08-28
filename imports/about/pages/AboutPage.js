@@ -80,9 +80,11 @@ const AboutPage = ({ videoId }) => {
             </Genres>
           </MovieInfo>
           <Div>
-            <EpisodeTitle>Episodes</EpisodeTitle>
+            {data?.movie?.episodes?.length > 0 && (
+              <EpisodeTitle>Episodes</EpisodeTitle>
+            )}
             <EpisodeBoxWrapper>
-              {Array.from({ length: 6 }).map((_, index) => {
+              {data?.movie?.episodes?.map((e, index) => {
                 return (
                   <EpisodeBox $active={index === 0}>
                     <InnerContent>
@@ -96,8 +98,8 @@ const AboutPage = ({ videoId }) => {
                       </NumberWrapper>
                       <TextWrapper>
                         <OfferWrapper>
-                          <OffterText>The Offer</OffterText>
-                          <Minute>55m</Minute>
+                          <OffterText>{e?.title}</OffterText>
+                          <Minute>{e.duration}m</Minute>
                         </OfferWrapper>
 
                         <LargeText>

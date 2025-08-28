@@ -8,10 +8,12 @@ import Flex from "lib/atoms/Flex";
 import PlayButtonIcon from "/imports/Home/ui/assets/PlayButtonIcon";
 import { useRouter } from "next/navigation";
 
-const Landing = () => {
+const Landing = ({ movieData, isLoading }) => {
   const videoRef = useRef(null);
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(true);
+
+  console.log("movieData", movieData?.[0]?.trailerUrl);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -33,7 +35,10 @@ const Landing = () => {
         loop
         muted
         playsInline
-        src="https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
+        src={
+          movieData?.[0]?.trailerUrl ??
+          "https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
+        }
         type="video/mp4"
       ></BackgroundVideo>
       <Header />
@@ -54,7 +59,11 @@ const Landing = () => {
             <PlayButtonIcon width={17} height={19} />
             {isPlaying ? "Pause" : " Play"}
           </Buttons>
-          <InfoCta onClick={() => router.push("/creator/1")}>
+          <InfoCta
+            onClick={() =>
+              router.push(`/creator/${movieData?.[0]?.uploaderId}`)
+            }
+          >
             <AvatarWrapper>
               <Image
                 src="/static/avtar.jpg"
@@ -63,8 +72,7 @@ const Landing = () => {
                 alt="Avatar"
               />
             </AvatarWrapper>
-
-            <Name>James Smith</Name>
+            <Name>{movieData?.[0]?.uploader?.name}</Name>
           </InfoCta>
         </CtaWrappers>
       </Content>
