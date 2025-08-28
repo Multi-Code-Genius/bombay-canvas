@@ -5,13 +5,15 @@ import React from "react";
 import styled from "styled-components";
 import CreatorLanding from "imports/creator/components/CreatorLanding";
 import CreatorGrids from "../components/CreatorGrids";
+import { useMoviesDataByCreator } from "api/movies";
 
-export default function Creator() {
+export default function Creator({ params }) {
+  const { data, isLoading } = useMoviesDataByCreator(params);
   return (
     <Layout>
-      <CreatorLanding />
+      <CreatorLanding data={data} />
       <ExploreWrapper>
-        <CreatorGrids />
+        <CreatorGrids data={data} isLoading={isLoading} />
       </ExploreWrapper>
     </Layout>
   );

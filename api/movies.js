@@ -35,6 +35,64 @@ export const useMoviesData = () => {
   });
 };
 
+const getMoviesByCreator = async (id) => {
+  try {
+    const response = await api(`/api/Movie/creator/${id}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    const data = await response;
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Movies Error", error.message);
+    } else {
+      console.log("Movies Error", error);
+    }
+  }
+};
+
+export const useMoviesDataByCreator = (id) => {
+  return useQuery({
+    queryKey: ["moviesDataByCreator"],
+    queryFn: () => getMoviesByCreator(id),
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    retry: 0,
+  });
+};
+
+const getMoviesById = async (id) => {
+  try {
+    const response = await api(`/api/Movie/movie-id/${id}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    const data = await response;
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Movies Error", error.message);
+    } else {
+      console.log("Movies Error", error);
+    }
+  }
+};
+
+export const useMoviesDataById = (id) => {
+  return useQuery({
+    queryKey: ["moviesDataById"],
+    queryFn: () => getMoviesById(id),
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    retry: 0,
+  });
+};
+
 export const deletMovie = async (id) => {
   try {
     const response = await api(`/api/movie/remove/${id}`, {
@@ -65,43 +123,43 @@ export const useDeleteMovie = () => {
   });
 };
 
-export const addMovies = async (data) => {
-  try {
-    const response = await api("/api/movie/add-movies", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...data,
-      }),
-    });
+// export const addMovies = async (data) => {
+//   try {
+//     const response = await api("/api/movie/movies", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         ...data,
+//       }),
+//     });
 
-    const resp = await response;
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("add Movies Error", error.message);
-    } else {
-      console.log("add Movies Error", error);
-    }
-  }
-};
+//     const resp = await response;
+//     return resp;
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       console.log("add Movies Error", error.message);
+//     } else {
+//       console.log("add Movies Error", error);
+//     }
+//   }
+// };
 
-export const useAddMovies = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data) => {
-      const response = await addMovies(data);
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["moviesData"] });
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(" add movies Failed", error.message);
-    },
-  });
-};
+// export const useAddMovies = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: async (data) => {
+//       const response = await addMovies(data);
+//       return response;
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["moviesData"] });
+//     },
+//     onError: (error) => {
+//       toast.error(error.message);
+//       console.log(" add movies Failed", error.message);
+//     },
+//   });
+// };
 
 export const editMovies = async (data) => {
   try {

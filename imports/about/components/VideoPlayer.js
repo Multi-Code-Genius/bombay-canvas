@@ -8,7 +8,7 @@ import SideButtonRightIcon from "../assets/SideButtonRightIcon";
 import PlayIcon from "../assets/PlayIcon";
 import VolumeIcon from "../assets/VolumeIcon";
 
-export default function VideoPlayer({ playing, setPlaying }) {
+export default function VideoPlayer({ movie, playing, setPlaying }) {
   const videoRef = useRef(null);
 
   const [muted, setMuted] = useState(false);
@@ -65,12 +65,12 @@ export default function VideoPlayer({ playing, setPlaying }) {
     <Container $playing={playing}>
       <StyledVideo
         ref={videoRef}
-        src="https://videos.pexels.com/video-files/26654027/11984840_1080_1920_30fps.mp4"
+        src={movie?.trailerUrl}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
         preload="auto"
-        poster="/static/videoImage.png"
+        poster={movie?.posterUrl ?? "/static/videoImage.png"}
       />
 
       <Controls className="controls">

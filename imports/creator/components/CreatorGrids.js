@@ -6,8 +6,9 @@ import React from "react";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
+import SkeletonCard from "imports/core/ui/atoms/SkeletonCard";
 
-const CreatorGrids = () => {
+const CreatorGrids = ({ data, isLoading }) => {
   const router = useRouter();
 
   const handlerCreator = (e, i) => {
@@ -16,12 +17,24 @@ const CreatorGrids = () => {
     router.push(`/creator/${i}`);
   };
 
+  if (isLoading) {
+    const skeletonCards = Array.from({ length: 15 }).map((_, index) => (
+      <SkeletonCard key={index} />
+    ));
+
+    return <Wrapper>{skeletonCards}</Wrapper>;
+  }
+
   return (
     <Div>
       <Wrapper>
-        {Array.from({ length: 50 }).map((_, index) => (
-          <Card key={index} onClick={() => router.push(`/video/${index}`)}>
-            <Video onClick={(e) => handlerCreator(e, index)}>
+        {data?.allMovies?.map((movie, index) => (
+          <Card
+            $bgImage={movie?.posterUrl}
+            key={index}
+            onClick={() => router.push(`/video/${movie?.id}`)}
+          >
+            <Video onClick={(e) => handlerCreator(e, movie?.uploaderId)}>
               <AvatarWrapper>
                 <Image
                   src="/static/avtar.jpg"
@@ -30,7 +43,7 @@ const CreatorGrids = () => {
                   alt="Avatar"
                 />
               </AvatarWrapper>
-              <Name>James Smith</Name>
+              <Name>{movie?.uploader?.name}</Name>
             </Video>
           </Card>
         ))}
@@ -75,7 +88,7 @@ const Card = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("/static/filmCard.png");
+  background-image: ${({ $bgImage }) => `url(${$bgImage})`};
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 12px;

@@ -10,6 +10,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ArrowIcon from "/imports/Home/ui/assets/ArrowIcon";
 import { useRouter } from "next/navigation";
+import { useMoviesData } from "api/movies";
+import SkeletonCard from "imports/core/ui/atoms/SkeletonCard";
 
 const getSlidesSettings = (width) => {
   if (width < 640) return { slidesToShow: 1, slidesToScroll: 1 };
@@ -22,6 +24,9 @@ const getSlidesSettings = (width) => {
 
 const Explore = ({ creator }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const { data: movieData, isLoading } = useMoviesData();
+
+  console.log("first", movieData?.allMovies[0]);
 
   useEffect(() => {
     const checkScreen = () => setIsMobile(window.innerWidth < 640);
@@ -118,20 +123,45 @@ const Explore = ({ creator }) => {
 
   if (!settings) return null;
 
-  return (
-    <Div>
-      {!creator && (
+  if (isLoading) {
+    const skeletonCards = Array.from({ length: 15 }).map((_, index) => (
+      <SkeletonCard key={index} />
+    ));
+
+    return (
+      <Div>
         <HeaderText>
           Explore and Learn
           <span> AI Tools</span>
         </HeaderText>
-      )}
+
+        {isMobile ? (
+          <ScrollRow>{skeletonCards}</ScrollRow>
+        ) : (
+          <Slider className="Slider" {...settings}>
+            {skeletonCards}
+          </Slider>
+        )}
+      </Div>
+    );
+  }
+
+  return (
+    <Div>
+      <HeaderText>
+        Explore and Learn
+        <span> AI Tools</span>
+      </HeaderText>
 
       {isMobile ? (
         <ScrollRow>
-          {Array.from({ length: 50 }).map((_, index) => (
-            <Card key={index} onClick={() => router.push(`/video/${index}`)}>
-              <Video onClick={(e) => handlerCreator(e, index)}>
+          {movieData?.allMovies.map((movie, index) => (
+            <Card
+              $bgImage={movie?.posterUrl}
+              key={index}
+              onClick={() => router.push(`/video/${movie?.id}`)}
+            >
+              <Video onClick={(e) => handlerCreator(e, movie?.uploader?.id)}>
                 <AvatarWrapper>
                   <Image
                     src="/static/avtar.jpg"
@@ -140,28 +170,35 @@ const Explore = ({ creator }) => {
                     alt="Avatar"
                   />
                 </AvatarWrapper>
-                <Name>James Smith</Name>
+                <Name>{movie?.uploader?.name}</Name>
               </Video>
             </Card>
           ))}
         </ScrollRow>
       ) : (
         <Slider className="Slider" {...settings}>
-          {Array.from({ length: 50 }).map((_, index) => (
-            <Card key={index} onClick={() => router.push(`/video/${index}`)}>
-              <Video onClick={(e) => handlerCreator(e, index)}>
-                <AvatarWrapper>
-                  <Image
-                    src="/static/avtar.jpg"
-                    width={24}
-                    height={24}
-                    alt="Avatar"
-                  />
-                </AvatarWrapper>
-                <Name>James Smith</Name>
-              </Video>
-            </Card>
-          ))}
+          {movieData?.allMovies.map((movie, index) => {
+            console.log("movie", movie);
+            return (
+              <Card
+                $bgImage={movie?.posterUrl}
+                key={index}
+                onClick={() => router.push(`/video/${movie?.id}`)}
+              >
+                <Video onClick={(e) => handlerCreator(e, movie?.uploader?.id)}>
+                  <AvatarWrapper>
+                    <Image
+                      src={"/static/avtar.jpg"}
+                      width={24}
+                      height={24}
+                      alt="Avatar"
+                    />
+                  </AvatarWrapper>
+                  <Name>{movie?.uploader?.name}</Name>
+                </Video>
+              </Card>
+            );
+          })}
         </Slider>
       )}
     </Div>
@@ -214,7 +251,8 @@ const Card = styled.div`
   position: relative;
   align-items: center;
   justify-content: center;
-  background-image: url("/static/filmCard.png");
+  background-image: ${({ $bgImage }) => `url(${$bgImage})`};
+
   background-repeat: no-repeat;
   background-size: cover;
 

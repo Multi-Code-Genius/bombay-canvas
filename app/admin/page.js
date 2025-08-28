@@ -5,13 +5,15 @@ import styled from "styled-components";
 import Cookies from "js-cookie";
 import Flex from "/lib/atoms/Flex";
 import LoginForm from "/imports/Auth/Components/LoginForm";
-import { useAllUserData, useUpdateRole } from "api/user";
+import { useAllUserData, useUpdateRole, useUserData } from "api/user";
 import {
   useAddMovies,
   useDeleteMovie,
   useEditMovies,
   useMoviesData,
 } from "api/movies";
+import { useAuthStore } from "store/authStore";
+import { useUploadMovie } from "lib/hooks/useUploadMovie";
 
 export default function AdminPage() {
   const [isAuthed, setIsAuthed] = useState(false);
@@ -30,21 +32,27 @@ export default function AdminPage() {
     const [activeTab, setActiveTab] = useState("Overview");
 
     const [moviesView, setMoviesView] = useState("list");
+    const { data: user } = useUserData(!!useAuthStore.getState().token);
 
     const { data } = useAllUserData();
     const { mutate } = useUpdateRole();
     const { data: movieData } = useMoviesData();
     const { mutate: deteleMovie } = useDeleteMovie();
-    const { mutate: addMovies } = useAddMovies();
+
     const { mutate: updateMovies } = useEditMovies();
 
-    console.log("movieData", movieData?.allMovies);
+    const { uploadMovie, loading, error } = useUploadMovie(
+      useAuthStore.getState().token
+    );
+
+    console.log("movieData", user?.userData?.id);
 
     const defaultMovie = useMemo(
       () => ({
         id: undefined,
         title: "",
         description: "",
+        uploaderId: user?.userData?.id,
         releaseDate: "",
         duration: 90,
         posterImage: null,
@@ -151,7 +159,7 @@ export default function AdminPage() {
       }));
     };
 
-    const onSave = (e) => {
+    const onSave = async (e) => {
       e.preventDefault();
 
       if (movie.id && originalMovie) {
@@ -172,15 +180,62 @@ export default function AdminPage() {
           }
         });
 
+        if (Object.keys(updatedFields).length <= 1) {
+          // No changes other than movieId
+          setMoviesView("list");
+          setOriginalMovie(null);
+          return;
+        }
+
+        const formData = new FormData();
+        Object.entries(updatedFields).forEach(([key, value]) => {
+          if (key === "genres") {
+            formData.append(key, JSON.stringify(value));
+          } else if (key === "episodes") {
+            const episodesData = value.map((ep) => {
+              const { id, episodeVideo, ...rest } = ep;
+              return rest;
+            });
+            formData.append("episodes", JSON.stringify(episodesData));
+            value.forEach((ep, index) => {
+              if (ep.episodeVideo instanceof File) {
+                formData.append(
+                  `episodeVideo_${index}`,
+                  ep.episodeVideo,
+                  ep.episodeVideo.name
+                );
+              }
+            });
+          } else if (value instanceof File) {
+            formData.append(key, value, value.name);
+          } else if (value === null) {
+            formData.append(key, "");
+          } else {
+            formData.append(key, value);
+          }
+        });
+
         console.log("Only updated fields:", updatedFields);
-        updateMovies(updatedFields);
+        updateMovies(formData);
 
         setMovies((arr) =>
           arr.map((m) => (m.id === movie.id ? { ...m, ...movie } : m))
         );
         setSavedJson(updatedFields);
       } else {
-        addMovies(movie);
+        await uploadMovie({
+          title: movie.title,
+          description: "A sci-fi thriller about dreams within dreams.",
+          releaseDate: movie.releaseDate,
+          duration: 148,
+          uploaderId: user?.userData?.id,
+          type: movie.type,
+          genres: movie.genres,
+          posterImage: movie.posterImage,
+          trailerVideo: movie.trailerVideo,
+          movieVideo: movie.movieVideo,
+          episodes: movie.episodes,
+        });
         const id = crypto.randomUUID ? crypto.randomUUID() : `m_${Date.now()}`;
         setMovies((arr) => [...arr, { ...movie, id }]);
         setMovie((m) => ({ ...m, id }));
@@ -283,9 +338,9 @@ export default function AdminPage() {
                     <tr>
                       <th>Name</th>
                       <th>Email</th>
-                      <th>Role</th>
+                      {/* <th>Role</th> */}
                       <th>Created</th>
-                      <th>Actions</th>
+                      {/* <th>Actions</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -295,11 +350,11 @@ export default function AdminPage() {
                         <tr key={u.id}>
                           <td>{u.name}</td>
                           <td>{u.email}</td>
-                          <td>
+                          {/* <td>
                             <RoleBadge $role={u.role}>{u.role}</RoleBadge>
-                          </td>
+                          </td> */}
                           <td>{u.createdAt}</td>
-                          <td>
+                          {/* <td>
                             <RoleSelect
                               value={u.role}
                               onChange={(e) =>
@@ -312,7 +367,7 @@ export default function AdminPage() {
                                 </option>
                               ))}
                             </RoleSelect>
-                          </td>
+                          </td> */}
                         </tr>
                       );
                     })}
@@ -376,12 +431,12 @@ export default function AdminPage() {
                             )}
                           </MovieInfo>
                           <MovieActions>
-                            <SecondaryBtn
+                            {/* <SecondaryBtn
                               type="button"
                               onClick={() => onEditMovie(m.id)}
                             >
                               Edit
-                            </SecondaryBtn>
+                            </SecondaryBtn> */}
                             <DangerBtn
                               type="button"
                               onClick={() => onDeleteMovie(m.id)}
@@ -741,8 +796,8 @@ export default function AdminPage() {
                             </EpisodeContainer>
                           ) : (
                             <EmptyEpisodes>
-                              No episodes added yet. Click &quot;Add Episode&quot; to get
-                              started.
+                              No episodes added yet. Click &quot;Add
+                              Episode&quot; to get started.
                             </EmptyEpisodes>
                           )}
                         </FormSection>
@@ -750,12 +805,17 @@ export default function AdminPage() {
 
                       <FormActions>
                         <SubmitBtn
+                          disabled={loading}
                           as="button"
                           type="submit"
                           $alignitems="center"
                           $justifycontent="center"
                         >
-                          {movie.id ? "Update Movie" : "Create Movie"}
+                          {!loading
+                            ? movie.id
+                              ? "Update Movie"
+                              : "Create Movie"
+                            : "Creating Movie"}
                         </SubmitBtn>
                         <SecondaryBtn
                           type="button"

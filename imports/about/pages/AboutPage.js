@@ -7,10 +7,13 @@ import PlayButtonIcon from "imports/Home/ui/assets/PlayButtonIcon";
 import VideoPlayer from "../components/VideoPlayer";
 import Header from "imports/core/ui/atoms/Header";
 import { useRouter } from "next/navigation";
+import { useMoviesDataById } from "api/movies";
 
-const AboutPage = () => {
+const AboutPage = ({ videoId }) => {
   const router = useRouter();
   const [playing, setPlaying] = useState(false);
+
+  const { data, isFetching } = useMoviesDataById(videoId);
 
   const handlerCreator = (e, i = 1) => {
     router.push(`/creator/${i}`);
@@ -21,7 +24,11 @@ const AboutPage = () => {
       <Header />
       <Frame>
         <VideoWrapper>
-          <VideoPlayer playing={playing} setPlaying={setPlaying} />
+          <VideoPlayer
+            movie={data?.movie}
+            playing={playing}
+            setPlaying={setPlaying}
+          />
         </VideoWrapper>
         <RightSection $isBlur={playing}>
           <MovieInfo>
@@ -58,12 +65,17 @@ const AboutPage = () => {
                     />
                   </AvatarWrapper>
 
-                  <Name>James Smith</Name>
+                  <Name>{data?.movie?.uploader?.name}</Name>
                 </InfoCta>
               </Creator>
               <GenresText>
-                <span>Genres: </span>
-                Lorem , dolor, ipsum dolor
+                <div>Genres: </div>
+                {data?.movie?.genres.map((g, i) => (
+                  <span key={g.id || i}>
+                    {g.name}
+                    {i < data.movie.genres.length - 1 && ", "}
+                  </span>
+                ))}
               </GenresText>
             </Genres>
           </MovieInfo>
@@ -205,7 +217,7 @@ const InfoCta = styled(Flex)`
 `;
 
 const Name = styled.div`
-  width: 63.5px;
+  min-width: 63.5px;
   font-family: "HelveticaRegular";
   font-size: 11.6px;
   line-height: 24px;
@@ -338,8 +350,9 @@ const GenresText = styled.span`
   line-height: 1.43;
   color: #fff;
 
-  span {
+  div {
     color: #777;
+    display: inline;
   }
 
   @media (max-width: 480px) {

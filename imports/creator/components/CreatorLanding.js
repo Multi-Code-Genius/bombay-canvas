@@ -7,12 +7,12 @@ import Flex from "lib/atoms/Flex";
 import YoutubeIcon from "imports/creator/assets/YoutubeIcon";
 import InstagramIcon from "imports/creator/assets/InstagramIcon";
 
-const CreatorLanding = () => {
+const CreatorLanding = ({ data }) => {
   return (
     <Layout>
       <Header />
       <Content>
-        <MainTitle>Hames John</MainTitle>
+        <MainTitle>{data?.allMovies[0]?.uploader?.name}</MainTitle>
         <Para>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.Suspendisse
           varius enim in eros elementum tristique.
