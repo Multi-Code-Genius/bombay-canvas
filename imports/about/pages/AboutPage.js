@@ -1,6 +1,6 @@
 "use client";
 import Flex from "lib/atoms/Flex";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import PlayButtonIcon from "imports/Home/ui/assets/PlayButtonIcon";
@@ -12,8 +12,13 @@ import { useMoviesDataById } from "api/movies";
 const AboutPage = ({ videoId }) => {
   const router = useRouter();
   const [playing, setPlaying] = useState(false);
+  const [activeEpisode, setActiveEpisode] = useState(false);
 
   const { data, isFetching } = useMoviesDataById(videoId);
+
+  useEffect(() => {
+    setActiveEpisode(data?.movie?.episodes?.[0]);
+  }, [data, isFetching]);
 
   const handlerCreator = (e, i = 1) => {
     router.push(`/creator/${i}`);
@@ -25,7 +30,7 @@ const AboutPage = ({ videoId }) => {
       <Frame>
         <VideoWrapper>
           <VideoPlayer
-            episode={data?.movie?.episodes[0]}
+            episode={activeEpisode ?? data?.movie?.episodes?.[0]}
             movie={data?.movie}
             playing={playing}
             setPlaying={setPlaying}
@@ -87,12 +92,14 @@ const AboutPage = ({ videoId }) => {
             <EpisodeBoxWrapper>
               {data?.movie?.episodes?.map((e, index) => {
                 return (
-                  <EpisodeBox $active={index === 0}>
+                  <EpisodeBox
+                    $active={activeEpisode?.episodeNo === e.episodeNo}
+                  >
                     <InnerContent>
                       <NumberWrapper>
                         <Number>{index + 1}</Number>
                         <MovieCard>
-                          <Ellipse>
+                          <Ellipse onClick={() => setActiveEpisode(e)}>
                             <PlayButtonIcon width={13} height={13} />
                           </Ellipse>
                         </MovieCard>
