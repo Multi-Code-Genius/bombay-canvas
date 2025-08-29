@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Pause, VolumeOff, VolumeXIcon } from "lucide-react";
 import SideButtonLeftIcon from "../assets/SideButtonLeftIcon";
 import SideButtonRightIcon from "../assets/SideButtonRightIcon";
 import PlayIcon from "../assets/PlayIcon";
 import VolumeIcon from "../assets/VolumeIcon";
+import Hls from "hls.js";
 
 export default function VideoPlayer({ movie, playing, setPlaying }) {
   const videoRef = useRef(null);
@@ -61,6 +62,25 @@ export default function VideoPlayer({ movie, playing, setPlaying }) {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  useEffect(() => {
+    if (videoRef.current) {
+      if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
+        videoRef.current.src =
+          "https://storage.googleapis.com/turfkeeper_bucket/movies/cmewihb7a0003a39evrq623k1/hls/master.m3u8";
+      } else if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(
+          "https://storage.googleapis.com/turfkeeper_bucket/movies/cmewihb7a0003a39evrq623k1/hls/master.m3u8"
+        );
+        hls.attachMedia(videoRef.current);
+
+        return () => {
+          hls.destroy();
+        };
+      }
+    }
+  }, [movie]);
+
   return (
     <Container $playing={playing}>
       <StyledVideo
@@ -68,16 +88,11 @@ export default function VideoPlayer({ movie, playing, setPlaying }) {
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
         preload="auto"
+        src="https://storage.googleapis.com/turfkeeper_bucket/movies/cmewihb7a0003a39evrq623k1/hls/master.m3u8"
         poster={movie?.posterUrl ?? "/static/videoImage.png"}
         ref={videoRef}
         controls
-      >
-        <source
-          src={`${process.env.NEXT_PUBLIC_BASE_URL}/api/movie/video/cmevcpasy000pa3irpqc5af5w/cmevcplct000ta3irhxit9xzz`}
-          type="video/mp4"
-        />
-        Your browser does not support video playback.
-      </StyledVideo>
+      />
 
       <Controls className="controls">
         <SideButtonLeft onClick={() => seek(-10)}>
