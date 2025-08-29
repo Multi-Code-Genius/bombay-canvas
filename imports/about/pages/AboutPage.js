@@ -25,6 +25,7 @@ const AboutPage = ({ videoId }) => {
       <Frame>
         <VideoWrapper>
           <VideoPlayer
+            episode={data?.movie?.episodes[0]}
             movie={data?.movie}
             playing={playing}
             setPlaying={setPlaying}

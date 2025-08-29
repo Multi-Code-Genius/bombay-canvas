@@ -9,7 +9,7 @@ import PlayIcon from "../assets/PlayIcon";
 import VolumeIcon from "../assets/VolumeIcon";
 import Hls from "hls.js";
 
-export default function VideoPlayer({ movie, playing, setPlaying }) {
+export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
   const videoRef = useRef(null);
 
   const [muted, setMuted] = useState(false);
@@ -63,16 +63,13 @@ export default function VideoPlayer({ movie, playing, setPlaying }) {
   };
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && episode?.videoUrl) {
       if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-        videoRef.current.src =
-          "https://storage.googleapis.com/turfkeeper_bucket/movies/cmewihb7a0003a39evrq623k1/hls/master.m3u8";
+        videoRef.current.src = episode?.videoUrl;
       } else if (Hls.isSupported()) {
         const hls = new Hls();
-        hls.loadSource(
-          "https://storage.googleapis.com/turfkeeper_bucket/movies/cmewihb7a0003a39evrq623k1/hls/master.m3u8"
-        );
-        hls.attachMedia(videoRef.current);
+        hls?.loadSource(episode?.videoUrl);
+        hls?.attachMedia(videoRef.current);
 
         return () => {
           hls.destroy();
@@ -88,10 +85,9 @@ export default function VideoPlayer({ movie, playing, setPlaying }) {
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
         preload="auto"
-        src="https://storage.googleapis.com/turfkeeper_bucket/movies/cmewihb7a0003a39evrq623k1/hls/master.m3u8"
+        src={episode?.videoUrl}
         poster={movie?.posterUrl ?? "/static/videoImage.png"}
         ref={videoRef}
-        controls
       />
 
       <Controls className="controls">
