@@ -9,6 +9,7 @@ import { useMoviesDataByCreator } from "api/movies";
 
 export default function Creator({ params }) {
   const { data, isLoading } = useMoviesDataByCreator(params);
+  console.log("params", params);
   return (
     <Layout>
       <CreatorLanding data={data} />

@@ -1,5 +1,6 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "lib/api";
+import { useDebounce } from "lib/hooks/useDebounce";
 
 export const fetchUserData = async () => {
   try {
@@ -97,5 +98,25 @@ export const useUpdateRole = () => {
       toast.error(error.message);
       console.log("update role Failed", error.message);
     },
+  });
+};
+
+export const fetchUsers = async (q) => {
+  const res = await api(`/api/user/search?q=${encodeURIComponent(q)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
+  });
+  const data = await res;
+  return data;
+};
+
+export const useSearchUsers = (q) => {
+  const debouncedQ = useDebounce(q, 400);
+  return useQuery({
+    queryKey: ["users", debouncedQ],
+    queryFn: () => fetchUsers(debouncedQ),
+    enabled: !!debouncedQ,
+    staleTime: 1000 * 60,
   });
 };

@@ -1,8 +1,7 @@
-'use client'
+"use client";
 import React from "react";
 import styled from "styled-components";
 import UserInfo from "../components/UserInfo";
-import CreatorStudio from "../components/CreatorStudio";
 
 const Container = styled.div`
   background-color: #181818;
@@ -24,7 +23,6 @@ const ProfilePage = () => {
     <Container>
       <Title>Profile</Title>
       <UserInfo />
-      <CreatorStudio />
     </Container>
   );
 };

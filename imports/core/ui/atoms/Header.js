@@ -11,7 +11,7 @@ import CloseIcon from "/imports/core/ui/assets/CloseIcon";
 import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
 import ExpandIcon from "/imports/core/ui/assets/ExpandIcon";
 import MenuIcon from "/imports/core/ui/assets/MenuIcon";
-import { useUserData } from "api/user";
+import { useSearchUsers, useUserData } from "api/user";
 import { useAuthStore } from "store/authStore";
 import { getInitials } from "lib/hooks/getIntials";
 
@@ -25,8 +25,17 @@ const Header = () => {
   const userName = data?.userData?.name || "";
   const initials = getInitials(userName);
 
+  const [query, setQuery] = useState("");
+  const { data: users, isLoading, error } = useSearchUsers(query);
+
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleCategory = () => {
+    setIsCategoryOpen(!isCategoryOpen);
   };
 
   const closeMenu = () => {
@@ -66,15 +75,63 @@ const Header = () => {
         <Search>
           <SearchWrapper $alignitems="center" $gap="8px">
             <SearchIcon />
-            <SearchBar type="text" placeholder="Search" />
+            <SearchBar
+              type="text"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
           </SearchWrapper>
-          <CloseIcon />
+          <CloseIconWrapper
+            onClick={() => {
+              setQuery("");
+            }}
+          >
+            <CloseIcon />
+          </CloseIconWrapper>
         </Search>
-        <CategoryTitle>
-          <VuesaxIcon />
-          <Text>Categories</Text>
-          <ExpandIcon />
-        </CategoryTitle>
+        {query && (
+          <SearchResults>
+            {isLoading && (
+              <p style={{ padding: "10px", color: "white" }}>Loading...</p>
+            )}
+            {error && (
+              <p style={{ padding: "10px", color: "white" }}>
+                Error fetching users
+              </p>
+            )}
+            {users && users.length > 0
+              ? users.map((user) => (
+                  <SearchResultItem key={user?.id}>
+                    <Link href={`/creator/${user?.id}`}>
+                      <Avatar>
+                        <AvatarText>{getInitials(user.name)}</AvatarText>
+                      </Avatar>
+                      <span>{user.name}</span>
+                    </Link>
+                  </SearchResultItem>
+                ))
+              : !isLoading &&
+                !error && (
+                  <p style={{ padding: "10px", color: "white" }}>
+                    No users found
+                  </p>
+                )}
+          </SearchResults>
+        )}
+        <CategoryContainer>
+          <CategoryTitle onClick={toggleCategory}>
+            <VuesaxIcon />
+            <Text>Categories</Text>
+            <ExpandIcon />
+          </CategoryTitle>
+          {isCategoryOpen && (
+            <CategoryDropdown>
+              <CategoryItem href="/movies">Movies</CategoryItem>
+              <CategoryItem href="/series">Series</CategoryItem>
+            </CategoryDropdown>
+          )}
+        </CategoryContainer>
 
         {isLoggedIn ? (
           <Avatar onClick={handleProfileClick} title={userName || ""}>
@@ -109,15 +166,63 @@ const Header = () => {
         <Search>
           <SearchWrapper $alignitems="center" $gap="8px">
             <SearchIcon />
-            <SearchBar type="text" placeholder="Search" />
+            <SearchBar
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              type="search"
+              placeholder="Search"
+            />
           </SearchWrapper>
-          <CloseIcon />
+          <CloseIconWrapper
+            onClick={() => {
+              setQuery("");
+            }}
+          >
+            <CloseIcon />
+          </CloseIconWrapper>
         </Search>
-        <CategoryTitle>
-          <VuesaxIcon />
-          <Text>Categories</Text>
-          <ExpandIcon />
-        </CategoryTitle>
+        {query && (
+          <SearchResults>
+            {isLoading && (
+              <p style={{ padding: "10px", color: "white" }}>Loading...</p>
+            )}
+            {error && (
+              <p style={{ padding: "10px", color: "white" }}>
+                Error fetching users
+              </p>
+            )}
+            {users && users.length > 0
+              ? users.map((user) => (
+                  <SearchResultItem key={user.id}>
+                    <Link href={`/creator/${user.id}`}>
+                      <Avatar>
+                        <AvatarText>{getInitials(user.name)}</AvatarText>
+                      </Avatar>
+                      <span>{user.name}</span>
+                    </Link>
+                  </SearchResultItem>
+                ))
+              : !isLoading &&
+                !error && (
+                  <p style={{ padding: "10px", color: "white" }}>
+                    No users found
+                  </p>
+                )}
+          </SearchResults>
+        )}
+        <CategoryContainer>
+          <CategoryTitle onClick={toggleCategory}>
+            <VuesaxIcon />
+            <Text>Categories</Text>
+            <ExpandIcon />
+          </CategoryTitle>
+          {isCategoryOpen && (
+            <CategoryDropdown>
+              <CategoryItem>Movies</CategoryItem>
+              <CategoryItem>Series</CategoryItem>
+            </CategoryDropdown>
+          )}
+        </CategoryContainer>
         {isLoggedIn ? (
           <Avatar onClick={handleProfileClick} title={userName} $fullwidth>
             <AvatarText>{initials || "U"}</AvatarText>
@@ -175,8 +280,7 @@ const Navs = styled(Flex)`
 `;
 
 const RightSection = styled(Flex)`
-  width: 544px;
-  gap: 14px;
+  gap: 24px;
 
   @media (max-width: 920px) {
     display: none;
@@ -192,6 +296,34 @@ const CategoryTitle = styled(Flex)`
   border-radius: 8px;
   border: solid 1px rgba(239, 239, 239, 0.28);
   background-color: rgba(0, 0, 0, 0.37);
+  cursor: pointer;
+`;
+
+const CategoryContainer = styled.div`
+  position: relative;
+`;
+
+const CategoryDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: rgba(15, 15, 15, 0.12);
+  border-radius: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  z-index: 100;
+`;
+
+const CategoryItem = styled.div`
+  display: block;
+  padding: 10px;
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -236,7 +368,7 @@ const SearchBar = styled.input`
 `;
 
 const Search = styled(Flex)`
-  width: 284px;
+  width: 400px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -247,6 +379,38 @@ const Search = styled(Flex)`
   outline: solid 1px rgba(255, 255, 255, 0.2) !important;
   border: none;
   background-color: rgba(15, 15, 15, 0.12);
+  position: relative;
+`;
+
+const SearchResults = styled.div`
+  position: absolute;
+  top: calc(100% + -35px);
+  right: 14%;
+  width: 21.2%;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: rgba(15, 15, 15, 0.12);
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 100;
+`;
+
+const SearchResultItem = styled.div`
+  padding: 12px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+  }
 `;
 
 const LoginButton = styled.button`
@@ -337,7 +501,7 @@ const DropdownMenu = styled.div`
       width: 100%;
     }
 
-    > ${CategoryTitle} {
+    > ${CategoryContainer} {
       width: 100%;
     }
 
@@ -349,4 +513,8 @@ const DropdownMenu = styled.div`
       width: 100%;
     }
   }
+`;
+
+const CloseIconWrapper = styled.div`
+  cursor: pointer;
 `;

@@ -12,7 +12,7 @@ const CreatorLanding = ({ data }) => {
     <Layout>
       <Header />
       <Content>
-        <MainTitle>{data?.allMovies[0]?.uploader?.name}</MainTitle>
+        <MainTitle>{data?.creator?.name}</MainTitle>
         <Para>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.Suspendisse
           varius enim in eros elementum tristique.
