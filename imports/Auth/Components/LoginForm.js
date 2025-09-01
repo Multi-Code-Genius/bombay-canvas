@@ -1,34 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Cookies from "js-cookie";
 import Flex from "/lib/atoms/Flex";
+import { useLogin } from "api/auth";
+import EyeSlashIcon from "imports/core/ui/assets/EyeSlashIcon";
+import EyeIcon from "/imports/core/ui/assets/EyeIcon";
 
 export default function LoginForm({ setIsAuthed }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const DEMO_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@gmail.com";
-  const DEMO_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "1212";
+  const { mutate, data } = useLogin(true);
+
+  useEffect(() => {
+    if (data?.user?.role == "ADMIN") {
+      Cookies.set("adminAccess", "true", { expires: 10 });
+      setIsAuthed(true);
+    }
+  }, [data]);
 
   const onLogin = async (e) => {
-    console.log("trigggerrr");
     e.preventDefault();
     setError("");
     setLoading(true);
 
+    console.log("first", email, password);
+
     try {
-      const ok =
-        email.trim() === DEMO_EMAIL && password.trim() === DEMO_PASSWORD;
-      if (!ok) {
-        setError("Invalid admin credentials");
-        return;
-      }
-      Cookies.set("adminAccess", "true", { expires: 1 });
-      setIsAuthed(true);
+      mutate({
+        email: email,
+        password: password,
+      });
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -47,13 +54,18 @@ export default function LoginForm({ setIsAuthed }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        {/* <div> */}
         <LoginInput
-          type="password"
+          type={true ? "text" : "password"}
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        {/* <EyeIconWrapper onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+          </EyeIconWrapper> */}
+        {/* </div> */}
         {error && <LoginError>{error}</LoginError>}
         <LoginButton type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
@@ -92,6 +104,18 @@ const LoginTitle = styled.h2`
   color: #fff;
   text-align: center;
   margin-bottom: 20px;
+`;
+
+const EyeIconWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    right: 12px;
+  }
 `;
 
 const LoginInput = styled.input`

@@ -73,7 +73,7 @@ export const login = async (data) => {
   }
 };
 
-export const useLogin = () => {
+export const useLogin = (isAdmin) => {
   const router = useRouter();
 
   return useMutation({
@@ -87,7 +87,7 @@ export const useLogin = () => {
           .getState()
           .saveToken(data.token)
           .then(() => {
-            router.push("/");
+            !isAdmin && router.push("/");
           });
       }
     },
