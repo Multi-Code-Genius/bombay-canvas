@@ -85,6 +85,7 @@ const Card = styled.div`
   min-width: 252px;
   height: 401px;
   position: relative;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;

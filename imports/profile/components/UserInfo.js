@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useAuthStore } from "store/authStore";
+import { useUserData } from "api/user";
 
 const UserInfoContainer = styled.div`
   background-color: #282828;
@@ -45,6 +46,8 @@ const ProfileImage = styled.img`
 
 const UserInfo = () => {
   const token = useAuthStore((s) => s.token);
+  const { logout } = useAuthStore();
+  const { data } = useUserData(token);
 
   return (
     <UserInfoContainer>
@@ -52,15 +55,18 @@ const UserInfo = () => {
       <InfoGrid>
         <InfoItem>
           <Label>Name:</Label>
-          <Value>{"Jay"}</Value>
+          <Value>{data?.userData?.name}</Value>
         </InfoItem>
         <InfoItem>
           <Label>Email:</Label>
-          <Value>{"example@gmail.com"}</Value>
+          <Value>{data?.userData?.email}</Value>
         </InfoItem>
         <InfoItem>
           <Label>Profile Picture:</Label>
           <ProfileImage src={"/static/avtar.jpg"} alt="Profile" />
+        </InfoItem>
+        <InfoItem>
+          <button onClick={() => logout()}>LogOut</button>
         </InfoItem>
       </InfoGrid>
     </UserInfoContainer>

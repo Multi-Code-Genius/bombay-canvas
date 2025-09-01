@@ -245,6 +245,7 @@ const Card = styled.div`
   /* height: 413px; */
   position: relative;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
   background-image: ${({ $bgImage }) => `url(${$bgImage})`};
 
