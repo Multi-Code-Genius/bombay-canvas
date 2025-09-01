@@ -78,7 +78,7 @@ const Landing = ({ movieData, isLoading }) => {
       </Content>
       <Range>
         <Duration>
-          Duration :<span>14hr</span>
+          Duration : <span>14hr</span>
         </Duration>
       </Range>
     </Layout>
@@ -127,7 +127,7 @@ const BackgroundVideo = styled.video`
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* behaves like background-size: cover */
+  object-fit: cover;
   z-index: 1;
 `;
 
@@ -159,10 +159,17 @@ const Range = styled(Flex)`
   right: 0;
   z-index: 1;
   width: 310px;
-  padding: 27px 0px 25px 73px;
+  padding: 27px 0 25px 73px;
   border-right: 11px solid #ff6a00;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+
+  background: linear-gradient(
+    to right,
+    rgba(99, 99, 99, 0) 0%,
+    rgba(211, 211, 211, 0.33) 100%
+  );
 
   @media (max-width: 768px) {
     display: none;
@@ -234,7 +241,8 @@ const Buttons = styled(Flex)`
   padding: 8px;
   border-radius: 8px;
   line-height: 24px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -265,7 +273,8 @@ const InfoCta = styled(Flex)`
   gap: 4px;
   padding: 8px 0;
   border-radius: 10px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);

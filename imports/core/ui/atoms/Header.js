@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import SearchIcon from "/imports/core/ui/assets/SearchIcon";
 import CloseIcon from "/imports/core/ui/assets/CloseIcon";
 import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
@@ -52,8 +52,11 @@ const Header = () => {
 
   const isLoggedIn = Boolean(token);
 
+  const isCreator = pathname?.startsWith("/creator/");
+  const showBg = pathname !== "/" && !isCreator;
+
   return (
-    <HeaderContainer $fullwidth>
+    <HeaderContainer $fullwidth $isBackground={showBg}>
       <Left $alignitems="center">
         <Logo>
           <Link href="/">
@@ -246,7 +249,15 @@ const HeaderContainer = styled(Flex)`
   width: 100%;
   padding: 40px;
 
-  @media (max-width: 920px) {
+  ${({ $isBackground }) =>
+    $isBackground &&
+    css`
+      background: rgba(24, 24, 24, 0.5);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    `}
+
+  @media (max-width: 1100px) {
     padding: 20px;
   }
 `;
@@ -308,11 +319,13 @@ const CategoryDropdown = styled.div`
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: rgba(15, 15, 15, 0.12);
+  background-color: rgba(15, 15, 15, 0.3);
   border-radius: 8px;
   margin-top: 8px;
   padding: 10px;
   z-index: 100;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
 `;
 
 const CategoryItem = styled.div`
@@ -422,7 +435,8 @@ const LoginButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -486,7 +500,9 @@ const DropdownMenu = styled.div`
     padding: 20px;
     border-radius: 8px;
     z-index: 1001;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     transform: ${({ open }) => (open ? "translateY(0)" : "translateY(-20px)")};
     opacity: ${({ open }) => (open ? 1 : 0)};
     pointer-events: ${({ open }) => (open ? "auto" : "none")};

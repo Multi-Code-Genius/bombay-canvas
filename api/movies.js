@@ -55,12 +55,13 @@ const getMoviesByCreator = async (id) => {
 
 export const useMoviesDataByCreator = (id) => {
   return useQuery({
-    queryKey: ["moviesDataByCreator"],
+    queryKey: ["moviesDataByCreator", id],
     queryFn: () => getMoviesByCreator(id),
+    enabled: !!id,
     staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    retry: 0,
+    retry: false,
   });
 };
 
@@ -84,12 +85,13 @@ const getMoviesById = async (id) => {
 
 export const useMoviesDataById = (id) => {
   return useQuery({
-    queryKey: ["moviesDataById"],
+    queryKey: ["moviesDataById", id],
     queryFn: () => getMoviesById(id),
+    enabled: !!id,
     staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    retry: 0,
+    retry: false,
   });
 };
 

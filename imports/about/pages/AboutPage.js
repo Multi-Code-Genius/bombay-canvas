@@ -1,6 +1,6 @@
 "use client";
 import Flex from "lib/atoms/Flex";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import PlayButtonIcon from "imports/Home/ui/assets/PlayButtonIcon";
@@ -8,123 +8,129 @@ import VideoPlayer from "../components/VideoPlayer";
 import Header from "imports/core/ui/atoms/Header";
 import { useRouter } from "next/navigation";
 import { useMoviesDataById } from "api/movies";
+import Loading from "imports/common/components/Loading";
 
 const AboutPage = ({ videoId }) => {
   const router = useRouter();
   const [playing, setPlaying] = useState(false);
   const [activeEpisode, setActiveEpisode] = useState(false);
 
-  const { data, isFetching } = useMoviesDataById(videoId);
+  const { data, isFetching, isLoading } = useMoviesDataById(videoId);
 
   useEffect(() => {
     setActiveEpisode(data?.movie?.episodes?.[0]);
   }, [data, isFetching]);
 
-  const handlerCreator = (e, i = 1) => {
+  const handlerCreator = (_e, i = 1) => {
     router.push(`/creator/${i}`);
   };
 
   return (
-    <>
+    <Fragment>
       <Header />
-      <Frame>
-        <VideoWrapper>
-          <VideoPlayer
-            episode={activeEpisode ?? data?.movie?.episodes?.[0]}
-            movie={data?.movie}
-            playing={playing}
-            setPlaying={setPlaying}
-          />
-        </VideoWrapper>
-        <RightSection $isBlur={playing}>
-          <MovieInfo>
-            <Content>
-              <Above>
-                <VideoQuolity>
-                  <Episode>Episode 1</Episode>
-                  <Year>2024</Year>
-                  <Quality>
-                    <HD>HD</HD>
-                  </Quality>
-                </VideoQuolity>
-                <Lable>
-                  <Text>Lorem ipsum</Text>
-                </Lable>
-                <Description>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing
-                  elit.Suspendisse varius enim in eros elementum tristique. orem
-                  ipsum dolor sit amet, consectetur adipiscing elit.Suspendisse
-                  varius enim in eros elementum tristique.
-                </Description>
-              </Above>
-            </Content>
-            <Genres>
-              <Creator>
-                <By>By</By>{" "}
-                <InfoCta onClick={() => handlerCreator()}>
-                  <AvatarWrapper>
-                    <Image
-                      src="/static/avtar.jpg"
-                      width={24}
-                      height={24}
-                      alt="Avatar"
-                    />
-                  </AvatarWrapper>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Frame>
+          <VideoWrapper>
+            <VideoPlayer
+              episode={activeEpisode ?? data?.movie?.episodes?.[0]}
+              movie={data?.movie}
+              playing={playing}
+              setPlaying={setPlaying}
+            />
+          </VideoWrapper>
+          <RightSection $isBlur={playing}>
+            <MovieInfo>
+              <Content>
+                <Above>
+                  <VideoQuolity>
+                    <Episode>Episode 1</Episode>
+                    <Year>2024</Year>
+                    <Quality>
+                      <HD>HD</HD>
+                    </Quality>
+                  </VideoQuolity>
+                  <Lable>
+                    <Text>Lorem ipsum</Text>
+                  </Lable>
+                  <Description>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.Suspendisse varius enim in eros elementum tristique.
+                    orem ipsum dolor sit amet, consectetur adipiscing
+                    elit.Suspendisse varius enim in eros elementum tristique.
+                  </Description>
+                </Above>
+              </Content>
+              <Genres>
+                <Creator>
+                  <By>By</By>{" "}
+                  <InfoCta onClick={() => handlerCreator()}>
+                    <AvatarWrapper>
+                      <Image
+                        src="/static/avtar.jpg"
+                        width={24}
+                        height={24}
+                        alt="Avatar"
+                      />
+                    </AvatarWrapper>
 
-                  <Name>{data?.movie?.uploader?.name}</Name>
-                </InfoCta>
-              </Creator>
-              <GenresText>
-                <div>Genres: </div>
-                {data?.movie?.genres.map((g, i) => (
-                  <span key={g.id || i}>
-                    {g.name}
-                    {i < data.movie.genres.length - 1 && ", "}
-                  </span>
-                ))}
-              </GenresText>
-            </Genres>
-          </MovieInfo>
-          <Div>
-            {data?.movie?.episodes?.length > 0 && (
-              <EpisodeTitle>Episodes</EpisodeTitle>
-            )}
-            <EpisodeBoxWrapper>
-              {data?.movie?.episodes?.map((e, index) => {
-                return (
-                  <EpisodeBox
-                    $active={activeEpisode?.episodeNo === e.episodeNo}
-                  >
-                    <InnerContent>
-                      <NumberWrapper>
-                        <Number>{index + 1}</Number>
-                        <MovieCard>
-                          <Ellipse onClick={() => setActiveEpisode(e)}>
-                            <PlayButtonIcon width={13} height={13} />
-                          </Ellipse>
-                        </MovieCard>
-                      </NumberWrapper>
-                      <TextWrapper>
-                        <OfferWrapper>
-                          <OffterText>{e?.title}</OffterText>
-                          <Minute>{e.duration}m</Minute>
-                        </OfferWrapper>
+                    <Name>{data?.movie?.uploader?.name}</Name>
+                  </InfoCta>
+                </Creator>
+                <GenresText>
+                  <div>Genres: </div>
+                  {data?.movie?.genres.map((g, i) => (
+                    <span key={g.id || i}>
+                      {g.name}
+                      {i < data.movie.genres.length - 1 && ", "}
+                    </span>
+                  ))}
+                </GenresText>
+              </Genres>
+            </MovieInfo>
+            <Div>
+              {data?.movie?.episodes?.length > 0 && (
+                <EpisodeTitle>Episodes</EpisodeTitle>
+              )}
+              <EpisodeBoxWrapper>
+                {data?.movie?.episodes?.map((e, index) => {
+                  return (
+                    <EpisodeBox
+                      key={index}
+                      $active={activeEpisode?.episodeNo === e.episodeNo}
+                    >
+                      <InnerContent>
+                        <NumberWrapper>
+                          <Number>{index + 1}</Number>
+                          <MovieCard>
+                            <Ellipse onClick={() => setActiveEpisode(e)}>
+                              <PlayButtonIcon width={13} height={13} />
+                            </Ellipse>
+                          </MovieCard>
+                        </NumberWrapper>
+                        <TextWrapper>
+                          <OfferWrapper>
+                            <OffterText>{e?.title}</OffterText>
+                            <Minute>{e.duration}m</Minute>
+                          </OfferWrapper>
 
-                        <LargeText>
-                          lLorem ipsum dolor sit amet, consectetur adipiscing
-                          eLorem ipsum dolor sit amet, consectetur adipiscing
-                          elit.Suspendisse varius enim in eros
-                        </LargeText>
-                      </TextWrapper>
-                    </InnerContent>
-                  </EpisodeBox>
-                );
-              })}
-            </EpisodeBoxWrapper>
-          </Div>
-        </RightSection>
-      </Frame>
-    </>
+                          <LargeText>
+                            lLorem ipsum dolor sit amet, consectetur adipiscing
+                            eLorem ipsum dolor sit amet, consectetur adipiscing
+                            elit.Suspendisse varius enim in eros
+                          </LargeText>
+                        </TextWrapper>
+                      </InnerContent>
+                    </EpisodeBox>
+                  );
+                })}
+              </EpisodeBoxWrapper>
+            </Div>
+          </RightSection>
+        </Frame>
+      )}
+    </Fragment>
   );
 };
 
@@ -208,7 +214,8 @@ const InfoCta = styled(Flex)`
   gap: 4px;
   padding: 8px 0;
   border-radius: 10px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);

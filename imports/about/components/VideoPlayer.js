@@ -135,7 +135,7 @@ export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
 
 const Container = styled.div`
   position: relative;
-  height: 100%;
+  height: 700px;
   width: 100%;
   border-radius: 20px;
   overflow: hidden;
@@ -147,6 +147,11 @@ const Container = styled.div`
 
   &:hover .controls {
     opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    height: 100%;
+    width: 100%;
   }
 `;
 
