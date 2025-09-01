@@ -47,6 +47,11 @@ position: relative;
   display: none;
  }
 
+ input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); 
+}
+
+
 
 
 ::-webkit-scrollbar {
