@@ -43,7 +43,7 @@ const Layout = styled.div`
   position: relative;
   width: 100%;
   height: 100vh;
-  padding-bottom: 45%;
+  padding-bottom: 43.5%;
   background: url("/static/creator.png") no-repeat;
   background-size: cover;
   background-position: center;

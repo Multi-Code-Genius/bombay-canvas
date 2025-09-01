@@ -9,13 +9,15 @@ import { useMoviesDataByCreator } from "api/movies";
 
 export default function Creator({ params }) {
   const { data, isLoading } = useMoviesDataByCreator(params);
-  console.log("params", params);
+
   return (
     <Layout>
       <CreatorLanding data={data} />
-      <ExploreWrapper>
-        <CreatorGrids data={data} isLoading={isLoading} />
-      </ExploreWrapper>
+      {data?.allMovies?.length > 0 && (
+        <ExploreWrapper>
+          <CreatorGrids data={data} isLoading={isLoading} />
+        </ExploreWrapper>
+      )}
     </Layout>
   );
 }

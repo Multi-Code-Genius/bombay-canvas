@@ -194,6 +194,7 @@ const SideButtonLeft = styled.button`
   position: absolute;
   top: 50%;
   left: 15%;
+  cursor: pointer;
   transform: translateY(-50%);
   background: transparent;
   border: none;
@@ -209,6 +210,7 @@ const SideButtonRight = styled.button`
   background: transparent;
   border: none;
   color: white;
+  cursor: pointer;
   font-size: 24px;
 `;
 
@@ -218,6 +220,7 @@ const MuteButton = styled.button`
   right: 12px;
   background: transparent;
   border: none;
+  cursor: pointer;
   color: white;
 `;
 
