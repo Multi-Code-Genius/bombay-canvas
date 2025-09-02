@@ -82,7 +82,7 @@ export const useLogin = (isAdmin) => {
       return response;
     },
     onSuccess: async (data) => {
-      if (data.token) {
+      if (data?.token) {
         await useAuthStore
           .getState()
           .saveToken(data.token)

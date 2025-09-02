@@ -30,11 +30,12 @@ export default function AdminPage() {
     const [moviesView, setMoviesView] = useState("list");
     const { data: user } = useUserData(!!useAuthStore.getState().token);
 
-    const { data } = useAllUserData();
-    const { mutate } = useUpdateRole();
+    const { data } = useAllUserData(!!useAuthStore?.getState().token);
+    const { mutate } = useUpdateRole(!!useAuthStore?.getState().token);
     const { data: movieData } = useMoviesData();
-    const { mutate: deteleMovie } = useDeleteMovie();
-
+    const { mutate: deteleMovie } = useDeleteMovie(
+      !!useAuthStore?.getState().token
+    );
     const { mutate: updateMovies } = useEditMovies();
 
     const { uploadMovie, loading, error } = useUploadMovie(
@@ -171,8 +172,6 @@ export default function AdminPage() {
 
     const onSave = async (e) => {
       e.preventDefault();
-
-      console.log("movie", movie);
 
       if (movie.id && originalMovie) {
         const updatedFields = {};
@@ -311,6 +310,7 @@ export default function AdminPage() {
             <NavBtn
               onClick={() => {
                 Cookies.remove("adminAccess");
+                useAuthStore.getState().logout();
                 setIsAuthed(false);
               }}
             >
@@ -351,9 +351,9 @@ export default function AdminPage() {
                     <tr>
                       <th>Name</th>
                       <th>Email</th>
-                      {/* <th>Role</th> */}
+                      <th>Role</th>
                       <th>Created</th>
-                      {/* <th>Actions</th> */}
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -363,11 +363,11 @@ export default function AdminPage() {
                         <tr key={u.id}>
                           <td>{u.name}</td>
                           <td>{u.email}</td>
-                          {/* <td>
+                          <td>
                             <RoleBadge $role={u.role}>{u.role}</RoleBadge>
-                          </td> */}
+                          </td>
                           <td>{u.createdAt}</td>
-                          {/* <td>
+                          <td>
                             <RoleSelect
                               value={u.role}
                               onChange={(e) =>
@@ -380,7 +380,7 @@ export default function AdminPage() {
                                 </option>
                               ))}
                             </RoleSelect>
-                          </td> */}
+                          </td>
                         </tr>
                       );
                     })}

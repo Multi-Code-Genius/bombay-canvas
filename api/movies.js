@@ -31,7 +31,7 @@ export const useMoviesData = () => {
     staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
-    retry: 0,
+    retry: 1,
   });
 };
 

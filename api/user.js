@@ -35,7 +35,7 @@ export const useUserData = (token) => {
 
 export const fetchAllUserData = async () => {
   try {
-    const response = await api("/api/user/all-usera", {
+    const response = await api("/api/user/all-users", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -52,7 +52,7 @@ export const fetchAllUserData = async () => {
   }
 };
 
-export const useAllUserData = () => {
+export const useAllUserData = (token) => {
   return useQuery({
     queryKey: ["allUserData"],
     queryFn: fetchAllUserData,
@@ -60,6 +60,7 @@ export const useAllUserData = () => {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     retry: 0,
+    enabled: !!token,
   });
 };
 
