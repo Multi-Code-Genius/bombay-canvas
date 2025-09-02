@@ -13,8 +13,6 @@ const Landing = ({ movieData, isLoading }) => {
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(true);
 
-  console.log("movieData", movieData?.[0]?.trailerUrl);
-
   const togglePlay = () => {
     if (!videoRef.current) return;
 
@@ -226,6 +224,7 @@ const CtaWrappers = styled(Flex)`
   @media (max-width: 768px) {
     flex-wrap: wrap;
     gap: 12px;
+    flex-direction: row-reverse;
   }
 `;
 

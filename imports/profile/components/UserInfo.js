@@ -2,10 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import { useAuthStore } from "store/authStore";
 import { useUserData } from "api/user";
+import { useRouter } from "next/navigation";
 
 const UserInfoContainer = styled.div`
   background-color: #282828;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 0.5rem; /* 8px */
   padding: 1.5rem; /* 24px */
@@ -45,9 +47,15 @@ const ProfileImage = styled.img`
 `;
 
 const UserInfo = () => {
+  const router = useRouter();
   const token = useAuthStore((s) => s.token);
   const { logout } = useAuthStore();
   const { data } = useUserData(token);
+
+  const handleLogOut = () => {
+    logout();
+    router.push("/");
+  };
 
   return (
     <UserInfoContainer>
@@ -66,7 +74,7 @@ const UserInfo = () => {
           <ProfileImage src={"/static/avtar.jpg"} alt="Profile" />
         </InfoItem>
         <InfoItem>
-          <button onClick={() => logout()}>LogOut</button>
+          <LogInBtn onClick={handleLogOut}>Log out</LogInBtn>
         </InfoItem>
       </InfoGrid>
     </UserInfoContainer>
@@ -74,3 +82,20 @@ const UserInfo = () => {
 };
 
 export default UserInfo;
+
+const LogInBtn = styled.button`
+  width: 100px;
+  text-align: center;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  border: 1px solid #ef8a4c;
+  background: #ef8a4c22;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+
+  &:hover {
+    background: #f7af8330;
+  }
+`;

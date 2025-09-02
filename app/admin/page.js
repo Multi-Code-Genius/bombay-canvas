@@ -226,7 +226,6 @@ export default function AdminPage() {
           }
         });
 
-        console.log("Only updated fields:", updatedFields);
         updateMovies(formData);
 
         setMovies((arr) =>
@@ -358,7 +357,6 @@ export default function AdminPage() {
                   </thead>
                   <tbody>
                     {filteredUsers?.map((u) => {
-                      console.log("u", u);
                       return (
                         <tr key={u.id}>
                           <td>{u.name}</td>

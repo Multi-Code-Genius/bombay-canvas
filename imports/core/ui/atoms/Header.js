@@ -93,40 +93,31 @@ const Header = () => {
           >
             <CloseIcon />
           </CloseIconWrapper>
+          {query && (
+            <SearchResults>
+              {isLoading && <p>Loading...</p>}
+              {error && <p>Something went wrong</p>}
+              {users && users.length > 0
+                ? users.map((user) => (
+                    <SearchResultItem key={user?.id}>
+                      <Link href={`/creator/${user?.id}`}>
+                        <Avatar>
+                          <AvatarText>{getInitials(user.name)}</AvatarText>
+                        </Avatar>
+                        <span>{user.name}</span>
+                      </Link>
+                    </SearchResultItem>
+                  ))
+                : !isLoading && !error && <p>No users found</p>}
+            </SearchResults>
+          )}
         </Search>
-        {query && (
-          <SearchResults>
-            {isLoading && (
-              <p style={{ padding: "10px", color: "white" }}>Loading...</p>
-            )}
-            {error && (
-              <p style={{ padding: "10px", color: "white" }}>
-                Error fetching users
-              </p>
-            )}
-            {users && users.length > 0
-              ? users.map((user) => (
-                  <SearchResultItem key={user?.id}>
-                    <Link href={`/creator/${user?.id}`}>
-                      <Avatar>
-                        <AvatarText>{getInitials(user.name)}</AvatarText>
-                      </Avatar>
-                      <span>{user.name}</span>
-                    </Link>
-                  </SearchResultItem>
-                ))
-              : !isLoading &&
-                !error && (
-                  <p style={{ padding: "10px", color: "white" }}>
-                    No users found
-                  </p>
-                )}
-          </SearchResults>
-        )}
         <CategoryContainer>
           <CategoryTitle onClick={toggleCategory}>
-            <VuesaxIcon />
-            <Text>{categories}</Text>
+            <CategoryTextWrapper>
+              <VuesaxIcon />
+              <Text>{categories}</Text>
+            </CategoryTextWrapper>
             <ExpandIcon reversed={isCategoryOpen} />
           </CategoryTitle>
           {isCategoryOpen && (
@@ -187,7 +178,7 @@ const Header = () => {
             <SearchBar
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              type="search"
+              type="text"
               placeholder="Search"
             />
           </SearchWrapper>
@@ -198,40 +189,31 @@ const Header = () => {
           >
             <CloseIcon />
           </CloseIconWrapper>
+          {query && (
+            <SearchResults>
+              {isLoading && <p>Loading...</p>}
+              {error && <p>Error fetching users</p>}
+              {users && users.length > 0
+                ? users.map((user) => (
+                    <SearchResultItem key={user.id}>
+                      <Link href={`/creator/${user.id}`}>
+                        <Avatar>
+                          <AvatarText>{getInitials(user.name)}</AvatarText>
+                        </Avatar>
+                        <span>{user.name}</span>
+                      </Link>
+                    </SearchResultItem>
+                  ))
+                : !isLoading && !error && <p>No users found</p>}
+            </SearchResults>
+          )}
         </Search>
-        {query && (
-          <SearchResults>
-            {isLoading && (
-              <p style={{ padding: "10px", color: "white" }}>Loading...</p>
-            )}
-            {error && (
-              <p style={{ padding: "10px", color: "white" }}>
-                Error fetching users
-              </p>
-            )}
-            {users && users.length > 0
-              ? users.map((user) => (
-                  <SearchResultItem key={user.id}>
-                    <Link href={`/creator/${user.id}`}>
-                      <Avatar>
-                        <AvatarText>{getInitials(user.name)}</AvatarText>
-                      </Avatar>
-                      <span>{user.name}</span>
-                    </Link>
-                  </SearchResultItem>
-                ))
-              : !isLoading &&
-                !error && (
-                  <p style={{ padding: "10px", color: "white" }}>
-                    No users found
-                  </p>
-                )}
-          </SearchResults>
-        )}
         <CategoryContainer>
           <CategoryTitle onClick={toggleCategory}>
-            <VuesaxIcon />
-            <Text>{categories}</Text>
+            <CategoryTextWrapper>
+              <VuesaxIcon />
+              <Text>{categories}</Text>
+            </CategoryTextWrapper>
             <ExpandIcon reversed={isCategoryOpen} />
           </CategoryTitle>
           {isCategoryOpen && (
@@ -318,11 +300,16 @@ const Navs = styled(Flex)`
 `;
 
 const RightSection = styled(Flex)`
-  gap: 24px;
+  gap: 14px;
 
   @media (max-width: 920px) {
     display: none;
   }
+`;
+
+const CategoryTextWrapper = styled(Flex)`
+  align-items: center;
+  gap: 10px;
 `;
 
 const CategoryTitle = styled(Flex)`
@@ -330,11 +317,17 @@ const CategoryTitle = styled(Flex)`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  padding: 10px 9px;
+  padding: 8.5px 12px;
   border-radius: 8px;
-  border: solid 1px rgba(239, 239, 239, 0.28);
-  background-color: rgba(0, 0, 0, 0.37);
   cursor: pointer;
+  outline: solid 1px rgba(255, 255, 255, 0.2);
+  border: none;
+  background-color: rgba(15, 15, 15, 0.12);
+  justify-content: space-between;
+
+  @media (max-width: 920px) {
+    width: 100%;
+  }
 `;
 
 const CategoryContainer = styled.div`
@@ -346,14 +339,15 @@ const CategoryDropdown = styled.div`
   top: 100%;
   left: 0;
   width: 100%;
-  border: solid 1px rgba(239, 239, 239, 0.28);
-  background-color: rgba(0, 0, 0, 0.37);
+  background-color: rgba(15, 15, 15, 0.12);
   border-radius: 8px;
   margin-top: 8px;
   padding: 10px;
   z-index: 100;
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
+  outline: solid 1px rgba(255, 255, 255, 0.2) !important;
+  border: none;
 `;
 
 const CategoryItem = styled.div`
@@ -364,7 +358,7 @@ const CategoryItem = styled.div`
   text-decoration: none;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
   }
 `;
 
@@ -392,11 +386,13 @@ const BorderBottom = styled.div`
 `;
 
 const SearchWrapper = styled(Flex)`
+  width: 100%;
   align-items: center;
   gap: 8px;
 `;
 
 const SearchBar = styled.input`
+  width: 100%;
   display: flex;
   align-items: center;
   outline: none;
@@ -406,37 +402,52 @@ const SearchBar = styled.input`
   background-color: transparent;
   line-height: 1.5;
   letter-spacing: -0.16px;
-  color: rgba(255, 255, 255, 0.27);
+  color: rgba(255, 255, 255, 1);
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
 `;
 
 const Search = styled(Flex)`
-  width: 400px;
+  width: 284px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   padding: 7.5px 12px;
   border-radius: 8px;
-  -webkit-backdrop-filter: blur(20.4px);
-  backdrop-filter: blur(20.4px);
   outline: solid 1px rgba(255, 255, 255, 0.2) !important;
   border: none;
   background-color: rgba(15, 15, 15, 0.12);
   position: relative;
+
+  @media (max-width: 920px) {
+    z-index: 99;
+  }
 `;
 
 const SearchResults = styled.div`
   position: absolute;
-  top: calc(100% + -35px);
-  right: 14%;
-  width: 21.2%;
+  top: 50px;
+  left: 0;
+  width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  /* background-color: rgba(15, 15, 15, 0.12); */
+  background-color: rgba(15, 15, 15, 0.12);
   border: solid 1px rgba(239, 239, 239, 0.28);
-  background-color: rgba(0, 0, 0, 0.37);
   border-radius: 8px;
   padding: 10px;
   z-index: 100;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  outline: solid 1px rgba(255, 255, 255, 0.2) !important;
+  border: none;
+
+  p {
+    margin: 0;
+    padding: 5px;
+    color: rgba(255, 255, 255, 1);
+  }
 `;
 
 const SearchResultItem = styled.div`
@@ -445,7 +456,7 @@ const SearchResultItem = styled.div`
   border-radius: 6px;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
   }
 
   a {
@@ -466,7 +477,8 @@ const LoginButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -530,7 +542,9 @@ const DropdownMenu = styled.div`
     padding: 20px;
     border-radius: 8px;
     z-index: 1001;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     transform: ${({ open }) => (open ? "translateY(0)" : "translateY(-20px)")};
     opacity: ${({ open }) => (open ? 1 : 0)};
     pointer-events: ${({ open }) => (open ? "auto" : "none")};

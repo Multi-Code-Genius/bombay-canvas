@@ -11,7 +11,7 @@ const SearchIcon = () => {
     >
       <path
         d="M9.584 17.5a7.917 7.917 0 1 0 0-15.833 7.917 7.917 0 0 0 0 15.833zM18.334 18.333l-1.667-1.666"
-        stroke="#E0E0E0"
+        stroke="#fff"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

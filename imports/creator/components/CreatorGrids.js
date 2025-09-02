@@ -12,7 +12,6 @@ const CreatorGrids = ({ data, isLoading }) => {
   const router = useRouter();
 
   const handlerCreator = (e, i) => {
-    console.log("e,i", e, i);
     e.stopPropagation();
     router.push(`/creator/${i}`);
   };
@@ -58,7 +57,7 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 0px;
+  padding: 0 40px;
   background-color: black;
   gap: 24px;
   z-index: 10;
@@ -73,16 +72,28 @@ const Wrapper = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
   gap: 25px;
 
-  margin: 35px 40px;
+  @media (max-width: 920px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     margin: 0;
     gap: 16px;
+    place-items: center;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 375px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 `;
 
 const Card = styled.div`
-  min-width: 252px;
+  width: 252px;
   height: 401px;
   position: relative;
   cursor: pointer;
@@ -96,24 +107,19 @@ const Card = styled.div`
 
   overflow: hidden;
 
+  @media (max-width: 920px) {
+    width: 150px;
+    height: 250px;
+  }
+
   @media (max-width: 768px) {
-    min-width: 202px;
-    height: 321px;
-
-    aspect-ratio: 202 / 321;
+    width: 100%;
+    height: 300px;
   }
 
   @media (max-width: 640px) {
-    moin-width: 180px;
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 252 / 401;
-  }
-  @media (max-width: 640px) {
-    min-width: 180px;
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 252 / 401;
+    width: 100%;
+    height: 200px;
   }
 `;
 
@@ -136,10 +142,13 @@ const Video = styled(Flex)`
   @media (max-width: 768px) {
     gap: 5px;
     border-radius: 20px;
+    padding: 4px 6px 4px 3px;
   }
 
   @media (max-width: 480px) {
     gap: 4px;
+    padding: 3px 5px 3px 2px;
+    left: clamp(3px, 1vw, 12px);
   }
 `;
 
@@ -148,6 +157,16 @@ const AvatarWrapper = styled.div`
   height: clamp(20px, 3.5vw, 24px);
   border-radius: 50%;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 15px;
+    height: 15px;
+  }
+
+  @media (max-width: 480px) {
+    width: 7px;
+    height: 7px;
+  }
 `;
 
 const Name = styled.div`
@@ -157,4 +176,12 @@ const Name = styled.div`
   color: #fff;
   padding-right: 2px;
   line-height: 1.42;
+
+  @media (max-width: 768px) {
+    font-size: 8px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 5px;
+  }
 `;

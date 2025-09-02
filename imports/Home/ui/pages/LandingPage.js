@@ -13,10 +13,12 @@ export default function LandingPage() {
   return (
     <Layout>
       <Landing movieData={data?.allMovies} isLoading={isLoading} />
-      <ExploreWrapper>
-        <Explore movieData={data?.allMovies} isLoading={isLoading} />
-        <Explore movieData={data?.allMovies} isLoading={isLoading} />
-      </ExploreWrapper>
+      {data?.allMovies?.length > 0 && (
+        <ExploreWrapper>
+          <Explore movieData={data?.allMovies} isLoading={isLoading} />
+          <Explore movieData={data?.allMovies} isLoading={isLoading} />
+        </ExploreWrapper>
+      )}
     </Layout>
   );
 }

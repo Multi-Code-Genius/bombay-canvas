@@ -7,6 +7,7 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
 
+
   background: #181818;
   margin: 0;
   /* &::-webkit-scrollbar-thumb {
@@ -32,13 +33,6 @@ a {
 .Slider {
 /* margin-bottom: 31px; */
 position: relative;
-}
-
-.slick-slide{
-   margin-right: 13px;
-   max-width: 259px;
-   overflow: hidden;
-   border-radius: 22.7px;
 }
 
 
@@ -71,7 +65,7 @@ position: relative;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;       
+  background: #e1e1e1;       
 }
 
 

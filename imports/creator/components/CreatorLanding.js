@@ -110,13 +110,13 @@ const MainTitle = styled.div`
   color: #fff;
 
   @media (max-width: 768px) {
-    font-size: 36px;
+    font-size: 30px;
     letter-spacing: -1.2px;
     line-height: 1.15;
   }
 
   @media (max-width: 480px) {
-    font-size: 28px;
+    font-size: 22px;
     letter-spacing: -0.9px;
   }
 `;
@@ -129,12 +129,11 @@ const Para = styled.div`
   font-size: 23.4px;
 
   @media (max-width: 768px) {
-    font-size: 15px;
+    font-size: 12px;
     max-width: 90%;
   }
 
   @media (max-width: 480px) {
-    font-size: 14px;
     max-width: 100%;
   }
 `;
@@ -161,7 +160,8 @@ const Buttons = styled.div`
 
   padding: 9px 32px;
   border-radius: 10px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);
@@ -173,7 +173,7 @@ const Buttons = styled.div`
 
   @media (max-width: 768px) {
     width: auto;
-    padding: 8px 12px;
+    padding: 7px 8px;
     gap: 6px;
     font-size: 14px;
   }

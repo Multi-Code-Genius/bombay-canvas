@@ -29,8 +29,6 @@ export default function LoginForm({ setIsAuthed }) {
     setError("");
     setLoading(true);
 
-    console.log("first", email, password);
-
     try {
       mutate({
         email: email,
