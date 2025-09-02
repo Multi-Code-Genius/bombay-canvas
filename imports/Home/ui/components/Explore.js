@@ -36,8 +36,8 @@ const Explore = ({ movieData, isLoading }) => {
     const side = className?.includes("slick-prev")
       ? "left"
       : className?.includes("slick-next")
-        ? "right"
-        : undefined;
+      ? "right"
+      : undefined;
     const isDisabled = className?.includes("slick-disabled");
     return (
       <ArrowButtonUI
@@ -123,6 +123,7 @@ const Explore = ({ movieData, isLoading }) => {
           {items.map((movie, index) => (
             <Card
               $bgImage={movie?.posterUrl}
+              // $bgImage={"/static/filmCard.png"}
               key={index}
               onClick={() => router.push(`/video/${movie?.id}`)}
             >

@@ -292,11 +292,9 @@ const CTATxt = styled.div`
   color: #fff;
 
   @media (max-width: 768px) {
-    font-size: 15px;
   }
 
   @media (max-width: 480px) {
-    font-size: 14px;
   }
 `;
 
@@ -377,8 +375,7 @@ const ContinueCTA = styled(Flex)`
   padding: 13px;
   cursor: pointer;
   border-radius: 8px;
-  box-shadow:
-    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -509,7 +506,7 @@ const SubTitle = styled.div`
   }
 
   @media (max-width: 480px) {
-    font-size: 16px;
+    font-size: 12px;
   }
 `;
 
@@ -548,7 +545,9 @@ const MainTitle = styled.div`
   }
 
   @media (max-width: 480px) {
-    font-size: 34px;
+    font-size: 24px;
+    width: 100%;
+    text-align: center;
     letter-spacing: -1.1px;
   }
 `;

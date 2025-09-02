@@ -29,7 +29,8 @@ const CreatorGrids = ({ data, isLoading }) => {
       <Wrapper>
         {data?.allMovies?.map((movie, index) => (
           <Card
-            $bgImage={movie?.posterUrl}
+            // $bgImage={movie?.posterUrl}
+            $bgImage={"/static/filmCard.png"}
             key={index}
             onClick={() => router.push(`/video/${movie?.id}`)}
           >

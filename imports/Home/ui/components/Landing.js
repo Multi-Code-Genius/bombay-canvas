@@ -33,8 +33,11 @@ const Landing = ({ movieData, isLoading }) => {
         loop
         muted
         playsInline
+        // src={
+        //   movieData?.[0]?.trailerUrl ??
+        //   "https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
+        // }
         src={
-          movieData?.[0]?.trailerUrl ??
           "https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
         }
         type="video/mp4"
@@ -159,7 +162,6 @@ const Range = styled(Flex)`
   width: 310px;
   padding: 27px 0 25px 73px;
   border-right: 11px solid #ff6a00;
-
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
 
@@ -194,7 +196,7 @@ const MainTitle = styled.div`
   }
 
   @media (max-width: 480px) {
-    font-size: 28px;
+    font-size: 30px;
     letter-spacing: -0.9px;
   }
 `;
@@ -212,7 +214,7 @@ const Para = styled.div`
   }
 
   @media (max-width: 480px) {
-    font-size: 14px;
+    font-size: 10px;
     max-width: 100%;
   }
 `;
@@ -240,8 +242,7 @@ const Buttons = styled(Flex)`
   padding: 8px;
   border-radius: 8px;
   line-height: 24px;
-  box-shadow:
-    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -272,8 +273,7 @@ const InfoCta = styled(Flex)`
   gap: 4px;
   padding: 8px 0;
   border-radius: 10px;
-  box-shadow:
-    -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
+  box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);
