@@ -9,11 +9,11 @@ import styled, { css } from "styled-components";
 import SearchIcon from "/imports/core/ui/assets/SearchIcon";
 import CloseIcon from "/imports/core/ui/assets/CloseIcon";
 import VuesaxIcon from "/imports/core/ui/assets//VuesaxIcon";
-import ExpandIcon from "/imports/core/ui/assets/ExpandIcon";
 import MenuIcon from "/imports/core/ui/assets/MenuIcon";
 import { useSearchUsers, useUserData } from "api/user";
 import { useAuthStore } from "store/authStore";
 import { getInitials } from "lib/hooks/getIntials";
+import { ExpandIcon } from "../assets/ExpandIcon";
 
 const Header = () => {
   const router = useRouter();
@@ -29,6 +29,7 @@ const Header = () => {
   const { data: users, isLoading, error } = useSearchUsers(query);
 
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [categories, setCategories] = useState("Categories");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -125,13 +126,27 @@ const Header = () => {
         <CategoryContainer>
           <CategoryTitle onClick={toggleCategory}>
             <VuesaxIcon />
-            <Text>Categories</Text>
-            <ExpandIcon />
+            <Text>{categories}</Text>
+            <ExpandIcon reversed={isCategoryOpen} />
           </CategoryTitle>
           {isCategoryOpen && (
             <CategoryDropdown>
-              <CategoryItem href="/movies">Movies</CategoryItem>
-              <CategoryItem href="/series">Series</CategoryItem>
+              <CategoryItem
+                onClick={() => {
+                  setCategories("Movies");
+                  setIsCategoryOpen(false);
+                }}
+              >
+                Movies
+              </CategoryItem>
+              <CategoryItem
+                onClick={() => {
+                  setCategories("Series");
+                  setIsCategoryOpen(false);
+                }}
+              >
+                Series
+              </CategoryItem>
             </CategoryDropdown>
           )}
         </CategoryContainer>
@@ -216,13 +231,25 @@ const Header = () => {
         <CategoryContainer>
           <CategoryTitle onClick={toggleCategory}>
             <VuesaxIcon />
-            <Text>Categories</Text>
-            <ExpandIcon />
+            <Text>{categories}</Text>
+            <ExpandIcon reversed={isCategoryOpen} />
           </CategoryTitle>
           {isCategoryOpen && (
             <CategoryDropdown>
-              <CategoryItem>Movies</CategoryItem>
-              <CategoryItem>Series</CategoryItem>
+              <CategoryItem
+                onClick={() => {
+                  setCategories("Movies"), setIsCategoryOpen(false);
+                }}
+              >
+                Movies
+              </CategoryItem>
+              <CategoryItem
+                onClick={() => {
+                  setCategories("Series"), setIsCategoryOpen(false);
+                }}
+              >
+                Series
+              </CategoryItem>
             </CategoryDropdown>
           )}
         </CategoryContainer>
@@ -319,7 +346,8 @@ const CategoryDropdown = styled.div`
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: rgba(15, 15, 15, 0.3);
+  border: solid 1px rgba(239, 239, 239, 0.28);
+  background-color: rgba(0, 0, 0, 0.37);
   border-radius: 8px;
   margin-top: 8px;
   padding: 10px;
@@ -332,6 +360,7 @@ const CategoryItem = styled.div`
   display: block;
   padding: 10px;
   color: #fff;
+  cursor: pointer;
   text-decoration: none;
 
   &:hover {
@@ -402,7 +431,9 @@ const SearchResults = styled.div`
   width: 21.2%;
   max-height: 300px;
   overflow-y: auto;
-  background-color: rgba(15, 15, 15, 0.12);
+  /* background-color: rgba(15, 15, 15, 0.12); */
+  border: solid 1px rgba(239, 239, 239, 0.28);
+  background-color: rgba(0, 0, 0, 0.37);
   border-radius: 8px;
   padding: 10px;
   z-index: 100;
@@ -435,8 +466,7 @@ const LoginButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  box-shadow:
-    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -500,9 +530,7 @@ const DropdownMenu = styled.div`
     padding: 20px;
     border-radius: 8px;
     z-index: 1001;
-    transition:
-      transform 0.3s ease-in-out,
-      opacity 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     transform: ${({ open }) => (open ? "translateY(0)" : "translateY(-20px)")};
     opacity: ${({ open }) => (open ? 1 : 0)};
     pointer-events: ${({ open }) => (open ? "auto" : "none")};
