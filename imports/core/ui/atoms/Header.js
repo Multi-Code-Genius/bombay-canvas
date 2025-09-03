@@ -61,7 +61,13 @@ const Header = () => {
       <Left $alignitems="center">
         <Logo>
           <Link href="/">
-            <Image src="/static/logo.png" alt="Logo" width={100} height={40} />
+            <Image
+              src="/static/logo.png"
+              alt="Logo"
+              width={100}
+              height={40}
+              unoptimized
+            />
           </Link>
         </Logo>
         <Navs>
@@ -482,7 +488,8 @@ const LoginButton = styled.button`
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -546,7 +553,9 @@ const DropdownMenu = styled.div`
     padding: 20px;
     border-radius: 8px;
     z-index: 1001;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     transform: ${({ open }) => (open ? "translateY(0)" : "translateY(-20px)")};
     opacity: ${({ open }) => (open ? 1 : 0)};
     pointer-events: ${({ open }) => (open ? "auto" : "none")};

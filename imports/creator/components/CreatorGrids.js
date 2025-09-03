@@ -41,6 +41,7 @@ const CreatorGrids = ({ data, isLoading }) => {
                   width={24}
                   height={24}
                   alt="Avatar"
+                  unoptimized
                 />
               </AvatarWrapper>
               <Name>{movie?.uploader?.name}</Name>
@@ -84,12 +85,13 @@ const Wrapper = styled.div`
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  @media (max-width: 520px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  @media (max-width: 480px) {
+    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  @media (max-width: 375px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (max-width: 320px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 `;
 
@@ -119,8 +121,8 @@ const Card = styled.div`
   }
 
   @media (max-width: 640px) {
-    width: 100%;
-    height: 200px;
+    width: 80px;
+    height: 130px;
   }
 `;
 

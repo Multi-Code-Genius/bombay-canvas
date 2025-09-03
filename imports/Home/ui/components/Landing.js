@@ -44,7 +44,13 @@ const Landing = ({ movieData, isLoading }) => {
       ></BackgroundVideo>
       <Header />
       <Content>
-        <Image src="/static/logo.png" alt="Logo" width={91} height={35} />
+        <ContentImage
+          src="/static/logo.png"
+          alt="Logo"
+          width={91}
+          height={35}
+          unoptimized
+        />
         <MainTitle
           dangerouslySetInnerHTML={{
             __html: `Lorem ipsum <span>dolor sit amet</span>`,
@@ -71,6 +77,7 @@ const Landing = ({ movieData, isLoading }) => {
                 width={24}
                 height={24}
                 alt="Avatar"
+                unoptimized
               />
             </AvatarWrapper>
             <Name>{movieData?.[0]?.uploader?.name}</Name>
@@ -119,6 +126,7 @@ const Layout = styled.div`
 
   @media (max-width: 480px) {
     min-height: 65vh;
+    height: 75vh;
   }
 `;
 
@@ -130,6 +138,16 @@ const BackgroundVideo = styled.video`
   height: 100%;
   object-fit: cover;
   z-index: 1;
+`;
+
+const ContentImage = styled(Image)`
+  width: 91px;
+  height: 35px;
+
+  @media (max-width: 480px) {
+    width: 53px !important;
+    height: 21px !important;
+  }
 `;
 
 const Content = styled(Flex)`
@@ -149,7 +167,7 @@ const Content = styled(Flex)`
   }
 
   @media (max-width: 480px) {
-    gap: 12px;
+    gap: 11px;
     bottom: 12px;
   }
 `;
@@ -171,8 +189,18 @@ const Range = styled(Flex)`
     rgba(211, 211, 211, 0.33) 100%
   );
 
-  @media (max-width: 768px) {
-    display: none;
+  @media (max-width: 780px) {
+    width: 140px;
+    padding: 5px 0 5px 10px;
+    border-right: 5px solid #ff6a00;
+    bottom: 35%;
+  }
+
+  @media (max-width: 480px) {
+    width: 94.36px;
+    padding: 5px 0 5px 10px;
+    border-right: 5px solid #ff6a00;
+    bottom: 33%;
   }
 `;
 
@@ -197,7 +225,7 @@ const MainTitle = styled.div`
 
   @media (max-width: 480px) {
     font-size: 30px;
-    letter-spacing: -0.9px;
+    letter-spacing: -4%;
   }
 `;
 
@@ -228,6 +256,10 @@ const CtaWrappers = styled(Flex)`
     gap: 12px;
     flex-direction: row-reverse;
   }
+
+  @media (max-width: 768px) {
+    gap: 9.3px;
+  }
 `;
 
 const Buttons = styled(Flex)`
@@ -242,7 +274,8 @@ const Buttons = styled(Flex)`
   padding: 8px;
   border-radius: 8px;
   line-height: 24px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(250, 87, 0, 0.12),
     -1.4px 16.5px 16.5px 0 rgba(250, 87, 0, 0.1),
     -3.6px 36.6px 22.2px 0 rgba(250, 87, 0, 0.06),
     -5.7px 64.6px 25.8px 0 rgba(250, 87, 0, 0.02),
@@ -260,8 +293,16 @@ const Buttons = styled(Flex)`
   }
 
   @media (max-width: 480px) {
-    padding: 8px 12px;
-    font-size: 13px;
+    min-width: 87px;
+    padding: 5px 6px;
+    font-size: 12px;
+    line-height: 20px;
+    border-radius: 6px;
+
+    svg {
+      width: 12.59px;
+      height: 14.96px;
+    }
   }
 `;
 
@@ -273,7 +314,8 @@ const InfoCta = styled(Flex)`
   gap: 4px;
   padding: 8px 0;
   border-radius: 10px;
-  box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
+  box-shadow:
+    -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);
@@ -282,6 +324,12 @@ const InfoCta = styled(Flex)`
     rgba(14, 14, 14, 0.71) -91%,
     #000 112%
   );
+
+  @media (max-width: 480px) {
+    min-width: 100px;
+    padding: 7px 0;
+    border-radius: 6px;
+  }
 `;
 
 const Name = styled.div`
@@ -297,6 +345,11 @@ const AvatarWrapper = styled.div`
   height: 24px;
   border-radius: 50%;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    width: 14px;
+    height: 14px;
+  }
 `;
 
 const Duration = styled.div`
@@ -312,12 +365,12 @@ const Duration = styled.div`
   }
 
   @media (max-width: 768px) {
-    font-size: 24px;
+    font-size: 18px;
     letter-spacing: -1.2px;
   }
 
   @media (max-width: 480px) {
-    font-size: 20px;
+    font-size: 12px;
     letter-spacing: -1px;
   }
 `;

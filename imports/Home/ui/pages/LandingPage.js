@@ -34,4 +34,10 @@ const ExploreWrapper = styled.div`
   gap: 42px;
   background-color: black;
   padding-bottom: 31px;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
 `;

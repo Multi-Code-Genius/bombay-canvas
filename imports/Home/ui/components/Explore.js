@@ -2,8 +2,9 @@
 
 import Flex from "lib/atoms/Flex";
 import styled from "styled-components";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,33 +12,31 @@ import ArrowIcon from "/imports/Home/ui/assets/ArrowIcon";
 import { useRouter } from "next/navigation";
 import SkeletonCard from "imports/core/ui/atoms/SkeletonCard";
 
-const getMaxSlides = (w) => {
-  if (w >= 1536) return 6;
-  if (w >= 1280) return 5;
-  if (w >= 1024) return 4;
-  if (w >= 920) return 3;
-  if (w > 424) return 2;
-  return 1;
+const getSlidesSettings = (width) => {
+  if (width < 640) return { slidesToShow: 1, slidesToScroll: 1 };
+  if (width < 768) return { slidesToShow: 2, slidesToScroll: 2 };
+  if (width < 1024) return { slidesToShow: 3, slidesToScroll: 3 };
+  if (width < 1280) return { slidesToShow: 3, slidesToScroll: 3 };
+  if (width < 1536) return { slidesToShow: 4, slidesToScroll: 4 };
+  return { slidesToShow: 5, slidesToScroll: 5 };
 };
 
 const Explore = ({ movieData, isLoading }) => {
-  const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
 
-  const [windowWidth, setWindowWidth] = useState(1200);
   useEffect(() => {
-    const update = () =>
-      setWindowWidth(typeof window !== "undefined" ? window.innerWidth : 1200);
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    const checkScreen = () => setIsMobile(window.innerWidth < 768);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
   function ArrowButton({ className, onClick }) {
     const side = className?.includes("slick-prev")
       ? "left"
       : className?.includes("slick-next")
-      ? "right"
-      : undefined;
+        ? "right"
+        : undefined;
     const isDisabled = className?.includes("slick-disabled");
     return (
       <ArrowButtonUI
@@ -52,61 +51,92 @@ const Explore = ({ movieData, isLoading }) => {
     );
   }
 
-  const settings = useMemo(
-    () => ({
-      dots: false,
+  const router = useRouter();
 
-      infinite: false,
-      speed: 600,
-      swipe: true,
-      draggable: true,
-      swipeToSlide: true,
-      touchMove: true,
-      touchThreshold: 10,
-      slidesToShow: 6,
-      slidesToScroll: 1,
-      centerMode: windowWidth <= 480,
-      centerPadding: windowWidth <= 480 ? "60px" : "0px",
-      nextArrow: <ArrowButton />,
-      prevArrow: <ArrowButton />,
-      responsive: [
-        { breakpoint: 1536, settings: { slidesToShow: 6, slidesToScroll: 1 } },
-        { breakpoint: 1280, settings: { slidesToShow: 4, slidesToScroll: 1 } },
-        { breakpoint: 920, settings: { slidesToShow: 3, slidesToScroll: 1 } },
-        { breakpoint: 575, settings: { slidesToShow: 2, slidesToScroll: 1 } },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            infinite: true,
-            centerMode: true,
-            centerPadding: "60px",
-            className: "center",
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const updateSettings = () => {
+      const width = window.innerWidth;
+      const { slidesToShow, slidesToScroll } = getSlidesSettings(width);
+
+      const isSmallScreen = width <= 768;
+
+      setSettings({
+        dots: false,
+        infinite: false,
+        speed: 1500,
+        adaptiveHeight: true,
+        touchThreshold: 10,
+
+        swipe: isSmallScreen,
+        draggable: isSmallScreen,
+        swipeToSlide: isSmallScreen,
+        touchMove: isSmallScreen,
+
+        slidesToShow: isSmallScreen ? 1 : slidesToShow,
+        slidesToScroll: isSmallScreen ? 1 : slidesToScroll,
+
+        centerMode: isSmallScreen,
+        centerPadding: isSmallScreen ? "20px" : "0px",
+
+        nextArrow: <ArrowButton />,
+        prevArrow: <ArrowButton />,
+
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              centerMode: true,
+              centerPadding: "0px",
+            },
           },
-        },
-      ],
-    }),
-    [windowWidth]
-  );
+          {
+            breakpoint: 640,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              centerMode: true,
+              centerPadding: "20px",
+            },
+          },
+        ],
+      });
+    };
 
-  const items = movieData ?? [];
+    updateSettings();
+    window.addEventListener("resize", updateSettings);
+    return () => window.removeEventListener("resize", updateSettings);
+  }, []);
+
+  const handlerCreator = (e, i) => {
+    e.stopPropagation();
+    router.push(`/creator/${i}`);
+  };
+
+  if (!settings) return null;
 
   if (isLoading) {
     const skeletonCards = Array.from({ length: 15 }).map((_, index) => (
       <SkeletonCard key={index} />
     ));
+
     return (
       <Div>
         <HeaderText>
           Explore and Learn
           <span> AI Tools</span>
         </HeaderText>
-        <SliderShell>
+
+        {isMobile ? (
+          <ScrollRow>{skeletonCards}</ScrollRow>
+        ) : (
           <Slider className="Slider" {...settings}>
             {skeletonCards}
           </Slider>
-        </SliderShell>
+        )}
       </Div>
     );
   }
@@ -118,24 +148,18 @@ const Explore = ({ movieData, isLoading }) => {
         <span> AI Tools</span>
       </HeaderText>
 
-      <SliderShell>
-        <Slider className="Slider" {...settings}>
-          {items.map((movie, index) => (
+      {isMobile ? (
+        <ScrollRow>
+          {movieData?.map((movie, index) => (
             <Card
               $bgImage={movie?.posterUrl}
-              // $bgImage={"/static/filmCard.png"}
               key={index}
               onClick={() => router.push(`/video/${movie?.id}`)}
             >
-              <Video
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(`/creator/${movie?.uploader?.id}`);
-                }}
-              >
+              <Video onClick={(e) => handlerCreator(e, movie?.uploader?.id)}>
                 <AvatarWrapper>
-                  <Image
-                    src={"/static/avtar.jpg"}
+                  <AvatarImage
+                    src="/static/avtar.jpg"
                     width={24}
                     height={24}
                     alt="Avatar"
@@ -145,8 +169,33 @@ const Explore = ({ movieData, isLoading }) => {
               </Video>
             </Card>
           ))}
+        </ScrollRow>
+      ) : (
+        <Slider className="Slider" {...settings}>
+          {movieData?.map((movie, index) => {
+            return (
+              <Card
+                $bgImage={movie?.posterUrl}
+                key={index}
+                onClick={() => router.push(`/video/${movie?.id}`)}
+              >
+                <Video onClick={(e) => handlerCreator(e, movie?.uploader?.id)}>
+                  <AvatarWrapper>
+                    <Image
+                      src={"/static/avtar.jpg"}
+                      width={24}
+                      height={24}
+                      alt="Avatar"
+                      unoptimized
+                    />
+                  </AvatarWrapper>
+                  <Name>{movie?.uploader?.name}</Name>
+                </Video>
+              </Card>
+            );
+          })}
         </Slider>
-      </SliderShell>
+      )}
     </Div>
   );
 };
@@ -163,8 +212,12 @@ const Div = styled.div`
   z-index: 10;
 
   @media (max-width: 768px) {
-    padding: 0 8px;
+    padding: 0 16px;
     gap: 14px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8.5px;
   }
 `;
 
@@ -174,47 +227,52 @@ const HeaderText = styled.div`
   line-height: 1.2;
   letter-spacing: -1.7px;
   color: #fff;
+
   span {
     font-family: "HelveticaBold";
   }
+
   @media (max-width: 768px) {
     font-size: 24px;
     letter-spacing: -1px;
     padding: 16px 0;
   }
-  @media (max-width: 480px) {
-    font-size: 20px;
-    letter-spacing: -0.8px;
-    padding: 12px 0 16px 0;
-  }
-`;
 
-const SliderShell = styled.div`
-  .slick-list {
-    margin: 0 -6px;
-  }
-  .slick-slide > div {
-    padding: 0 6px;
+  @media (max-width: 480px) {
+    font-size: 16px;
+    letter-spacing: -3%;
+    padding: 5px 0;
   }
 `;
 
 const Card = styled.div`
   width: 100%;
-  height: 414px;
+  height: 413px;
   position: relative;
+  align-items: center;
   cursor: pointer;
-  border-radius: 22px;
-  overflow: hidden;
+  justify-content: center;
   background-image: ${({ $bgImage }) => `url(${$bgImage})`};
+
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
 
-  @media (max-width: 1280px) {
-    height: 360px;
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 195px;
+    height: 310px;
   }
-  @media (max-width: 1024px) {
-    height: 300px;
+
+  @media (max-width: 640px) {
+    width: 100%;
+    max-width: 195px;
+    height: 310px;
+  }
+
+  @media (max-width: 425px) {
+    width: 100%;
+    max-width: 100px;
+    height: 160px;
   }
 `;
 
@@ -233,12 +291,26 @@ const Video = styled(Flex)`
   background-color: rgba(0, 0, 0, 0.36);
   white-space: nowrap;
   z-index: 100;
+
   @media (max-width: 768px) {
     gap: 5px;
     border-radius: 20px;
   }
+
   @media (max-width: 480px) {
+    padding: 4px;
     gap: 4px;
+    border-radius: 10px;
+  }
+`;
+
+const AvatarImage = styled(Image)`
+  width: 24px;
+  height: 24px;
+
+  @media (max-width: 480px) {
+    width: 14px !important;
+    height: 14px !important;
   }
 `;
 
@@ -247,6 +319,11 @@ const AvatarWrapper = styled.div`
   height: clamp(20px, 3.5vw, 24px);
   border-radius: 50%;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    width: 14px;
+    height: 14px;
+  }
 `;
 
 const Name = styled.div`
@@ -256,6 +333,10 @@ const Name = styled.div`
   color: #fff;
   padding-right: 2px;
   line-height: 1.42;
+
+  @media (max-width: 480px) {
+    font-size: 7px;
+  }
 `;
 
 const ArrowButtonUI = styled.button`
@@ -296,7 +377,12 @@ const ArrowButtonUI = styled.button`
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
   }
 
-  @media (max-width: 920px) {
+  svg {
+    transform: ${({ $side }) => ($side === "left" ? "scaleX(-1)" : "none")};
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+  }
+
+  @media (max-width: 768px) {
     display: none;
   }
 `;
@@ -308,9 +394,11 @@ const ScrollRow = styled.div`
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 8px;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   > div {
     flex: 0 0 auto;
     scroll-snap-align: start;

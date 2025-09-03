@@ -13,12 +13,22 @@ const UserInfoContainer = styled.div`
   padding: 1.5rem; /* 24px */
   margin-bottom: 2rem; /* 32px */
   color: white;
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    margin-bottom: 0;
+  }
 `;
 
 const Title = styled.h2`
   font-size: 1.5rem; /* 24px */
   font-weight: 600;
   margin-bottom: 1rem;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+    margin: 5px 0 16px 0;
+  }
 `;
 
 const InfoGrid = styled.div`
@@ -31,13 +41,28 @@ const InfoGrid = styled.div`
   }
 `;
 
-const InfoItem = styled.div``;
+const InfoItem = styled.div`
+  display: block;
+
+  @media (max-width: 480px) {
+    display: flex;
+    gap: 10px;
+  }
+`;
 
 const Label = styled.p`
   font-weight: 600;
+
+  @media (max-width: 480px) {
+    margin: 5px 0;
+  }
 `;
 
-const Value = styled.p``;
+const Value = styled.p`
+  @media (max-width: 480px) {
+    margin: 5px 0;
+  }
+`;
 
 const ProfileImage = styled.img`
   width: 6rem; /* 96px */
@@ -69,10 +94,10 @@ const UserInfo = () => {
           <Label>Email:</Label>
           <Value>{data?.userData?.email}</Value>
         </InfoItem>
-        <InfoItem>
+        <div>
           <Label>Profile Picture:</Label>
           <ProfileImage src={"/static/avtar.jpg"} alt="Profile" />
-        </InfoItem>
+        </div>
         <InfoItem>
           <LogInBtn onClick={handleLogOut}>Log out</LogInBtn>
         </InfoItem>

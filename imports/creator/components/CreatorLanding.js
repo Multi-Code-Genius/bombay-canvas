@@ -27,7 +27,6 @@ const CreatorLanding = ({ data }) => {
           <Buttons>
             <Wrapper>
               <YoutubeIcon />
-
               <Text>Youtube</Text>
             </Wrapper>
           </Buttons>
@@ -66,7 +65,6 @@ const Layout = styled.div`
     padding-bottom: 0;
     height: 70vh;
     background-position: center;
-    overflow-x: hidden;
 
     &::after {
       height: 55%;
@@ -75,6 +73,7 @@ const Layout = styled.div`
 
   @media (max-width: 480px) {
     min-height: 65vh;
+    height: 75vh;
   }
 `;
 
@@ -111,13 +110,8 @@ const MainTitle = styled.div`
 
   @media (max-width: 768px) {
     font-size: 30px;
-    letter-spacing: -1.2px;
-    line-height: 1.15;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 22px;
     letter-spacing: -0.9px;
+    line-height: 1.15;
   }
 `;
 
@@ -139,7 +133,6 @@ const Para = styled.div`
 `;
 
 const CtaWrappers = styled.div`
-  /* width: 295px; */
   display: flex;
   gap: 16px;
   margin-top: -7.2px;
@@ -172,10 +165,11 @@ const Buttons = styled.div`
   );
 
   @media (max-width: 768px) {
-    width: auto;
+    width: 94px;
     padding: 7px 8px;
     gap: 6px;
     font-size: 14px;
+    border-radius: 8px;
   }
 
   @media (max-width: 480px) {
@@ -184,13 +178,21 @@ const Buttons = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled(Flex)`
   min-width: 87.6px;
-  display: flex;
   align-items: center;
   gap: 4.6px;
   padding: 0;
   opacity: 0.9;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
 `;
 
 const Text = styled.div`
@@ -201,4 +203,10 @@ const Text = styled.div`
   letter-spacing: -0.5px;
   text-align: center;
   color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+    text-align: left;
+    min-width: fit-content;
+  }
 `;

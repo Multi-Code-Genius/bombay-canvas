@@ -8,7 +8,7 @@ body {
 
 
 
-  background: #181818;
+  background: rgba(24,24,24,1);
   margin: 0;
   /* &::-webkit-scrollbar-thumb {
       background-color: #5651e5;
@@ -33,9 +33,20 @@ a {
 .Slider {
 /* margin-bottom: 31px; */
 position: relative;
+
 }
 
+.slick-slide{
+   margin-right: 13px;
+   max-width: 259px;
+   overflow: hidden;
+   border-radius: 22.7px;
+}
 
+.Slider .slick-list {
+  margin: 0 -6px;
+  padding: 0px 5px !important;
+}
 
  .slick-prev:before, .slick-next:before {
   display: none;
@@ -44,8 +55,6 @@ position: relative;
  input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1); 
 }
-
-
 
 
 ::-webkit-scrollbar {
@@ -67,8 +76,6 @@ position: relative;
 ::-webkit-scrollbar-thumb:hover {
   background: #e1e1e1;       
 }
-
-
 `;
 
 export default GlobalStyles;
