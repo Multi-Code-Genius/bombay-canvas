@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Cookies from "js-cookie";
 import Flex from "/lib/atoms/Flex";
 import { useLogin } from "api/auth";
@@ -15,36 +15,46 @@ export default function LoginForm({ setIsAuthed }) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { mutate, data } = useLogin(true);
+  const { mutate, data, error: errrr } = useLogin(true);
 
   useEffect(() => {
-    if (data?.user?.role == "ADMIN") {
+    if (data?.user?.role === "ADMIN") {
       Cookies.set("adminAccess", "true", { expires: 10 });
       setIsAuthed(true);
     }
-  }, [data]);
+  }, [data, setIsAuthed]);
 
-  const onLogin = async (e) => {
+  const onLogin = (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    try {
-      mutate({
-        email: email,
-        password: password,
-      });
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    mutate(
+      { email, password },
+      {
+        onSuccess: (res) => {
+          if (res?.user?.role === "ADMIN") {
+            Cookies.set("adminAccess", "true", { expires: 10 });
+            setIsAuthed(true);
+          }
+        },
+        onError: (err) => {
+          console.log("err", err);
+          // depending on your API shape
+          setError("Invalid email or password.");
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      }
+    );
   };
 
   return (
     <LoginContainer>
       <LoginFormStyled onSubmit={onLogin}>
         <LoginTitle>Admin Login</LoginTitle>
+
         <LoginInput
           type="email"
           placeholder="Email"
@@ -52,22 +62,27 @@ export default function LoginForm({ setIsAuthed }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        {/* <div> */}
-        <LoginInput
-          type={true ? "text" : "password"}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {/* <EyeIconWrapper onClick={() => setShowPassword(!showPassword)}>
+
+        <PasswordWrapper>
+          <LoginInput
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <EyeIconWrapper onClick={() => setShowPassword((prev) => !prev)}>
             {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
-          </EyeIconWrapper> */}
-        {/* </div> */}
+          </EyeIconWrapper>
+        </PasswordWrapper>
+
         {error && <LoginError>{error}</LoginError>}
+
         <LoginButton type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </LoginButton>
+
+        {error && <LoginError>{error}</LoginError>}
       </LoginFormStyled>
     </LoginContainer>
   );
@@ -104,6 +119,11 @@ const LoginTitle = styled.h2`
   margin-bottom: 20px;
 `;
 
+const PasswordWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 const EyeIconWrapper = styled.div`
   position: absolute;
   top: 50%;
@@ -111,12 +131,20 @@ const EyeIconWrapper = styled.div`
   transform: translateY(-50%);
   cursor: pointer;
 
-  @media (max-width: 768px) {
-    right: 12px;
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+    opacity: 0.7;
+  }
+
+  &:hover svg {
+    opacity: 1;
   }
 `;
 
 const LoginInput = styled.input`
+  width: 100%;
   padding: 14px 18px;
   border-radius: 8px;
   border: 1px solid #414141;
@@ -144,6 +172,12 @@ const LoginButton = styled.button`
   color: #fff;
   font-family: "HelveticaRegular";
   font-size: 16px;
+  transition: opacity 0.3s ease;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 `;
 
 const LoginError = styled.div`

@@ -8,6 +8,7 @@ import SideButtonRightIcon from "../assets/SideButtonRightIcon";
 import PlayIcon from "../assets/PlayIcon";
 import VolumeIcon from "../assets/VolumeIcon";
 import Hls from "hls.js";
+import { Maximize, Minimize } from "lucide-react";
 
 export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
   const videoRef = useRef(null);
@@ -15,6 +16,30 @@ export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const toggleFullscreen = () => {
+    const videoContainer = videoRef.current?.parentElement;
+    if (!videoContainer) return;
+
+    if (!document.fullscreenElement) {
+      videoContainer.requestFullscreen?.();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen?.();
+      setIsFullscreen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFsChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFsChange);
+  }, []);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -76,7 +101,7 @@ export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
         };
       }
     }
-  }, [movie]);
+  }, [movie, episode]);
 
   return (
     <Container $playing={playing}>
@@ -85,10 +110,16 @@ export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
         preload="auto"
-        src={episode?.videoUrl}
+        // src={episode?.videoUrl}
+        src={
+          "https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
+        }
         poster={movie?.posterUrl ?? "/static/videoImage.png"}
         ref={videoRef}
       />
+      <FullscreenButton onClick={toggleFullscreen}>
+        {isFullscreen ? <Minimize /> : <Maximize />}
+      </FullscreenButton>
 
       <Controls className="controls">
         <SideButtonLeft onClick={() => seek(-10)}>
@@ -135,7 +166,7 @@ export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
 
 const Container = styled.div`
   position: relative;
-  height: 700px;
+  height: 697px;
   width: 100%;
   border-radius: 20px;
   overflow: hidden;
@@ -164,6 +195,21 @@ const StyledVideo = styled.video`
   width: 100%;
   height: 100%;
   object-fit: cover;
+`;
+
+const FullscreenButton = styled.button`
+  position: absolute;
+  bottom: 12px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
 const Controls = styled.div`
@@ -241,7 +287,7 @@ const BottomControls = styled.div`
   position: absolute;
   bottom: 20px;
   left: 20px;
-  right: 20px;
+  right: 40px;
   display: flex;
   align-items: center;
   gap: 8px;

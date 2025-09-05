@@ -9,14 +9,25 @@ import { useAllUserData, useUpdateRole, useUserData } from "api/user";
 import { useDeleteMovie, useEditMovies, useMoviesData } from "api/movies";
 import { useAuthStore } from "store/authStore";
 import { useUploadMovie } from "lib/hooks/useUploadMovie";
+import { keyframes } from "styled-components";
+import Loading from "imports/common/components/Loading";
+import Modal from "imports/common/components/Modal";
 
 export default function AdminPage() {
   const [isAuthed, setIsAuthed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const flag = Cookies.get("adminAccess");
-    if (flag === "true") setIsAuthed(true);
+    if (flag === "true") {
+      setIsAuthed(true);
+    }
+    setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>{isAuthed ? <Dashboard /> : <LoginForm setIsAuthed={setIsAuthed} />}</>
@@ -26,20 +37,24 @@ export default function AdminPage() {
     const tabs = ["Overview", "Users", "Movies", "Genres"];
     const [activeTab, setActiveTab] = useState("Overview");
     const [isUploading, setIsUploading] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [movieToDelete, setMovieToDelete] = useState(null);
 
     const [moviesView, setMoviesView] = useState("list");
     const { data: user } = useUserData(!!useAuthStore.getState().token);
 
     const { data } = useAllUserData(!!useAuthStore?.getState().token);
     const { mutate } = useUpdateRole(!!useAuthStore?.getState().token);
-    const { data: movieData } = useMoviesData();
+    const { data: movieData, refetch } = useMoviesData();
     const { mutate: deteleMovie } = useDeleteMovie(
       !!useAuthStore?.getState().token
     );
     const { mutate: updateMovies } = useEditMovies();
 
     const { uploadMovie, loading, error } = useUploadMovie(
-      useAuthStore.getState().token
+      useAuthStore.getState().token,
+      refetch
     );
 
     useEffect(() => {
@@ -280,9 +295,8 @@ export default function AdminPage() {
     };
 
     const onDeleteMovie = (id) => {
-      deteleMovie(id);
-      setMovies((arr) => arr.filter((m) => m.id !== id));
-      if (movie.id === id) setMovie(defaultMovie);
+      setMovieToDelete(id);
+      setShowDeleteModal(true);
     };
 
     const onReset = () => {
@@ -308,9 +322,7 @@ export default function AdminPage() {
             <Divider />
             <NavBtn
               onClick={() => {
-                Cookies.remove("adminAccess");
-                useAuthStore.getState().logout();
-                setIsAuthed(false);
+                setShowLogoutModal(true);
               }}
             >
               Logout
@@ -321,7 +333,7 @@ export default function AdminPage() {
             {activeTab === "Overview" && (
               <Card $direction="column">
                 <Title>Overview</Title>
-                <SmallHint>Quick snapshot of your app (static demo).</SmallHint>
+                <SmallHint>Quick snapshot of your app.</SmallHint>
                 <Kpis>
                   <KpiBox>
                     <KpiTitle>Total Users</KpiTitle>
@@ -442,12 +454,12 @@ export default function AdminPage() {
                             )}
                           </MovieInfo>
                           <MovieActions>
-                            {/* <SecondaryBtn
+                            <SecondaryBtn
                               type="button"
                               onClick={() => onEditMovie(m.id)}
                             >
-                              Edit
-                            </SecondaryBtn> */}
+                              View
+                            </SecondaryBtn>
                             <DangerBtn
                               type="button"
                               onClick={() => onDeleteMovie(m.id)}
@@ -486,11 +498,11 @@ export default function AdminPage() {
                     <FormHeader>
                       <div>
                         <Title>
-                          {movie.id ? "Edit Movie" : "Add New Movie"}
+                          {movie.id ? "View Movie" : "Add New Movie"}
                         </Title>
                         <SmallHint>
                           {movie.id
-                            ? `Editing: ${movie.title || "Untitled Movie"}`
+                            ? `View: ${movie.title || "Untitled Movie"}`
                             : "Fill in the details to add a new movie to your collection."}
                         </SmallHint>
                       </div>
@@ -566,7 +578,7 @@ export default function AdminPage() {
                             <Label>Release Date</Label>
                             <Input
                               type="date"
-                              value={movie.releaseDate}
+                              value={movie?.releaseDate}
                               onChange={(e) =>
                                 setField("releaseDate", e.target.value)
                               }
@@ -813,17 +825,22 @@ export default function AdminPage() {
 
                       <FormActions>
                         <SubmitBtn
-                          disabled={loading}
+                          disabled={loading || movie.id}
                           as="button"
                           type="submit"
                           $alignitems="center"
                           $justifycontent="center"
                         >
-                          {!loading
-                            ? movie.id
-                              ? "Update Movie"
-                              : "Create Movie"
-                            : "Uploading Movies..."}
+                          {loading ? (
+                            <>
+                              <Spinner />
+                              Uploading Movies...
+                            </>
+                          ) : movie.id ? (
+                            "Create Movie"
+                          ) : (
+                            "Create Movie"
+                          )}
                         </SubmitBtn>
                         <SecondaryBtn
                           type="button"
@@ -859,32 +876,103 @@ export default function AdminPage() {
             )}
           </Content>
         </DashboardLayout>
+        {showDeleteModal && (
+          <Modal onClose={() => setShowDeleteModal(false)}>
+            <ModalContent>
+              <ModalTitle>Confirm Deletion</ModalTitle>
+              <P>Are you sure you want to delete this movie?</P>
+              <ModalActions>
+                <SecondaryBtn onClick={() => setShowDeleteModal(false)}>
+                  Cancel
+                </SecondaryBtn>
+                <DangerBtn
+                  onClick={() => {
+                    deteleMovie(movieToDelete);
+                    setMovies((arr) =>
+                      arr.filter((m) => m.id !== movieToDelete)
+                    );
+                    if (movie.id === movieToDelete) setMovie(defaultMovie);
+                    setShowDeleteModal(false);
+                    setMovieToDelete(null);
+                  }}
+                >
+                  Delete
+                </DangerBtn>
+              </ModalActions>
+            </ModalContent>
+          </Modal>
+        )}
+        {showLogoutModal && (
+          <Modal onClose={() => setShowLogoutModal(false)}>
+            <ModalContent>
+              <ModalTitle>Confirm Logout</ModalTitle>
+              <P>Are you sure you want to logout?</P>
+              <ModalActions>
+                <SecondaryBtn onClick={() => setShowLogoutModal(false)}>
+                  Cancel
+                </SecondaryBtn>
+                <SubmitBtn
+                  onClick={() => {
+                    Cookies.remove("adminAccess");
+                    useAuthStore.getState().logout();
+                    setIsAuthed(false);
+                    setShowLogoutModal(false);
+                  }}
+                >
+                  Logout
+                </SubmitBtn>
+              </ModalActions>
+            </ModalContent>
+          </Modal>
+        )}
       </Main>
     );
   }
 }
 
 const Main = styled(Flex)`
-  height: 100vh;
-  padding: 16px;
-  gap: 16px;
+  max-height: 100vh;
+  background: #111;
+  padding: 24px;
+  gap: 24px;
   z-index: 10;
   position: relative;
   overflow: hidden;
+  font-family: "HelveticaNowDisplay-Regular", sans-serif;
 `;
 
 const PageTitle = styled.h1`
   margin: 0 0 8px 0;
-  font-family: "HelveticaBold";
-  font-size: 28px;
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
+  font-size: 32px;
   color: #fff;
+`;
+
+const P = styled.p`
+  color: white;
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid #ff670a;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: ${spin} 1s linear infinite;
+  margin-right: 8px;
+  display: inline-block;
 `;
 
 const DashboardLayout = styled.div`
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 16px;
-  height: calc(100vh - 80px);
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  height: calc(100vh - 100px);
   overflow: hidden;
 
   @media (max-width: 900px) {
@@ -893,64 +981,89 @@ const DashboardLayout = styled.div`
 `;
 
 const Sidebar = styled.div`
-  border: 1px solid #414141;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 12px;
+  border: 1px solid #222;
+  border-radius: 16px;
+  background: #1a1a1a;
+  padding: 16px;
   height: fit-content;
 `;
 
 const Content = styled(Flex)`
-  gap: 16px;
+  gap: 24px;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #111;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #444;
+  }
 `;
 
 const NavBtn = styled.button`
   width: 100%;
   text-align: left;
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  border-radius: 8px;
-  border: 1px solid ${({ $active }) => ($active ? "#ef8a4c" : "#414141")};
-  background: ${({ $active }) => ($active ? "#ef8a4c22" : "transparent")};
-  color: #fff;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: ${({ $active }) => ($active ? "#ff670a22" : "transparent")};
+  color: ${({ $active }) => ($active ? "#ff670a" : "#aaa")};
   cursor: pointer;
+  font-size: 14px;
+  font-family: "HelveticaNowDisplay-Medium", sans-serif;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: #ff670a11;
+    color: #ff670a;
+  }
 `;
 
 const Divider = styled.div`
   height: 1px;
-  background: #414141;
-  margin: 8px 0 12px 0;
+  background: #222;
+  margin: 12px 0;
 `;
 
 const Kpis = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
 `;
 
 const KpiBox = styled.div`
-  border: 1px solid #414141;
-  border-radius: 10px;
-  padding: 14px;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 20px;
+  background: #1a1a1a;
 `;
 
 const KpiTitle = styled.div`
-  opacity: 0.7;
-  font-size: 12px;
-  color: #fff;
+  opacity: 0.6;
+  font-size: 14px;
+  color: #aaa;
 `;
 
 const KpiValue = styled.div`
-  font-family: "HelveticaBold";
-  font-size: 24px;
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
+  font-size: 36px;
   color: #fff;
 `;
 
 const SearchRow = styled.div`
   display: flex;
   gap: 10px;
+  margin-bottom: 16px;
 `;
 
 const Table = styled.table`
@@ -960,51 +1073,55 @@ const Table = styled.table`
 
   th,
   td {
-    border-bottom: 1px solid #414141;
-    padding: 10px 8px;
+    padding: 14px 10px;
     text-align: left;
+    border-bottom: 1px solid #222;
   }
 
   thead th {
-    opacity: 0.8;
-    font-weight: 500;
+    font-family: "HelveticaNowDisplay-Bold", sans-serif;
+    color: #aaa;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  tbody tr {
+    transition: background 0.2s ease;
+    &:hover {
+      background: #1f1f1f;
+    }
   }
 `;
 
 const Card = styled(Flex)`
   width: 100%;
-  gap: 16px;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #414141;
-  background: rgba(255, 255, 255, 0.02);
+  gap: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #222;
+  background: #1a1a1a;
   overflow: hidden;
 `;
 
 const Title = styled.h2`
   margin: 0 0 4px 0;
-  font-family: "HelveticaBold";
-  font-size: 22px;
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
+  font-size: 24px;
   color: #fff;
 `;
 
 const SmallHint = styled.div`
   opacity: 0.6;
-  font-size: 12px;
-  color: #fff;
-  margin-top: -6px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  font-size: 14px;
+  color: #aaa;
+  margin-top: -4px;
 `;
 
 const Label = styled.label`
-  font-family: "HelveticaRegular";
+  font-family: "HelveticaNowDisplay-Medium", sans-serif;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
+  color: #aaa;
 `;
 
 const SmallLabel = styled(Label)`
@@ -1012,110 +1129,157 @@ const SmallLabel = styled(Label)`
 `;
 
 const Input = styled.input`
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #414141;
-  background: transparent;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #222;
   color: #fff;
   outline: none;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
 
-  ::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+  &::placeholder {
+    color: #666;
+  }
+
+  &:focus {
+    border-color: #ff670a;
   }
 `;
 
 const SmallInput = styled(Input)`
-  padding: 10px 12px;
+  padding: 10px 14px;
 `;
 
 const Textarea = styled.textarea`
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #414141;
-  background: transparent;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #222;
   color: #fff;
   outline: none;
   resize: vertical;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
 
-  ::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+  &::placeholder {
+    color: #666;
+  }
+
+  &:focus {
+    border-color: #ff670a;
   }
 `;
 
 const Select = styled.select`
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #414141;
-  background: transparent;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #222;
   color: #fff;
   outline: none;
+  font-size: 14px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 16px center;
 `;
 
 const SubmitBtn = styled(Flex)`
-  padding: 12px;
+  padding: 12px 24px;
   cursor: pointer;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 126, 55, 0.2);
-  background-image: linear-gradient(101deg, #ff670a 2%, #ef8a4c 82%);
+  border-radius: 10px;
+  border: 1px solid #ff670a;
+  background: #ff670a;
   color: #fff;
-  font-family: "HelveticaRegular";
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
   font-size: 16px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #e05a00;
+    border-color: #e05a00;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const SecondaryBtn = styled.button`
-  padding: 12px;
+  padding: 12px 24px;
   cursor: pointer;
-  border-radius: 8px;
-  border: 1px solid #414141;
+  border-radius: 10px;
+  border: 1px solid #333;
   background: transparent;
-  color: #fff;
-  font-family: "HelveticaRegular";
+  color: #aaa;
+  font-family: "HelveticaNowDisplay-Medium", sans-serif;
   font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #222;
+    color: #fff;
+  }
 `;
 
 const DangerBtn = styled(SecondaryBtn)`
-  border-color: #8b2b2b;
+  border-color: #502020;
   color: #ff8a8a;
+
+  &:hover {
+    background: #502020;
+    color: #ff8a8a;
+  }
 `;
 
 const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 `;
 
 const Tag = styled.button`
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid ${({ $active }) => ($active ? "#ef8a4c" : "#414141")};
-  background: ${({ $active }) => ($active ? "#ef8a4c22" : "transparent")};
-  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid ${({ $active }) => ($active ? "#ff670a" : "#333")};
+  background: ${({ $active }) => ($active ? "#ff670a22" : "#222")};
+  color: ${({ $active }) => ($active ? "#ff670a" : "#aaa")};
   font-size: 12px;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #ff670a;
+    color: #ff670a;
+  }
 `;
 
 const RoleBadge = styled.span`
   padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
   background: ${({ $role }) => {
     switch ($role) {
       case "ADMIN":
-        return "#ef8a4c22";
+        return "#ff670a33";
       case "CREATOR":
-        return "#4cef8a22";
+        return "#4cef8a33";
       case "USER":
       default:
-        return "#8a8aef22";
+        return "#8a8aef33";
     }
   }};
   border: 1px solid
     ${({ $role }) => {
       switch ($role) {
         case "ADMIN":
-          return "#ef8a4c";
+          return "#ff670a";
         case "CREATOR":
           return "#4cef8a";
         case "USER":
@@ -1126,7 +1290,7 @@ const RoleBadge = styled.span`
   color: ${({ $role }) => {
     switch ($role) {
       case "ADMIN":
-        return "#ef8a4c";
+        return "#ff670a";
       case "CREATOR":
         return "#4cef8a";
       case "USER":
@@ -1139,20 +1303,26 @@ const RoleBadge = styled.span`
 const RoleSelect = styled.select`
   padding: 6px 10px;
   border-radius: 6px;
-  border: 1px solid #414141;
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #333;
+  background: #222;
   color: #fff;
   font-size: 12px;
   cursor: pointer;
   outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
 
   &:hover {
-    border-color: #ef8a4c;
+    border-color: #ff670a;
   }
 
   &:focus {
-    border-color: #ef8a4c;
-    box-shadow: 0 0 0 2px rgba(239, 138, 76, 0.2);
+    border-color: #ff670a;
+    box-shadow: 0 0 0 2px #ff670a33;
   }
 
   option {
@@ -1161,64 +1331,26 @@ const RoleSelect = styled.select`
   }
 `;
 
-const FileInput = styled.input`
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #414141;
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  outline: none;
-  cursor: pointer;
-
-  &:hover {
-    border-color: #ef8a4c;
-  }
-
-  &:focus {
-    border-color: #ef8a4c;
-    box-shadow: 0 0 0 2px rgba(239, 138, 76, 0.2);
-  }
-
-  &::file-selector-button {
-    background: #ef8a4c;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    margin-right: 12px;
-    cursor: pointer;
-    font-size: 12px;
-    font-family: "HelveticaRegular";
-
-    &:hover {
-      background: #ff670a;
-    }
-  }
-`;
-
 const MovieForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   flex: 1;
   overflow-y: auto;
-  padding-right: 6px;
+  padding-right: 8px;
 
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
-
   &::-webkit-scrollbar-track {
-    background: transparent;
+    background: #111;
   }
-
   &::-webkit-scrollbar-thumb {
-    background: rgba(239, 138, 76, 0.3);
-    border-radius: 2px;
+    background: #333;
+    border-radius: 3px;
   }
-
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(239, 138, 76, 0.5);
+    background: #444;
   }
 `;
 
@@ -1230,14 +1362,14 @@ const FormSection = styled.div`
 
 const SectionTitle = styled.h3`
   margin: 0;
-  font-family: "HelveticaBold";
-  font-size: 18px;
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
+  font-size: 20px;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #414141;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #222;
 `;
 
 const FieldGroup = styled.div`
@@ -1249,7 +1381,7 @@ const FieldGroup = styled.div`
 const FormField = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 `;
 
 const TwoColumnGrid = styled.div`
@@ -1279,23 +1411,24 @@ const ThreeColumnGrid = styled.div`
 const GenreContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   padding: 8px 0;
 `;
 
 const GenreTag = styled.button`
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid ${({ $active }) => ($active ? "#ef8a4c" : "#414141")};
-  background: ${({ $active }) => ($active ? "#ef8a4c22" : "transparent")};
-  color: ${({ $active }) => ($active ? "#ef8a4c" : "#fff")};
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid ${({ $active }) => ($active ? "#ff670a" : "#333")};
+  background: ${({ $active }) => ($active ? "#ff670a22" : "transparent")};
+  color: ${({ $active }) => ($active ? "#ff670a" : "#aaa")};
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #ef8a4c;
-    background: #ef8a4c11;
+    border-color: #ff670a;
+    background: #ff670a11;
+    color: #ff670a;
   }
 `;
 
@@ -1306,29 +1439,25 @@ const FileUploadArea = styled.div`
   position: relative;
 `;
 
+const FileInput = styled.input`
+  display: none;
+`;
+
 const FileUploadLabel = styled.label`
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  border: 2px dashed #414141;
-  border-radius: 8px;
+  min-height: 100px;
+  border: 2px dashed #333;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #ef8a4c;
-    background: rgba(239, 138, 76, 0.05);
-  }
-
-  input[type="file"] {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
+    border-color: #ff670a;
+    background: #ff670a11;
   }
 `;
 
@@ -1336,15 +1465,15 @@ const FileUploadText = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  color: #fff;
+  gap: 8px;
+  color: #aaa;
   font-size: 14px;
 `;
 
 const FileUploadHint = styled.div`
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.6;
-  color: #fff;
+  color: #aaa;
 `;
 
 const FileSelected = styled.div`
@@ -1361,33 +1490,30 @@ const EpisodeContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 400px;
-  overflow-y: auto;
+  /* max-height: 400px; */
+  /* overflow-y: auto; */
+  padding-right: 8px;
 
-  /* Subtle scrollbar */
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 0px;
   }
-
   &::-webkit-scrollbar-track {
-    background: transparent;
+    background: #111;
   }
-
   &::-webkit-scrollbar-thumb {
-    background: rgba(239, 138, 76, 0.3);
-    border-radius: 2px;
+    background: #333;
+    border-radius: 3px;
   }
-
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(239, 138, 76, 0.5);
+    background: #444;
   }
 `;
 
 const EpisodeCard = styled.div`
-  border: 1px solid #414141;
-  border-radius: 8px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 20px;
+  background: #111;
 `;
 
 const EpisodeHeader = styled.div`
@@ -1400,7 +1526,7 @@ const EpisodeHeader = styled.div`
 const EpisodeTitle = styled.h4`
   margin: 0;
   color: #fff;
-  font-family: "HelveticaBold";
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
   font-size: 16px;
 `;
 
@@ -1421,11 +1547,11 @@ const EpisodeGrid = styled.div`
 
 const EmptyEpisodes = styled.div`
   text-align: center;
-  padding: 32px;
-  color: #fff;
+  padding: 40px;
+  color: #aaa;
   opacity: 0.6;
-  border: 1px dashed #414141;
-  border-radius: 8px;
+  border: 2px dashed #222;
+  border-radius: 12px;
 `;
 
 const FormActions = styled.div`
@@ -1433,8 +1559,8 @@ const FormActions = styled.div`
   gap: 12px;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 16px;
-  border-top: 1px solid #414141;
+  padding-top: 24px;
+  border-top: 1px solid #222;
   margin-top: auto;
 `;
 
@@ -1462,50 +1588,41 @@ const MoviesHeader = styled.div`
 
 const MoviesGrid = styled.div`
   display: flex;
-  /* grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); */
   flex-direction: column;
   gap: 16px;
   flex: 1;
   overflow-y: auto;
-  padding-right: 6px;
+  padding-right: 8px;
 
-  /* Subtle scrollbar */
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
-
   &::-webkit-scrollbar-track {
-    background: transparent;
+    background: #111;
   }
-
   &::-webkit-scrollbar-thumb {
-    background: rgba(239, 138, 76, 0.3);
-    border-radius: 2px;
+    background: #333;
+    border-radius: 3px;
   }
-
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(239, 138, 76, 0.5);
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    background: #444;
   }
 `;
 
 const MovieCard = styled.div`
   padding: 20px;
   border-radius: 12px;
-  border: 1px solid #414141;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #222;
+  background: #1a1a1a;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 190px;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #ef8a4c;
-    background: rgba(239, 138, 76, 0.05);
+    border-color: #ff670a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px #00000033;
   }
 `;
 
@@ -1518,7 +1635,7 @@ const MovieInfo = styled.div`
 
 const MovieTitle = styled.h3`
   margin: 0;
-  font-family: "HelveticaBold";
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
   font-size: 18px;
   color: #fff;
   line-height: 1.3;
@@ -1532,12 +1649,12 @@ const MovieMeta = styled.div`
 
 const MovieType = styled.span`
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
   background: ${({ $type }) =>
-    $type === "SERIES" ? "#4cef8a22" : "#8a8aef22"};
+    $type === "SERIES" ? "#4cef8a33" : "#8a8aef33"};
   border: 1px solid
     ${({ $type }) => ($type === "SERIES" ? "#4cef8a" : "#8a8aef")};
   color: ${({ $type }) => ($type === "SERIES" ? "#4cef8a" : "#8a8aef")};
@@ -1545,21 +1662,21 @@ const MovieType = styled.span`
 
 const MovieDuration = styled.span`
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: #aaa;
 `;
 
 const MovieGenres = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
 `;
 
 const GenreChip = styled.span`
-  padding: 2px 6px;
-  border-radius: 12px;
-  font-size: 10px;
-  background: rgba(239, 138, 76, 0.15);
-  color: #ef8a4c;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  background: #ff670a22;
+  color: #ff670a;
   text-transform: capitalize;
 `;
 
@@ -1567,8 +1684,8 @@ const MovieActions = styled.div`
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  padding-top: 12px;
-  border-top: 1px solid #414141;
+  padding-top: 16px;
+  border-top: 1px solid #222;
 `;
 
 const EmptyMoviesState = styled.div`
@@ -1580,6 +1697,8 @@ const EmptyMoviesState = styled.div`
   text-align: center;
   padding: 60px 20px;
   color: #fff;
+  border: 2px dashed #222;
+  border-radius: 16px;
 
   div {
     font-size: 48px;
@@ -1589,7 +1708,7 @@ const EmptyMoviesState = styled.div`
 
   h3 {
     margin: 0 0 8px 0;
-    font-family: "HelveticaBold";
+    font-family: "HelveticaNowDisplay-Bold", sans-serif;
     font-size: 24px;
     color: #fff;
   }
@@ -1599,6 +1718,7 @@ const EmptyMoviesState = styled.div`
     opacity: 0.6;
     max-width: 400px;
     line-height: 1.5;
+    color: #aaa;
   }
 `;
 
@@ -1622,4 +1742,27 @@ const FormHeader = styled.div`
     flex-direction: column;
     align-items: stretch;
   }
+`;
+
+const ModalContent = styled.div`
+  background: #1a1a1a;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #222;
+  width: 100%;
+  max-width: 400px;
+`;
+
+const ModalTitle = styled.h3`
+  margin: 0 0 16px 0;
+  font-family: "HelveticaNowDisplay-Bold", sans-serif;
+  font-size: 20px;
+  color: #fff;
+`;
+
+const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
 `;

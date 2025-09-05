@@ -218,8 +218,7 @@ const InfoCta = styled(Flex)`
   gap: 4px;
   padding: 8px 0;
   border-radius: 10px;
-  box-shadow:
-    -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
+  box-shadow: -0.7px 4.3px 8.6px 0 rgba(61, 61, 61, 0.12),
     inset -2.9px 3.6px 18.9px 0 rgba(255, 255, 255, 0.25),
     inset -2.9px -2.9px 95.7px -199px rgba(255, 255, 255, 0);
   border: solid 1.4px rgba(1, 1, 1, 0.2);

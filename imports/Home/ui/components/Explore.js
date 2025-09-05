@@ -35,8 +35,8 @@ const Explore = ({ movieData, isLoading }) => {
     const side = className?.includes("slick-prev")
       ? "left"
       : className?.includes("slick-next")
-        ? "right"
-        : undefined;
+      ? "right"
+      : undefined;
     const isDisabled = className?.includes("slick-disabled");
     return (
       <ArrowButtonUI
@@ -152,7 +152,8 @@ const Explore = ({ movieData, isLoading }) => {
         <ScrollRow>
           {movieData?.map((movie, index) => (
             <Card
-              $bgImage={movie?.posterUrl}
+              // $bgImage={movie?.posterUrl}
+              $bgImage={"/static/filmCard.png"}
               key={index}
               onClick={() => router.push(`/video/${movie?.id}`)}
             >
@@ -175,7 +176,8 @@ const Explore = ({ movieData, isLoading }) => {
           {movieData?.map((movie, index) => {
             return (
               <Card
-                $bgImage={movie?.posterUrl}
+                // $bgImage={movie?.posterUrl}
+                $bgImage={"/static/filmCard.png"}
                 key={index}
                 onClick={() => router.push(`/video/${movie?.id}`)}
               >

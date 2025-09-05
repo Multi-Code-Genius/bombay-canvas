@@ -66,7 +66,6 @@ export const login = async (data) => {
     return resp;
   } catch (error) {
     if (error instanceof Error) {
-      console.log("login Error", error.message);
     } else {
       console.log("login Error", error);
     }
@@ -92,7 +91,6 @@ export const useLogin = (isAdmin) => {
       }
     },
     onError: (error) => {
-      toast.error(error.message);
       console.log("Login Failed", error.message);
     },
   });
