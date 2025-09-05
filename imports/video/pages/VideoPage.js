@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useMoviesDataById } from "api/movies";
 import Loading from "imports/common/components/Loading";
 
-const AboutPage = ({ videoId }) => {
+const VideoPage = ({ videoId }) => {
   const router = useRouter();
   const [playing, setPlaying] = useState(false);
   const [activeEpisode, setActiveEpisode] = useState(false);
@@ -105,7 +105,9 @@ const AboutPage = ({ videoId }) => {
                         <NumberWrapper>
                           <Number>{index + 1}</Number>
                           <MovieCard>
-                            <Ellipse onClick={() => setActiveEpisode(e)}>
+                            <Ellipse
+                              onClick={() => !playing && setActiveEpisode(e)}
+                            >
                               <PlayButtonIcon width={13} height={13} />
                             </Ellipse>
                           </MovieCard>
@@ -135,7 +137,7 @@ const AboutPage = ({ videoId }) => {
   );
 };
 
-export default AboutPage;
+export default VideoPage;
 
 const Frame = styled(Flex)`
   justify-content: center;
