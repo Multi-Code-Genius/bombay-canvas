@@ -110,10 +110,10 @@ export default function VideoPlayer({ episode, movie, playing, setPlaying }) {
         onLoadedMetadata={handleLoadedMetadata}
         muted={muted}
         preload="auto"
-        // src={episode?.videoUrl}
-        src={
-          "https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
-        }
+        src={episode?.videoUrl}
+        // src={
+        //   "https://videos.pexels.com/video-files/5200378/5200378-uhd_2560_1440_30fps.mp4"
+        // }
         poster={movie?.posterUrl ?? "/static/videoImage.png"}
         ref={videoRef}
       />

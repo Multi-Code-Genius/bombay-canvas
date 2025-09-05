@@ -152,8 +152,8 @@ const Explore = ({ movieData, isLoading }) => {
         <ScrollRow>
           {movieData?.map((movie, index) => (
             <Card
-              // $bgImage={movie?.posterUrl}
-              $bgImage={"/static/filmCard.png"}
+              $bgImage={movie?.posterUrl}
+              // $bgImage={"/static/filmCard.png"}
               key={index}
               onClick={() => router.push(`/video/${movie?.id}`)}
             >
@@ -176,8 +176,8 @@ const Explore = ({ movieData, isLoading }) => {
           {movieData?.map((movie, index) => {
             return (
               <Card
-                // $bgImage={movie?.posterUrl}
-                $bgImage={"/static/filmCard.png"}
+                $bgImage={movie?.posterUrl}
+                // $bgImage={"/static/filmCard.png"}
                 key={index}
                 onClick={() => router.push(`/video/${movie?.id}`)}
               >
